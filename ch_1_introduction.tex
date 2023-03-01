@@ -1,0 +1,119 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+The statistical modeling of infectious disease data is among the oldest applications of statistics, beginning with Bernoulli's work on smallpox in the 18th century \citep{Bernoulli2004}.
+Today, it is an increasingly relevant application of research, due to globalization that enables diseases to spread further and faster, as well as the abundance of relevant data from electronic surveillance systems, social contact and mobility patterns from mobile phones, and genetic sequencing of pathogens.
+The importance of this pursuit is apparent when reflecting on the ongoing COVID-19 pandemic, which has resulted in millions of deaths and the largest global recession in nearly a century \citep{whocoronavirus,  zumbrun_2020}.
+
+\section{Epidemic Surveillance Data and Its Applications}
+\label{sec:epidemic_surveillance_data}
+
+Infectious disease data differs from data used in traditional statistical applications because they are highly dependent in time and space, and are almost always partially observed \citep{held2019handbook}.
+People without healthcare access or who do not exhibit disease symptoms may not seek diagnosis, leading to systematic bias and under-reporting in case counts.
+Among those who seek diagnosis, their disease status may not be correctly identified, and their results may not be reported to a centralized database.
+Even among those who receive correct diagnosis and whose results are reported, the precise timing of infection, transmission, and recovery are generally unknown.
+These factors make statistical inference challenging.
+For instance, a small outbreak with a high reporting rate may produce similar observed case counts as a large outbreak with a low reporting rate.
+The situation is even more opaque for endemic diseases, where these unreported cases contribute to differing levels of immunity throughout a population.
+
+Infectious disease surveillance data can be reported at a variety of resolutions and used for a variety of tasks.
+Some methods are designed to work with detailed data from a specific, relatively small, outbreak, while others are more suitable for widespread diseases observed with less detail.
+This work is primarily concerned with the latter scenario and uses passive surveillance data, which traditionally takes the form of aggregated counts of incidence data (e.g. new tests, new cases, and new deaths), counts of prevalence data (e.g. number of hospitalized patients with a disease) at some coarse demographic, spatial, and temporal resolution (e.g. stratified by age and county every week).
+This and other recent advances seek to integrate other forms of data into this framework \citep{Tang2022, Rasmussen2011}.
+In particular, we aim to incorporate seroprevalence studies and information derived from genetic sequencing.
+These data and models are vital tools for both inference and prediction tasks.
+One major goal in the inference context is nowcasting, which typically involves estimating the effective reproduction number, \( R_t \), in real time \citep{10.1093/aje/kwt133}.
+This parameter is defined as the expected number of secondary cases that arise from a primary case and is influenced by factors inherent to the pathogen, as well as the environmental conditions.
+For example, consider the case of a new virus variant emerging in the summer.
+The new variant may be inherently more transmissible than the previously circulating strain, driving up the effective reproduction number.
+Simultaneously, the warmer weather and school closures work to decrease the effective reproduction number.
+Of most concern is the threshold \( R_t = 1 \).
+When \( R_t < 1 \), the average primary case produces fewer than one secondary case.
+If this is sustained, prevalence will decrease.
+When \( R_t > 1 \), the average primary case produces more than one secondary case, leading to an exponential increase in cases.
+Other inference tasks involve quantifying the effects of interventions, whether they be pharmaceutical (e.g. vaccination campaigns) or non-pharmaceutical (e.g. mask mandates).
+Forecasting is concerned with anticipating future disease burden, with special attention to severe outcomes like hospitalizations and deaths \citep{10.1371/journal.pmed.1003793}.
+Forecasts can combine historical data with possible future scenarios to drive public policy by answering questions like ``in the presence of a more transmissible variant, how many people do we need to vaccinate to prevent the healthcare system from being overwhelmed?"
+
+A popular tool used for these tasks is the compartmental model.
+The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model.
+In these models, the population of interest is divided into compartments (e.g., susceptible, infectious, and recovered), and individuals transition between compartments at a specified rate (e.g. transitions from infectious compartment to recovered compartment happen at a rate proportional to the number of infectious individuals).
+Overviews of mechanistic compartmental models for disease dynamics can be found in \citep{anderson1992infectious, Brauer2008, keeling2011modeling, 10.1093/aje/kww021}.
+These models can be represented deterministically or stochastically.
+The stochastic models are more computationally difficult to fit and are particularly advantageous when there are few infections, as the beginning or end of an outbreak.
+In these scenarios, the randomness involved at the subject level can have a major impact on the course of the outbreak.
+In the most extreme case, one infectious individual could be introduced to a population, but, by chance, not infect anyone else.
+In contrast, deterministic models are more computationally feasible and tend to work well when all compartments are suitably large \citep{doi:10.1098/rspb.2015.0347}.
+This work is only concerned with these deterministic models in large population settings.
+In the next section, we provide an overview of data from these settings to motivate our methodological contributions.
+
+\section{Motivating Examples}
+\label{sec:motivating_examples}
+
+Data used in this thesis comes from the California of Department of Public Health.
+in Chapter~\ref{ch:content_1}, we analyze data from Orange County, California.
+In Chapter~\ref{ch:content_2}, we analyze data from tk additional California counties
+
+
+
+\section{Thesis Contributions}
+\label{sec:thesis_contributions}
+
+%touch on traditional methods (SIR Model)
+
+% This is an example using the \LaTeX{} template for UCI theses and
+% dissertation documents \cite{uci-thesis-latex}. Figure
+% \ref{fig:sourcecode} is just for illustration purposes, as is Table
+% \ref{tab:coordinates}.
+
+% \begin{figure}
+% \begin{verbatim}
+% #include <iostream>
+% int main(int argc, char** argv) {
+%   std::cout << "Hello World." << std::endl;
+%   return 0;
+% }
+% \end{verbatim}
+%   \caption{Example source code.}
+%   \label{fig:sourcecode}
+% \end{figure}
+
+% \section{Background}
+
+% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+% eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+% minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+% aliquip ex ea commodo consequat. Duis aute irure dolor in
+% reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+% pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+% culpa qui officia deserunt mollit anim id est laborum.
+
+% \begin{table}
+%   \centering
+%   \begin{tabular}{|rr|r|}
+%     \hline
+%     $x$ & $y$ & $z$ \\
+%     \hline
+%     14 & 12 & -2 \\
+%     0 & 33 & -25 \\
+%     -3 & 11 & 22 \\
+%     4 & 4 & 6 \\
+%     \hline
+%   \end{tabular}
+%   \caption{Example coordinates.}
+%   \label{tab:coordinates}
+% \end{table}
+
+% Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+% eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+% minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+% aliquip ex ea commodo consequat. Duis aute irure dolor in
+% reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+% pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+% culpa qui officia deserunt mollit anim id est laborum.
+
+
+%%% Local Variables: ***
+%%% mode: latex ***
+%%% TeX-master: "thesis.tex" ***
+%%% End: ***
