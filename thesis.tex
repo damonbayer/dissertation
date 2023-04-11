@@ -86,6 +86,20 @@
 % even for non-included files.
 %\includeonly{chapter1}
 
+% Personal packages
+\usepackage{quiver}
+
+\tikzcdset{
+    cells = {
+        nodes = {draw, circle}
+        },
+        arrows = {shorten = 1mm}
+}
+
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
 \begin{document}
 
 % Preliminary pages are always loaded (TOC, CV, etc.)
@@ -97,7 +111,8 @@
 \include{ch_2_background}
 \include{ch_3_content_1}
 \include{ch_4_content_2}
-\include{ch_5_discussion}
+\include{ch_5_content_3}
+\include{ch_6_discussion}
 % ... and so on
 
 % These commands fix an odd problem in which the bibliography line
