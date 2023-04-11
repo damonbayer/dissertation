@@ -3,10 +3,11 @@
 
 The statistical modeling of infectious disease data is among the oldest applications of statistics, beginning with Bernoulli's work on smallpox in the 18th century \citep{Bernoulli2004}.
 Today, it is an increasingly relevant application of research, due to globalization that enables diseases to spread further and faster, as well as the abundance of relevant data from electronic surveillance systems, social contact and mobility patterns from mobile phones, and genetic sequencing of pathogens.
-The importance of this pursuit is apparent when reflecting on the ongoing COVID-19 pandemic, which has resulted in millions of deaths and the largest global recession in nearly a century \citep{whocoronavirus,  zumbrun_2020}.
+The importance of this pursuit is apparent when reflecting on the recent COVID-19 pandemic, which resulted in millions of deaths and the largest global recession in nearly a century \citep{whocoronavirus,  zumbrun_2020}.
 
 \section{Epidemic Surveillance Data and Its Applications}
 \label{sec:epidemic_surveillance_data}
+This work considers both active and passive surveillance data.
 
 Infectious disease data differs from data used in traditional statistical applications because they are highly dependent in time and space, and are almost always partially observed \citep{held2019handbook}.
 People without healthcare access or who do not exhibit disease symptoms may not seek diagnosis, leading to systematic bias and under-reporting in case counts.
@@ -35,28 +36,44 @@ Other inference tasks involve quantifying the effects of interventions, whether 
 Forecasting is concerned with anticipating future disease burden, with special attention to severe outcomes like hospitalizations and deaths \citep{10.1371/journal.pmed.1003793}.
 Forecasts can combine historical data with possible future scenarios to drive public policy by answering questions like ``in the presence of a more transmissible variant, how many people do we need to vaccinate to prevent the healthcare system from being overwhelmed?"
 
-A popular tool used for these tasks is the compartmental model.
-The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model.
-In these models, the population of interest is divided into compartments (e.g., susceptible, infectious, and recovered), and individuals transition between compartments at a specified rate (e.g. transitions from infectious compartment to recovered compartment happen at a rate proportional to the number of infectious individuals).
-Overviews of mechanistic compartmental models for disease dynamics can be found in \citep{anderson1992infectious, Brauer2008, keeling2011modeling, 10.1093/aje/kww021}.
-These models can be represented deterministically or stochastically.
-The stochastic models are more computationally difficult to fit and are particularly advantageous when there are few infections, as the beginning or end of an outbreak.
-In these scenarios, the randomness involved at the subject level can have a major impact on the course of the outbreak.
-In the most extreme case, one infectious individual could be introduced to a population, but, by chance, not infect anyone else.
-In contrast, deterministic models are more computationally feasible and tend to work well when all compartments are suitably large \citep{doi:10.1098/rspb.2015.0347}.
-This work is only concerned with these deterministic models in large population settings.
 In the next section, we provide an overview of data from these settings to motivate our methodological contributions.
 
 \section{Motivating Examples}
 \label{sec:motivating_examples}
 
-Data used in this thesis comes from the California of Department of Public Health.
-in Chapter~\ref{ch:content_1}, we analyze data from Orange County, California.
-In Chapter~\ref{ch:content_2}, we analyze data from tk additional California counties
+In Chapter~\ref{ch:content_1}, we analyze data from Kalish paper, data collected from each state in the US between May and July 2020.
+In Chapter~\ref{ch:content_2}, we analyze data from Orange County, California, provided to us by the Orange County Health Care Agency as well as a seroprevalence study by idk who.
+In Chapter~\ref{ch:content_3}, we analyze data from tk additional California counties, provided to us by the California Department of Public Health.
 
+\section{Overview of this dissertation}
+Chapter~\ref{ch:background} provides background information on areas of statistics essential to understanding the methods proposed and assessed in this dissertation.
+The topics covered include mathematical models for the spread of infectious diseases, Bayesian inference and Markov chain Monte Carlo, forecast assessment, and fiducial inference.
 
+In Chapter~\ref{ch:content_1}, we eschew the temporal complications of analyzing infectious disease data and focus on issues of sampling schemes and diagnostic test accuracy.
+While there are established methods for estimating disease prevalence with associated confidence intervals for complex surveys with perfect assays and simple random sample surveys with imperfect assays, the complicated case of complex surveys with imperfect assays remains relatively unexplored.
+We develop and study new methods for this setting.
+The new methods use the melding method to combine gamma intervals for directly standardized rates and established adjustments for imperfect assays by estimating sensitivity and specificity.
+One of the new methods appears to have at least nominal coverage in all simulated scenarios.
+We compare our new methods to established methods in special cases (complex surveys with perfect
+assays or simple surveys with imperfect assays).
+In some simulations, our methods appear to guarantee coverage, while competing methods have much lower than nominal coverage, especially when overall prevalence is very low.
+In other settings, our methods are shown to have higher than nominal coverage.
+We apply our method to a seroprevalence survey of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020.
 
-\section{Thesis Contributions}
+In Chapter~\ref{ch:content_2}, we turn our attention to the temporal dynamics of infectious diseases in the presence of changing policy and behavior.
+Mechanistic models fit to streaming surveillance data are critical for understanding the transmission dynamics of an outbreak as it unfolds in real-time.
+However, transmission model parameter estimation can be imprecise, and sometimes even impossible because surveillance data are noisy and not informative about all aspects of the mechanistic model.
+To partially overcome this obstacle, Bayesian models have been proposed to integrate multiple surveillance data streams. 
+We devise a modeling framework for integrating SARS-CoV-2 diagnostics test and mortality time series data, as well as seroprevalence data from cross-sectional studies, and tested the importance of individual data streams for both inference and forecasting.
+Importantly, our model for incidence data accounts for changes in the total number of tests performed.
+We apply our Bayesian data integration method to COVID-19 surveillance data collected in Orange County, California between March 2020 and February 2021 and find that 32--72\% of the Orange County residents experienced SARS-CoV-2 infection by mid-January, 2021.
+Despite this high number of infections, our results suggest that the abrupt end of the winter surge in January 2021 was due to both behavioral changes and a high level of accumulated natural immunity.
+
+In Chapter~\ref{ch:content_3}, we work in a similar setting as Chapter~\ref{ch:content_3}, but where the changing disease dynamics are due to novel disease variants, rather than changing policy and behavior.
+Abstract tk
+
+We conclude with a summary of our work in Chapter~\ref{ch:discussion} and discuss opportunities for future research in developing methodologies for the analysis of infectious disease data.
+
 \label{sec:thesis_contributions}
 
 %touch on traditional methods (SIR Model)
