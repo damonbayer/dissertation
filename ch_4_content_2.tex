@@ -1,2 +1,468 @@
 \chapter{Semi-parametric modeling of SARS-CoV-2 transmission using tests, cases, deaths, and seroprevalence data}
 \label{ch:content_2}
+\graphicspath{{figures/ch_4/}}
+
+\section{Introduction}
+SARS-CoV-2 is a human coronavirus associated with high morbidity and mortality that caused a pandemic in 2020 \citep{Cummings2020, Wu2020CDC, Song2020}.
+Like other human coronaviruses, SARS-CoV-2 is transmitted person to person through close contact and has high transmission potential in crowded indoor settings and around activities that generate aerosols \citep{whocoronavirustrans}.
+In the early stages of the COVID-19 pandemic, transmission dynamics modeling played an important role in alerting the public about the potential dangers of unmitigated virus spread \citep{prem2020effect, ferguson2020report9, davies2020}.
+At later pandemic stages, this modeling helped evaluate intervention effectiveness \citep{Knockeabg2021} and to quantify transmission advantages of genetic variants \citep{Davieseabg2021}.
+We develop models that integrate diagnostics test and mortality time series data with cross-sectional seroprevalence data to estimate underlying transmission dynamics and forecast future case and death counts.
+These models are flexible in the data sources they incorporate.
+By comparing the forecasting capabilities of these models, we aim to investigate which data streams should be used in future modeling efforts.
+\par
+Differences in mitigation strategies, surveillance efforts, and population characteristics across countries and even across different regions within one country prompted development of regional modeling of SARS-CoV-2 transmission \citep{anderson2020, miller2020, morozova2021one, irons2021estimating}.
+However, neither national nor subnational/regional modelers fully integrate all surveillance data available to them, because inclusion of each additional data source leads to an increase in model complexity, which complicates statistical inference and reduces computational efficiency of this inference.
+In addition, including more data sources necessitates additional modeling assumptions and risks specification in one part of the model influencing inference in other aspects of the model.
+Modelers were faced with many questions about which data to use, which data to ignore, and how to best integrate them into their models.
+Incorporating case incidence data into inference proved particularly problematic because a data generating model for cases needs to account for preferential sampling of symptomatic individuals and dependence of case counts on the number of diagnostic tests performed, which significantly varies temporally and spatially.
+However, even with delayed reporting, positive diagnostic tests (cases) are among the earliest indicators of changing disease dynamics, so we hypothesize that taking advantage of this source of information could be important for producing timely forecasts and for policy decision-making.
+Similarly, properly incorporating seroprevalence data into models may improve the accuracy of a model's estimations of the underlying cumulative number of infections, which, in part, drives the effective reproduction number and is crucial for forecasting.
+We investigate these ideas by fitting and comparing the forecasting abilities of multiple models, some of which use these data, while others do not.
+\par
+We show how to fit a mechanistic model of SARS-CoV-2 spread to incidence and mortality time series, while accounting for the time-varying number of diagnostic tests performed.
+The mechanistic model is a standard ordinary differential equation (ODE) model that describes changes in the proportions of the population residing in model compartments.
+Death counts are modeled with a negative binomial distribution that allows for over-dispersion often observed in surveillance data.
+Our first innovation is the model for cases, where we use a flexible beta-binomial distribution, whose mean is a product of the total number of tests performed and a non-linear function of unobserved infections modeled by the ODE model.
+This ensures that our estimates are not unduly influenced by large fluctuations of COVID-19 diagnostic test positivity fractions.
+Our second innovation is nonparametric estimation of time-varying parameters that control both the transmission model and surveillance model.
+By allowing our model to adapt to temporal changes in transmission and surveillance, we can identify how changes in policy affected the near-term progression of the outbreak.
+Our third contribution is a careful assessment of the usefulness of various data streams in the context of a case study in Orange County, California, USA.
+\par
+To benchmark the ability of our model to capture temporal trends in transmission dynamics, we use simulated data to compare our estimation of changes in the effective reproductive number to analogous estimates produced by \texttt{epidemia}, a simpler semi-parametric method \citep{epidemia}.
+This comparison shows that failing to account for fluctuations in the number of diagnostic tests performed can result in misleading inferences about effective reproduction numbers, a critical quantity in infectious disease epidemiology.
+Our data integration approach allows our model to provide a much more detailed picture of the spread of an infectious disease beyond the effective reproduction number, including estimating the time-varying infection fatality ratio, the total number of infected individuals, and changes in testing patterns.
+Data integration further allows us to produce reasonable short-term forecasts of deaths and testing positivity.
+We demonstrate these enhanced capabilities
+by fitting our compartmental model to COVID-19 surveillance data collected in Orange County, California --- the sixth most populous county in the United States of America (U.S.A.), with an estimated 3.2 million inhabitants as of 2019 \citep{orangecensus}.
+We analyze Orange County surveillance data collected between March 30, 2020 and February 14, 2021, prior to the start of widespread vaccine availability.
+We find both basic and effective reproductive numbers varied widely during the first year of the pandemic, which is expected in light of implementation and subsequent relaxation of mitigation measures.
+We compare several modifications to our primary model which omit negative diagnostic tests or seroprevalence data.
+We demonstrate that our models produce reasonable short term (up to 4 weeks ahead) probabilistic forecasts of mortality, but that different data streams may be more or less useful during different periods of the pandemic.
+
+\section{Methods}
+\label{ch_4:sec:methods}
+
+\subsection{Data}
+\label{ch_4:subsec:data}
+We start with time series of daily numbers of SARS-CoV-2 diagnostic tests (positive and negative), case counts (positive tests), and deaths observed over some time period of interest.
+We aggregate the three types of counts in weekly intervals.
+Figure~\ref{ch_4:oc:data} shows such a collection of aggregated time series for Orange County, CA, corresponding to the observation period spanning days between March 30, 2020 and February 14, 2021.
+We end our modeling period in February because vaccines became more widely available around this time, and our model does not account for vaccine-induced immunity.
+The data was compiled from anonymized individual test results provided by the Orange County Health Care Agency (OCHCA).
+We define cases as either confirmed or presumed COVID-19 diagnoses that have been officially reported to the OCHCA.
+We used specimen collection dates and dates of deaths to tabulate test, case, and death counts.
+We denote the vector of binned tests by $\mathbf{T} = (T_1, \dots, T_L)$, the vector of case counts by
+$\mathbf{Y} = (Y_1, \dots, Y_L)$, and the vector of deaths by $\mathbf{M} = (M_1, \dots, M_L)$, where the weeks are indexed by $l$ and $L = 48$ is the total number of weeks.
+Additionally, we use data from \cite{Bruckner2021}, a study conducted to estimate the seroprevalence in Orange County from a population-representative sample, which consists of 343 seropositive cases ($Z_{l^*}$) among 2979 ($U_{l^*}$) tests conducted between July 10 and August 16, 2020.
+For simplicity, we lump all seroprevalence test dates to a single time point --- August 16, 2020 --- corresponding to week $l^*=20$.
+To formulate the surveillance model for cases $\mathbf{Y}$, deaths $\mathbf{M}$, and seropositive cases $Z_{l^*}$, we first need a model for latent trajectories of incidence and prevalence of SARS-CoV-2 infections.
+
+\begin{figure}[htbp]
+\includegraphics[width=1.0\columnwidth]{figures/binned_data_plot}
+\caption{
+COVID-19 surveillance data from Orange County, CA.
+The figure shows weekly counts of tests, cases (positive tests), reported deaths due to COVID-19, as well as testing positivity.}
+\label{ch_4:oc:data}
+\end{figure}
+
+\subsection{Transmission model}
+\label{ch_4:subsec:model}
+To model latent incidence and prevalence trajectories, we divide all individuals in the population of Orange County, CA into five compartments: $S$ = susceptible individuals, $E$ = infected, but not yet infectious individuals, $I$ = infectious individuals, $R$ = recovered individuals, $D$ = individuals who died due to COVID-19.
+Possible progressions of an individual through the above compartments are depicted in Figure~\ref{ch_4:fig:seiird}.
+We model the time-evolution of the proportions of individuals occupying the above compartments with a set of deterministic ordinary differential equations (ODEs).
+For simplicity, we assume a homogeneously mixing population of fixed size \( N \), although it is possible to relax these assumptions, and we also assume that recovery confers immunity to subsequent infection over the duration of the modeling period.
+Let $\bX(t) = \left(S(t), E(t), I(t), R(t), D(t) \right)^T$ denote the population proportion in each compartment at time $t$, and let $\bX(t_0) = \bx_0 $ denote the population proportions at time $ t_0 $, the start of the modeling period.
+By convention, we model the population at risk, i.e., those individuals who may still move throughout the model compartments.
+Hence, we take $R(t_0) = D(t_0) = 0$ and normalize $ \bX(t_0) $ so that $ \bX(t_0)^T\boldsymbol{1} = 1$, where $\boldsymbol{1} = (1,1,1,1,1)^T$.
+Since we want to fit this model to incidence data, it is convenient to also keep track of the cumulative proportion of the population that experiences transitions between compartments from $t_0$ to $t$: $ \bN(t) = \left(N_{SE}(t), N_{E I}(t), N_{I R}(t), N_{I D}(t)\right)^T$.
+To describe mathematically how vectors $\bX(t)$ and $\bN(t)$ change through time, we first define rates of transitions between compartments, with possible transitions corresponding to the arrows in Figure~\ref{ch_4:fig:seiird}:
+
+\begin{equation}
+\begin{aligned}
+\lambda_{SE}(S, I, t) &= \frac{\beta(t)}{N} S I,\\
+\lambda_{I R}(I, t) &= \left(1-\eta(t)\right) \nu I,
+\end{aligned}
+\qquad \quad \quad
+\begin{aligned}
+\lambda_{E I}(E) &= \gamma E,\\
+\lambda_{I D}(I, t) &= \eta(t) \nu I,
+\end{aligned}
+\end{equation}
+where $\beta(t)$ is the transmission rate, which varies over time, \( N \) is the constant population size, $1/\gamma$ is the mean latent period duration, $1/\nu$ is the mean infectious period duration, and $\eta(t)$ is the infection-to-fatality ratio (IFR), which varies over time.
+The time-varying transmission rate allows our model to capture the effects of interventions and changes in human behavior, while the time-varying IFR should capture changes in age profiles of infected individuals and stress on healthcare providers during surges.
+We demonstrate this property in Supplementary Section~\ref{ch_4:sec:hetero}.
+\par
+Equipped with the population-level transition rates, we define ODEs for our model:
+\begin{equation}
+\label{ch_4:eqn:model_ODEs}
+\begin{aligned}
+\deriv{S}{t} &= -\lambda_{SE}(S, I, t),\\
+\deriv{E}{t} &= \lambda_{SE}(S, I, t)  - \lambda_{E I}(E),\\
+\deriv{I}{t} &=  \lambda_{E I}(E) - \lambda_{I R}(I, t) -  \lambda_{I D}(I, t),\\
+\deriv{R}{t} &=   \lambda_{I R}(I, t),\\
+\deriv{D}{t} &= \lambda_{I D}(I, t),
+\end{aligned}
+\qquad \qquad \qquad \qquad
+\begin{aligned}
+\deriv{N_{SE}}{t} &= \lambda_{SE}(S, I, t),\\
+\deriv{N_{E I}}{t} &=  \lambda_{E I}(E),\\
+\deriv{N_{I R}}{t} &= \lambda_{I R}(I, t),\\
+\deriv{N_{I D}}{t} &= \lambda_{I D}(I, t),\\
+\
+\end{aligned}
+\end{equation}
+subject to initial conditions $ \bX(t_0) = \bx_0 $ and $ \bN(t_0) = \mathbf{0}$,
+where $\bx_0 = (S_0, E_0, I_0, R_0, D_0)$ are initial compartment proportions.
+We set $R_0 = 0$ and $D_0 = 0$, because these proportions do not play a role in future dynamics of the epidemic, leaving $S_0$, $E_0$, and $I_{0}$ as free model parameters.
+
+The above equations are redundant, and typically only the prevalence ODEs in the left column are used in mathematical modeling.
+However, the cumulative incidence/transition representation of the model, shown by the ODEs in the right column, is useful for statistical modeling of infectious disease dynamics \citep{breto2011compound}.
+In practice, we solve the subset of the above ODEs that are needed to track $\bX(t)$ and the parts of $\bN(t)$ that ``connect'' our transmission model to data.
+We proceed to make this connection in the next subsection.
+
+\begin{figure}[htbp]
+	\centering
+	\resizebox {0.7\linewidth} {!} {
+		\begin{tikzpicture}
+		\draw (0, -1.25) circle(0.5) node (S) {$ S$};
+		\draw (2, -1.25) circle(0.5) node (E) {$ E $};
+		\draw (4, -1.25) circle(0.5) node (I) {$ I $};
+		\draw (6, -2) circle(0.5) node (D) {$ D $};
+		\draw (6, -0.5) circle(0.5) node (R) {$ R $};
+
+		\draw [thick,->,shorten >=3mm,shorten <=3mm] (S) -- (E) node[midway,above] {};
+		\draw [thick,->, shorten >=3.5mm, shorten <=3mm] (E) -- (I) node[midway,above] {};
+		\draw [thick,->,shorten >=3mm, shorten <= 3mm] (I) -- (R) node[midway,above] {};
+		\draw [thick,->,shorten >=3mm, shorten <= 3mm] (I) -- (D) node[midway,above] {};
+		\end{tikzpicture}
+	}
+	\caption{Model diagram depicting possible progressions between infection states. The model compartments are as follows: susceptible $ (S) $, infected, but not yet infectious ($ E $), infectious ($I$), recovered ($ R $), and deceased ($ D $). }
+	\label{ch_4:fig:seiird}
+\end{figure}
+
+\subsection{Surveillance model}
+We fit our transmission model to seroprevalence data and two time series: numbers of new cases and deaths reported during some pre-specified time periods (e.g., weeks).
+We do not model changes in the numbers of diagnostic tests performed.
+Rather, we condition on test counts in the specification of the sampling model for the vector of case counts, which describes the probability of the observed case count given the observed number of tests and unobserved/latent incidence of cases over each time interval.
+First, we assume that, conditional on $\bN(t)$, case and death counts are independent of each other and across time intervals, because they are just noisy realizations of information encoded by $\bN(t)$.
+This leaves us with formulating models for cases and deaths in each individual observation interval.
+\par
+Consider the number of deaths $M_l$ observed in time interval $(t_{l-1}, t_l]$, where $l = 1,\dots, L$.
+Since our ODEs track the latent cumulative fraction of deaths $N_{I D}(t_l)$, we can compute
+$\Delta N_{I D}(t_l) = N_{I D}(t_l) - N_{I D}(t_{l-1})$ --- the latent fraction of the population that died in the interval $(t_{l-1}, t_l]$.
+We model the observed death count $M_l$ as a realization from the following negative binomial distribution:
+\begin{align}
+\label{ch_4:eqn:mortalityemission}
+M_l \sim \text{Negative binomial}\left (\mu^D_l =  \rho_D \times N \times \Delta N_{I D}(t_l),\ {\sigma^2_l}^D = \mu^D_l (1 + \mu^D_l / \phi_D )\right ),
+\end{align}
+where $N$ is the population size, $ \mu^D_l $ and $ {\sigma^2_l}^D $ are the mean and variance of the negative binomial distribution, $ \rho_D \in [0,1]$ is the mean overall death detection probability, and $ \phi_D > 0 $ is an over-dispersion parameter.
+Informally, our mortality model says that, on average, the observed number of deaths, $ M_l $, is a fraction of the true death count estimated by the model, $N \times \Delta N_{I D}(t_l)$,  with some noise due to underreporting, delayed reporting, and sampling variability.
+\par
+Next, we develop a model for the number of positive tests (cases), $Y_l$, observed in the time interval $(t_{l-1}, t_l]$.
+We start with a simple binomial model with per-test positivity probability $\psi_l$:
+\[
+Y_l \mid \psi_l \sim \text{Binomial}(T_l, \psi_l),
+\]
+where $T_l$ is the number of COVID-19 diagnostic tests administered during the time interval $(t_{l-1}, t_l]$.
+We use another layer of randomness to account for unobserved factors affecting positivity probabilities (e.g., variable testing guidelines and test shortages) and assume that the positivity probability in interval $(t_{l-1}, t_l]$ follows the beta distribution:
+\begin{equation}
+\psi_{l}  \sim \text{Beta}\left (\phi_C \mu^C_l,\ \phi_C \left (1 - \mu^C_l \right )\right ),
+\label{ch_4:eqn:positivity}
+\end{equation}
+where $ \phi_C $ is an over-dispersion parameter and $\mu^C_l$ is the mean test positivity probability.
+We assume that mean test positivity odds is proportional to the unobserved odds of transitioning from exposed to infectious, $\Delta N_{E I}(t_l) = N_{E I}(t_l) - N_{E I}(t_{l-1})$ in interval $(t_{l-1}, t_l]$:
+
+\begin{equation}
+\frac{\mu^C_l}{1- \mu^C_l}= e^{\alpha_l} \cdot \left( \frac{\Delta N_{EI}(t_l)}{1 - \Delta N_{EI}(t_l)}\right),
+\label{ch_4:eqn:testlogoddsmean}
+\end{equation}
+where $\alpha_l > 0$.
+This functional form ensures that, on average, the probability of detecting a SARS-CoV-2 infection grows with the population incidence.
+Parameter $\alpha_l$ can be thought of as an effect of testing guidelines and practices.
+A model with $\alpha_l \approx 0$ (i.e., $\mu^C_l \approx \Delta N_{\Ie\Is}(t_l)$) says that in interval $(t_{l-1}, t_l]$ testing is done approximately by sampling individuals uniformly at random, so that the positivity probability over a time interval $ l $ is equal to the fraction of the population that transitions from the latent to infectious state.
+As we increase $\alpha_l$ above 0, the model mimics preferential testing of individuals who are more likely to have severe infection (e.g., testing only individuals with certain symptoms).
+
+\par We can streamline our surveillance model for case counts by integrating over positivity probabilities and arriving at the following beta-binomial distribution:
+\begin{align}
+\label{ch_4:eqn:caseemission}
+Y_l\mid \mu_l^C,\phi_C \sim \text{Beta-binomial}\left (T_l,\ \phi_C \mu^C_l,\ \phi_C \left (1 - \mu^C_l\right )\right ).
+\end{align}
+Properties of the beta-binomial distribution imply that $\text{E}(Y_l) = T_l \times \mu^C_l$.
+This means that our model predicts that, on average, cases grow linearly with the number of diagnostic tests administered.
+Keeping in mind our assumed relationship between $\mu^C_l$ and $\Delta N_{E I}(t_l)$, the average number of cases also grows with the accumulation of new infections.
+Furthermore, the variance of the fraction of tests that are positive under the beta-binomial distribution is
+\[
+\Var(Y_l/T_l\mid T_l, \mu_l^C, \phi_C) = \frac{\mu_l^C(1-\mu_l^C)}{T_l}\left (1 + \frac{T_l - 1}{\phi_C+1}\right ),
+\]
+where the variance under an analogous pure binomial model would be $ \mu_l^C(1-\mu_l^C)/T_l $. Hence, the over-dispersion parameter, $ \phi_C $, can be interpreted in terms of the excess variance of the beta-binomial model relative to a pure binomial distribution.
+In summary, our beta-binomial distribution for observed case counts ensures that we do not confuse increase in testing for increase in SARS-CoV-2 incidence and implicitly allows for heterogeneity in the mean test positivity probability.
+
+Finally, we model the number of observed seropositive cases $Z_{l^*}$ among $U_{l^*}$ tests with a binomial distribution:
+\begin{equation}
+\label{ch_4:eqn:seroprevemission}
+    Z_{l^*} \sim \text{Binomial}\left( U_{l^*}, \frac{R_{l^*}}{S_{l^*} + E_{l^*} + I_{l^*} + R_{l^*}} \right).
+\end{equation}
+
+This simple model assumes the seroprevalence data comes from a high-quality study based on random sampling, which does not exhibit the problems observed in the testing data.
+
+In addition, we also consider a more typical approach to modeling observed cases, which is not conditional on tests and is similar to \eqref{ch_4:eqn:mortalityemission}.
+
+\begin{equation}
+    \label{ch_4:eqn:altcaseemission}
+    Y_l \sim \text{Negative binomial}\left (\mu^Y_l =  \rho_l^Y \times N \times \Delta N_{E I}(t_l),\ {\sigma^2_l}^Y = \mu^Y_l (1 + \mu^Y_l / \phi_Y )\right ),
+\end{equation}
+
+where $N$ is the population size, $ \mu^Y_l $ and $ {\sigma^2_l}^Y $ are the mean and variance of the negative binomial distribution, $ \rho_l^Y \in [0,1]$ is the mean case detection probability, which varies over time, and $ \phi_Y > 0 $ is an over-dispersion parameter.
+
+\subsection{Putting all the pieces into a Bayesian model}
+\label{ch_4:subsec:limitations}
+We now describe our inferential Bayesian procedure.
+First, we re-parameterize our model by replacing $\beta(t)$ with a basic reproductive number $R_0(t) = \beta(t) / \nu$.
+We parameterize each of our time-varying parameters, $R_0(t)$, $\eta(t)$, $\alpha(t)$, $\rho_l^Y(t)$ as piecewise constant functions, where each vector defining the constants \textit{a priori} follows a Gaussian Markov random field (GMRF).
+
+More precisely, we define the auxiliary vectors:
+\begin{gather*}
+\brtilde = (\tilde{R}_{0,1}, \tilde{R}_{0,2}, \ldots, \tilde{R}_{0,L}) \text{, } \betatilde = (\etatilde_1, \etatilde_2, \ldots, \etatilde_L) \text{, }\\
+\balphatilde = (\alphatilde_1, \alphatilde_2, \ldots, \alphatilde_L)  \text{, and }
+\brhoytilde = (\brhoytilde_1, \brhoytilde_2, \ldots, \brhoytilde_L),
+\end{gather*}
+
+which follow the Gaussian Markov random field priors:
+
+\begin{equation}
+\begin{aligned}
+	\tilde{R}_{0,l} \sim& N\left(\tilde{R}_{0, l - 1}, \sigma_{R_0}^2\right)\text{, where } l=2,\ldots,L \text{ and } \tilde{R}_{0,1} \sim N\left(\mu_{R_{01}},\sigma^2_{R_{01}}\right),\\
+	\etatilde_{l} \sim& N\left(\etatilde_{l - 1}, \sigma_\eta^2\right)\text{, where } l=2,\ldots,L \text{ and } \etatilde_1 \sim N\left(\mu_{\eta_1}, \sigma^2_{\eta_1}\right),\\
+	\alphatilde_{l} \sim& N\left(\alphatilde_{l - 1}, \sigma_\alpha^2\right)\text{, where } l=2,\ldots,L \text{ and } \alphatilde_1 \sim N\left(\mu_{\alpha_1},\sigma^2_{\alpha_1}\right),\\
+	\rhoytilde_{l} \sim& N\left(\rhoytilde_{l - 1}, \sigma_{\rho^Y}^2\right)\text{, where } l=2,\ldots,L \text{ and } \rhoytilde_1 \sim N\left(\mu_{\rho^Y_1}, \sigma^2_{\rho^Y_1}\right),
+ \label{ch_4:eqn:GMRF}
+\end{aligned}
+\end{equation}
+and define the piecewise constant functions:
+\begin{align}
+	R_0(t) =& \sum_{l=1}^L \exp{\left( \tilde{R}_{0,l} \right) \1{t \in (t_{l-1}, t_l]}},\\
+	\eta(t) =& \sum_{l=1}^L \frac{\exp{ \left(\etatilde_l\right) \1{t \in (t_{l-1}, t_l]} }}{\exp{\left( \etatilde_l \right) \1{t \in (t_{l-1}, t_l]}} + 1},\\
+	\alpha(t) =& \sum_{l=1}^L \exp{\left( \alphatilde_l \right)\ 1{t \in (t_{l-1}, t_l]} },\\
+	\rho^Y(t) =& \sum_{l=1}^L \frac{\exp{\left( \rhoytilde_l \right) \1{t \in (t_{l-1}, t_l]} }}{\exp{\left( \rhoytilde_l \right) \1{t \in (t_{l-1}, t_l]} } + 1}.
+\end{align}
+
+In addition, we parameterize initial compartment fractions as $ S_0 $, $ I_0 = \til{I}_0(1 - S_0) $, $ E_0 = (1 - \til{I}_0)(1 - S_0) $, $R_0 = 0$, $D_0 = 0$, where $\til{I}_0 = I_0 / (E_0 + I_0)$.
+This construction allows us to specify independent prior distributions for $S_0$ and $\til{I}_0$ while preserving the sum-to-one constraint on the original initial compartmental fractions.
+Next, we collect all our model parameters into a vector $\boldsymbol{\theta} = (S_0,  \tilde{I}_{0}, \brtilde, \gamma, \nu, \betatilde, \rho^D, \phi_D, \balphatilde, \phi_C, \sigma_{R_0}, \sigma_\eta, \sigma_\alpha)$.
+When using the traditional case-emission model \eqref{ch_4:eqn:altcaseemission}, $ \brhoytilde $,  $ \sigma_{\rho^Y} $, and $\phi_Y $ are substituted for $ \balphatilde $, $ \phi_C $, and $ \sigma_\alpha $.
+Our probabilistic construction described above implies that the likelihood function --- probability of observing incidence, mortality, and seroprevalence data --- can be written in the following way:
+
+\begin{equation*}
+\text{Pr}(\bM, \bY,  Z_{l^*} \mid \btheta ) = \text{Pr}(\bM \mid \btheta ) \text{Pr}(\bY \mid \btheta ) \text{Pr}(Z_{l^*} \mid \btheta ) =   \prod_{l=1}^{L}\Pr(M_l\mid\btheta) \Pr(Y_l\mid\btheta) \Pr(Z_{l^*}\mid\btheta),
+\end{equation*}
+where $\text{Pr}(M_l \mid \btheta)$, $\text{Pr}(Y_l \mid \btheta)$, and $\text{Pr}(Z_{l^*} \mid \btheta)$ are the probability mass functions given by \eqref{ch_4:eqn:mortalityemission}, \eqref{ch_4:eqn:caseemission} or \eqref{ch_4:eqn:altcaseemission}, and \eqref{ch_4:eqn:seroprevemission} respectively.
+\par
+We encode available information about our model parameters in a prior distribution with density $\pi(\btheta)$.
+We assume that all univariate non-GMRF distributed parameters are \textit{a priori} independent and list our prior assumptions in Table~\ref{ch_4:table:priors}.
+Since our model is highly parametric, we rely on informative prior distributions that we parameterize using existing scientific studies.
+We base all our inferences and predictions on the posterior distribution of all model parameters:
+\begin{equation}
+\pi(\btheta\mid \bM,\bY, \bZ) \propto \text{Pr}(\bM, \bY, \bZ \mid \btheta ) \pi(\btheta).
+\end{equation}
+
+We sample from this posterior using the No-U-Turn Sampler \citep{NUTS} as implemented in the Turing Julia package \citep{turing}.
+Model code and data are available at the following GitHub repository: \url{https://github.com/damonbayer/semi_parametric_COVID_19_OC_model}.
+
+\section{Results}
+\label{ch_4:sec:results}
+\subsection{Simulation Study}
+To validate our model, we simulated 200 datasets with parameters given in Supplementary Table~\ref{ch_4:table:simulation_parameters}.
+An example of one of these datasets is presented in Figure~\ref{ch_4:fig:simulated_binned_data_plot}.
+The number of tests at each time point is the same as in the Orange County data set, and the parameters were deliberately chosen to produce data similar to the Orange County data.
+Priors used for these model fits are the same as those used in the Orange County model (see Table~\ref{ch_4:table:priors}).
+The prior and posterior distribution of the model fit to the single simulated dataset from Figure~\ref{ch_4:fig:simulated_binned_data_plot} are presented in Supplementary Figures~\ref{ch_4:fig:single_generated_quantities_simulation_scalar_plot}--\ref{ch_4:fig:single_generated_quantities_simulation_time_varying_plot}.
+For each simulated dataset, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
+In this single dataset example, most of the scalar parameter posteriors shift slightly toward the true parameters compared to the priors, without much posterior variance contraction relative to the prior.
+We define posterior variance contraction as one minus the ratio of standard deviation of the posterior and the prior, where negative contraction indicates that the posterior is wider than the prior, and 100\% contraction indicates that the posterior is a degenerate distribution.
+For the time-varying parameters and compartments, the variance contraction and shift are much more apparent.
+We further explore our simulation study results with summary measurements, presented in Supplementary Figures~\ref{ch_4:fig:generated_quantities_simulation_scalar_coverage_plot}--\ref{ch_4:fig:generated_quantities_simulation_compartment_coverage_plot}.
+Figure~\ref{ch_4:fig:generated_quantities_simulation_scalar_coverage_plot} shows the coverage of the posterior 80\% credible intervals constructed for the scalar parameters in the 200 simulated datasets.
+Most parameters demonstrate nearly 100\% coverage, except for \( \phi_C \), which shows approximately 90\% coverage, which is still above the nominal 80\%.
+Similarly, Figure~\ref{ch_4:fig:generated_quantities_simulation_time_varying_coverage_plot} displays coverage of the posterior 80\% credible intervals constructed for the time-varying parameters, with only one time point for \( \alpha \) demonstrating less than nominal coverage.
+We observe slightly less conservative coverage when examining the latent compartments in Figure~\ref{ch_4:fig:generated_quantities_simulation_compartment_coverage_plot}, with the \( D \) compartment falling to around 60\% coverage at some points.
+In addition to coverage, we also consider posterior contraction.
+Figure~\ref{ch_4:fig:generated_quantities_simulation_scalar_shrinkage_plot} shows contraction of the scalar parameters, with most parameters demonstrating nearly no contraction.
+Notable exceptions to this are \( \sigma_{R_0} \), and \( \sigma_\alpha \), which exhibit positive contraction.
+Figure~\ref{ch_4:fig:generated_quantities_simulation_time_varying_shrinkage_plot} shows contraction of the time-varying parameters, with all parameters exhibiting a high amount of positive contraction.
+Similarly, the latent compartments also demonstrate a large degree of positive contraction in Figure~\ref{ch_4:fig:generated_quantities_simulation_compartment_shrinkage_plot}.
+
+We used the \texttt{epidemia} R package \citep{epidemia} to fit a state-of-the-art method for effective reproduction number estimation (\( R_t \)), to the same 200 simulated datasets.
+This semi-mechanistic method does not attempt to estimate the unobserved number of susceptible and recovered individuals and does not account for changes in testing volume.
+See Supplementary Section \ref{ch_4:epidemia_section} for a brief description of the \texttt{epidemia} statistical model.
+Metrics based on estimates of \( R_t \) from the true model and \texttt{epidemia} for the simulation study are presented in Figure~\ref{ch_4:fig:rt_comparison_metrics_plot}.
+We assess the envelope, which is the proportion of time points which the 80\% posterior credible interval contains the true \( R_t \) value specified in the simulation.
+Mean credible interval width (MCIW) is calculated as the mean of credible interval widths across time points within a simulation replication.
+Absolute deviation is a measure of bias, and is calculated as the mean of the absolute difference between the posterior median and the true \( R_t \) value at each time point.
+The mean absolute sequential variation (MASV) is calculated as the mean of the absolute difference between the posterior median at a time point and the posterior median at the previous time point.
+In all metrics, the true model fit achieves the superior result.
+The envelope for \texttt{epidemia} is typically around 50\%, while it is near 100\% for the true model.
+The mean credible interval width for \texttt{epidemia} (around 0.50) is larger than for the true model (around 0.35).
+The \texttt{epidemia} results also indicate more bias compared to the true model, as measured by the absolute deviation (0.20 for epidemia vs 0.05 for the true model).
+Additionally, the true model has a mean absolute sequential variation close to that of the simulated parameters (around 0.085), while the MASV reported by \texttt{epidemia} is larger (around 0.10).
+\par
+\subsection{Application to Orange County, California Data}
+Next, we apply our Bayesian inferential procedure to COVID-19 surveillance data collected in Orange County, California between March 30, 2020 and January 17, 2021.
+We again used four Markov chains run in parallel to draw a total of 1000 posterior samples.
+By the end of the modeling period, approximately 4\% of Orange County residents were at least partially vaccinated.
+% https://web.archive.org/web/20210119193138/https://occovid19.ochealthinfo.com/vaccines-administered-oc
+Because our model does not incorporate vaccination directly, it doesn't make sense to use our model beyond January 2021.
+Throughout the modeling period, a variety of non-pharmaceutical interventions were enacted and sometimes lifted at the state, county, and city level.
+Notably, in-person school closures, indoor dining bans, and mask mandates were in effect for most or all of this period.
+Fitting the model took approximately 7.5 hours to generate 1,000 posterior samples from 4 chains, totaling around 29 CPU hours.
+These run times show that our model can be fit frequently enough to be useful for a real-time policy response.
+This number of chains and posterior samples resulted in a satisfactory effective sample size for posterior inference.
+Convergence and mixing were assessed using potential scale reduction factors, effective posterior sample sizes, and traceplots of model parameters, which are presented in Appendix \ref{ch_4:sec:convergence-diagnostics}.
+Our main interest is in understanding differences in transmission dynamics and surveillance efforts throughout this period.
+Since our model is highly parametric, we used existing knowledge of SARS-CoV-2 transmission dynamics to formulate informative priors for all model parameters that we list in Table~\ref{ch_4:table:priors}.
+We briefly highlight some of our assumptions.
+Our priors for the initial compartment sizes reflect our belief that the number of infections was small, but potentially underreported by a factor of 10,  at the beginning of the pandemic.
+Since our observation period starts close to the stay-at-home order taking effect in California, we assume that the March 2020 basic reproduction number should be around 1.0 to reflect reduced contacts during this period.
+Lengths of latent and infectious periods \textit{a priori} assumed to be 0.8 and 1.2 weeks respectively, with substantial variance.
+Based on Orange County, CA seroprevalence study, we assume initial infection-to-fatality ratio to be around 0.4\% \citep{Bruckner2021}.
+We compare reported deaths in Orange County,  CA with estimates of U.S. county-specific excess mortality to set the prior for death reporting probability to be around 0.9 \citep{stokes2020assessing}.
+Prior and posterior distributional summaries of all model parameters are available in Supplementary Figures~\ref{ch_4:fig:scalar_sensitivity_plot} and \ref{ch_4:fig:time_varying_sensitivity_plot}.
+These figures also contain the results of our sensitivity analysis, where we examined the effects of our prior assumptions on our inference.
+Our main conclusion is our results are not sensitive to reasonable prior perturbations.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{main_posterior_results_plot.pdf}
+    \caption{Posterior distributions of the time-varying basic reproductive number $R_0$, effective reproductive number $R_e$, infection-to-fatality ratio (IFR), proportion in the proportional log-odds model of the beta-binomial observational model for cases $\alpha$, weekly latent:case ratio, and cumulative latent:case ratio.
+    Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.}
+    \label{ch_4:fig:main_posterior_results_plot}
+\end{figure}
+
+The upper-left plot of Figure~\ref{ch_4:fig:main_posterior_results_plot} presents the posterior distribution of the basic reproductive number ($R_0$) for Orange County.
+Throughout the late spring and summer, the basic reproductive number is estimated to be slightly above 1.0, with some probability of being below 1.0 in the early fall.
+Beginning in October, the basic reproductive number begins to rise and surpasses 2.0 at the peak of the winter wave.
+This rise in the fall may be associated with the school re-openings that occurred around this time. % https://www.ocregister.com/2020/09/15/heres-what-we-know-about-in-person-learning-plans-for-orange-county-public-school-districts/
+Despite the high basic reproductive number throughout the modeling period, the upper-right plot of Figure~\ref{ch_4:fig:main_posterior_results_plot} shows that the effective reproductive fell below 1.0 for much of the summer and again in January, following the winter surge, allowing us to separate the effects of reducing the average community contact rate and accumulated infection-induced immunity.
+We also apply the \texttt{epidemia} method to the Orange County data and plot the results in Figure~\ref{ch_4:fig:rt_comparison_oc_data_plot}.
+From this, we observe that the two methods lead to similar conclusions about the posterior distribution of \( R_t \).
+At all but one of the time points, the 80\% credible intervals of the posteriors from both methods overlap with one another, but the full model appears to generally produce smaller credible intervals, especially near the beginning of the fitting period.
+Additionally, the full model produces a smoother posterior than the \texttt{epidemia} model.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{rt_comparison_oc_data_plot}
+    \caption{Posterior inference for the effective reproduction number from the full model and \texttt{epidemia} fit to the Orange County data.}
+    \label{ch_4:fig:rt_comparison_oc_data_plot}
+\end{figure}
+\par
+We proceed with describing inference results for the other two time-varying parameters in our model: infection-to-fatality ratio \( \eta \)
+and the parameter $\alpha$ that governs the relationship between testing positivity and the true proportion of newly infected individuals in the population.
+The posterior distribution of the infection-to-fatality ratio is presented in the middle-left plot of Figure~\ref{ch_4:fig:main_posterior_results_plot}.
+The IFR is estimated to be consistent over time, hovering around 0.3\%, but our estimates are less certain near the end of the modeling period.
+This potential rise in IFR could have been caused by a combination of the overwhelmed healthcare system and the increasing prevalence of the Alpha variant at this time, which has been tied to more severe outcomes \citep{grint2021severity}.
+The middle-right plot and bottom plots of Figure~\ref{ch_4:fig:main_posterior_results_plot} present three perspectives on testing policy and case detection: the posterior \( \alpha \), the weekly latent:case ratio, and the cumulative latent:case ratio.
+Generally, \( \alpha \), drifts lower over time, indicating that testing policy became less preferential toward selecting infected individuals as testing became more accessible.
+This trend is reversed slightly during the summer and winter waves, which is reflected in the decreasing weekly latent:case ratio during these times.
+The cumulative latent:case ratio also drifts lower over time, eventually arriving at a final cumulative latent:case ratio of 4:1 -- 9:1.
+\par
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{dip_plot.pdf}
+    \caption{Latent and observed cumulative death (left) and incidence (center) trajectories and latent prevalence trajectories (right) in Orange County, CA (population 3.2 million).
+    Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.
+    Black circles denote observed data.
+    Note that the posterior predictive distributions are of latent deaths and cases are not forecasts of their observed counterparts.
+    Forecasts are plotted in Figure~\ref{ch_4:fig:combined_forecast_plot}.}
+    \label{ch_4:fig:dip_plot}
+\end{figure}
+
+We plot posterior medians and Bayesian credible intervals of the latent cumulative death counts ($N_{ID}(t)$) between March 2020 and January 2021, using three credibility levels shown in the left plot of Figure~\ref{ch_4:fig:dip_plot}.
+Reported death counts are shown as black circles in the same plot.
+The plot reflects an overall death reporting rate of 87\% - 94\%.
+The center plot of Figure~\ref{ch_4:fig:dip_plot} shows the posterior distributions of the cumulative number of infections ($N_{SE}(t)$) occurred in Orange County, with the cumulative observed cases displayed as black circles.
+We estimate that 32--72\% of Orange County residents experienced SARS-CoV-2 infection by mid-January 2021.
+As in Figure~\ref{ch_4:fig:main_posterior_results_plot}, this shows a cumulative latent:case ratio of 4:1 -- 9:1, with 1/3 -- 2/3 of all Orange County residents having been infected by the end of January 2021.
+From this plot, we also note that our posterior estimate of seroprevalence in mid-August of 2020 (11.2\%-13.7\%) closely matches the 11.5\% estimate from \citep{Bruckner2021}. We explicitly used this seroprevalence data in our inference, so this is unsurprising.
+The right plot of Figure~\ref{ch_4:fig:dip_plot} shows the prevalence of SARS-CoV-2 infected individuals at a particular time, ($E(t) + I(t)$).
+At the peak of the winter wave, we estimate that 7.8\% -- 14.9\% of Orange County residents had an active infection at the same time.
+\par
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=1.0\columnwidth]{combined_forecast_plot}
+    \caption{Forecast distributions for observed deaths (left column) and testing positivity (right column).
+    Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.
+    Observed values are presented as black circles.}
+    \label{ch_4:fig:combined_forecast_plot}
+\end{figure}
+
+Finally, we turn to model-based forecasting of observable quantities.
+In Figure~\ref{ch_4:fig:combined_forecast_plot}, we present one week and four week ahead forecasts of observed deaths and test positivity.
+The credible intervals shown for a given date are generated from a model that is fit to data from March 30, 2020 up to 1 week or 4 weeks prior to the given date.
+The forecasts are produced by augmenting the posterior time-varying parameters by carrying forward the previous mean values in \eqref{ch_4:eqn:GMRF} and solving the ODEs from \eqref{ch_4:eqn:model_ODEs} into the future.
+Since this model makes use of the seroprevalence data, we only produce forecasts for times after this data is available, beginning in late August 2020.
+Because forecasting cases with this model is impossible without knowing how many tests will be conducted in the future, we focus on the positivity fraction (cases divided by the total number of tests) instead.
+As in the other figures,  we use three credibility levels in Figure~\ref{ch_4:fig:combined_forecast_plot}, and observed values are displayed as black circles.
+Our one-week ahead probabilistic forecasts for both observed deaths in the upper half of Figure~\ref{ch_4:fig:combined_forecast_plot} generally capture the observed values, indicating our method to be precise and well calibrated.
+The four-week ahead forecasts predict the data well in times of relative stability, but exhibit poor performance when time-varying parameters are changing rapidly, such as during the winter wave.
+In this case, when forecasting four weeks out, we tend to underestimate the rise at the beginning of the wave and overestimate the fall at the end of the wave.
+This is not of major concern because the four-week time horizon is long enough that interventions and behavioral changes may take effect that are not foreseen by the model.
+Scenario-based modeling, where some values are specified for the future time-varying parameters, rather than simulating from the prior, may be more appropriate for this task.
+\par
+We now compare our forecasting results to three variants of our model, which make use of different data streams.
+Each model can either be conditioned on tests or not conditioned on tests.
+When conditioning on tests, we use the case emission model given by \eqref{ch_4:eqn:caseemission}.
+When not conditioning on tests, we use the case emission model given by \eqref{ch_4:eqn:altcaseemission}.
+Each model can also make use of the seroprevalence data or not.
+When using the seroprevalence data, we use the emission distribution given by \eqref{ch_4:eqn:seroprevemission}.
+When not using the seroprevalence data, no emission distribution is used.
+The model results discussed above are for the model which is conditioned on tests and uses the seroprevalence data.
+We compare these models by calculating the Continuous Ranked Probability Score (CRPS) \citep{CRPS}, as implemented in the \texttt{scoringRules} package \citep{scoringRules}, facilitated by the \texttt{scoringutils} package \citep{scoringutils}.
+We present comparisons of these scores in Figure~\ref{ch_4:fig:forecast_crps_plot}.
+We only show scores based on deaths because comparisons based on cases would require developing a method to forecast future test counts, which we have not considered in this work.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=0.75\columnwidth]{forecast_crps_plot}
+    \caption{Comparison of Continuous Rank Probability Score for models fit to the Orange County data.
+    Lower is better.}
+    \label{ch_4:fig:forecast_crps_plot}
+\end{figure}
+
+From Figure~\ref{ch_4:fig:forecast_crps_plot}, we observe that all models appear to perform similarly throughout much of the assessed time period.
+However, in both one week and four week ahead forecasts, the models which are conditioned on tests tend to score slightly better in the late summer period, when testing policy was rapidly changing.
+During the winter surge, the differences in the model forecasting abilities are more pronounced, with the models not conditioned on tests appearing to be consistently superior to those which are conditioned on tests.
+There is no clear pattern differentiating the models which use the seroprevalence data from those that do not.
+
+\section{Discussion}
+\label{ch_4:sec:discussion}
+We developed a Bayesian SARS-CoV-2 transmission model that integrates information from incidence, mortality, and seroprevalence data.
+Our approach combines an ODE-based SEIR compartmental model of SARS-CoV-2 transmission dynamics and a carefully constructed surveillance model for cases,  deaths, and seroprevalence.
+Importantly, our method accounts for variability in the number of SARS-CoV-2 diagnostics tests across time, thus ensuring that we do not confuse increases in testing with increases in incidence.
+Another distinguishing feature of our approach is nonparametric modeling of changes in key transmission and surveillance model parameters.
+Since we are integrating multiple sources of information, we can afford to be fairly ambitious and to include three such parameters into our model.
+Changes in one of these parameters accounts for changing the strength of preferentially testing SARS-CoV-2 infected individuals, which helps us avoid an important source of potential bias when inferring transmission model parameters.
+We reconstruct latent dynamics of the two pre-delta COVID-19 waves in Orange County, CA and estimate that 32--72\% of Orange County residents experienced SARS-CoV-2 infection by mid-January 2021.
+Retrospective analysis shows that our model produces accurate and well calibrated one week ahead and reasonable four week ahead forecasts, but the latter lack accuracy during periods when SARS-CoV-2 transmission dynamics and mitigation policies change rapidly.
+Additionally, we evaluated our forecasting performance when including or excluding certain data streams (test counts and seroprevalence study data) and found that incorporating negative test counts into our model was useful near the beginning of the modeling period, when testing policy was changing rapidly, but less useful when the policy became consistent.
+We also found that excluding seroprevalence data did not negatively affect our forecasting ability.
+
+Our primary focus in this work was on developing a framework for integrating multiple data streams into a transmission model.
+However, there are a number of extensions we could pursue to improve the realism of the assumed transmission dynamics and strengthen the model's forecasting skill.
+Our model assumes that the population of interest is well mixed and that all individuals in the population infect others and get infected at the same per capita rate.
+In fact, the actual SARS-CoV-2 transmission process is much more complex because individuals come into contact with each other based on their geographical and social network proximity.
+Furthermore, it is well established that COVID-19 disease progression process depends on the individual's age and other characteristics \citep{kim2020risk,bhargava2020predictors, petrilli2020factors}.
+Similarly, all transmission model parameters may depend on the vaccination status of an individual.
+Fortunately, compartmental models can be extended to account for these complexities.
+For example, we can stratify each model compartment by age, vaccination status, and geographical location, as is commonly done in epidemiological modeling \citep{li2008continuous, van2008spatial}.
+\par
+We have addressed changes in control/mitigation measures and in human behavior by nonparametrically modeling variability of some of the SARS-CoV-2 transmission model parameters across time.
+\citet{anderson2020} and \citet{miller2020} use parametric approaches to model the effects of mitigation measures on $R_0$.
+It would be interesting to try a semi-parametric approach that combines parametric and non-parametric components, which would allow us to include indicators of human behavior (e.g., mobility data as in \citet{miller2020}) into our inference and forecasting.
+\par
+In this paper, we have sidestepped the thorny issue of reporting delays by restricting our analyses to time periods in which the data have stabilized.
+Hence, our analyses should be robust to reporting delays so long as we have either ``run out the clock" on the extent of the delays or reporting delays do not differ between positive and negative COVID-19 diagnostic tests. A useful set of extensions that would make our model more useful for real-time surveillance involve estimating the reporting delay distribution \citep{hohle2014bayesian,stoner2019multivariate} and using this distribution in our surveillance model.
+\par
+Finally, we would like to point out that our deterministic representation of the latent epidemic process could be substituted for a fully stochastic model where the latent epidemic is represented as a Markov jump process, albeit with some loss of computational efficiency. In our large population setting, this could be achieved via simulation-based methods \citep{breto2009time, andrieu2010particle,dukic2012tracking}, data augmentation \citep{pooley2015using,nguyen2021stochastic}, or a variety of approximations of the latent stochastic epidemic process \citep{lekone2006statistical,cauchemez2008likelihood,fintzi2020linear}.
+Scaling our model to the state or national level could be done by analyzing multiple counties independently or by building a Bayesian hierarchical model that would allow borrowing information among counties.
+An even more ambitious undertaking would be allowing importation/exportation events across county lines, as was done by \citet{pei2021burden}. We hope that our methodology and other works in this spirit, along with better quality of surveillance data, will provide us with better predictive analytics tools when the next pandemic strikes.
