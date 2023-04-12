@@ -1,0 +1,67 @@
+\usepackage{quiver}
+% Tikz figures
+\tikzcdset{
+    cells = {
+        nodes = {draw, circle}
+        },
+        arrows = {shorten = 1mm}
+}
+
+% Floats
+\usepackage{float}
+\floatplacement{figure}{H}
+\floatplacement{table}{H}
+
+% Chapter 3
+\DeclareMathOperator{\Var}{Var}
+
+
+% Chapter 4
+\usepackage{tikz}
+\usepackage{dsfont}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{booktabs}
+
+\usetikzlibrary{arrows}
+
+\tikzset{ shorten <>/.style={ shorten >=#1, shorten <=#1 } }
+
+
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\sct}{SARS-CoV-2 }
+\newcommand{\rmd}{\mathrm{d}}
+\newcommand{\deriv}[2]{\frac{\rmd#1}{\rmd#2}}
+\newcommand{\bX}{\mathbf{X}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bZ}{\mathbf{Z}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bN}{\mathbf{N}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\btau}{\boldsymbol{\tau}}
+\newcommand{\etatilde}{\tilde{\eta}}
+\newcommand{\alphatilde}{\tilde{\alpha}}
+\newcommand{\rhoytilde}{\tilde{\rho}^Y}
+\newcommand{\rtilde}{\tilde{R}_0}
+\newcommand{\betatilde}{\boldsymbol{\tilde{\eta}}}
+\newcommand{\balphatilde}{\boldsymbol{\tilde{\alpha}}}
+\newcommand{\brtilde}{\boldsymbol{\tilde{R}_0}}
+\newcommand{\brhoytilde}{\boldsymbol{\tilde{\rho}^Y}}
+\newcommand{\e}{\mathrm{e}}
+\newcommand{\til}[1]{\widetilde{#1}}
+\newcommand{\bT}{\mathbf{T}}
+\newcommand{\bt}{\mathbf{t}}
+\newcommand{\btheta}{\boldsymbol{\theta}}
+\newcommand{\blambda}{\boldsymbol{\lambda}}
+
+\DeclareMathOperator{\logit}{logit}
+\DeclareMathOperator{\expit}{expit}
+
+\newcommand{\Ie}{I_{e}}
+\newcommand{\Is}{I_{p}}
+
+\newcommand{\1}[1]{\mathds{1}\left[#1\right]}
