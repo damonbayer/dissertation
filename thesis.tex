@@ -84,7 +84,17 @@
 % Very handy to speed up compilation if you're working on a certain
 % part of your thesis. It conserves page numbers, references, etc.
 % even for non-included files.
-%\includeonly{chapter1}
+\includeonly{
+ch_1_introduction,
+ch_2_background,
+% ch_3_content_1,
+ch_4_content_2,
+ch_5_content_3,
+ch_6_discussion,
+% appendix_ch_3_content_1,
+appendix_ch_4_content_2,
+appendix_ch_5_content_3
+}
 
 % Personal packages
 \usepackage{quiver}
@@ -113,6 +123,7 @@
 \include{ch_4_content_2}
 \include{ch_5_content_3}
 \include{ch_6_discussion}
+
 % ... and so on
 
 % These commands fix an odd problem in which the bibliography line
@@ -134,7 +145,10 @@
 
 % If you have an appendix, it should come after the references.
 \begin{appendices}
-\include{appendix}
+\appendix
+\include{appendix_ch_3_content_1}
+\include{appendix_ch_4_content_2}
+\include{appendix_ch_5_content_3}
 \end{appendices}
 
 \end{document}

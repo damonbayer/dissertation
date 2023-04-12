@@ -26,11 +26,11 @@ Another recent advancement is the method developed by Rosin et al\cite{rosin2021
 This problem has also previously been addressed in Bayesian literature, recently by Gelman and Carpenter. \cite{GelmanBayes}
 
 We work up to our ultimate goal in stages.
-First, in Section~\ref{sec:srs-imperfect}, we propose confidence intervals for simple random samples where prevalence is assessed with an assay with imperfect sensitivity and/or specificity.
-Next, in Section~\ref{sec:weight-perfect}, we present confidence intervals for weighted samples where prevalence is assessed with an assay without misclassification.
-In Section~\ref{sec:weight-imperfect}, we combine these methods to create confidence intervals for weighted samples where prevalence is assessed with an assay with imperfect sensitivity and specificity.
+First, in Section~\ref{ch_3:sec:srs-imperfect}, we propose confidence intervals for simple random samples where prevalence is assessed with an assay with imperfect sensitivity and/or specificity.
+Next, in Section~\ref{ch_3:sec:weight-perfect}, we present confidence intervals for weighted samples where prevalence is assessed with an assay without misclassification.
+In Section~\ref{ch_3:sec:weight-imperfect}, we combine these methods to create confidence intervals for weighted samples where prevalence is assessed with an assay with imperfect sensitivity and specificity.
 Because the combined method reduces to one of the first two methods as a special case, we can think of the first two stages as testing the combined method in those cases.
-Finally, in Section~\ref{sec:complex-surveys} we show how certain complex surveys may fit into the format for our new method.
+Finally, in Section~\ref{ch_3:sec:complex-surveys} we show how certain complex surveys may fit into the format for our new method.
 
 In simulations, we compare our method to established frequentist competitors and show through simulations that it beats the best of those in each of the three stages with respect to guaranteeing coverage.
 However, in some simulated settings, our proposed methods are overly conservative, meaning that they demonstrate higher than nominal coverage, while competitor methods maintain closer to nominal coverage.
@@ -41,7 +41,7 @@ The exact method of DiCiccio, et al\cite{DiCi:2021} would guarantee coverage, al
 \section{Confidence Interval Methods}
 
 \subsection{Notation and Problem Set-up}
-\label{sec-notation}
+\label{ch_3:sec-notation}
 
 
 To introduce notation, consider first the stratified simple random sample.
@@ -58,18 +58,18 @@ Therefore, the population prevalence is
 
 \begin{equation}
     \beta^* = \frac{\sum_{i=1}^K N_i \theta_i^*}{\sum_{j=1}^K N_j} = \sum_{i=1}^K w_i \theta_i^*,
-    \label{eq:pop-prev}
+    \label{ch_3:eq:pop-prev}
 \end{equation}
 
 and the apparent prevalence is
 
 \begin{equation}
     \beta = \frac{\sum_{i=1}^K N_i \theta_i}{\sum_{j=1}^K N_j} = \sum_{i=1}^K w_i \theta_i,
-    \label{eq:app-prev}
+    \label{ch_3:eq:app-prev}
 \end{equation}
 
 where \( w_i = N_i / \sum_{j=1}^K N_j \) and, therefore, \( \sum_{i=1}^K w_i = 1 \).
-This set-up will approximately work for other complex survey samples, where we can estimate survey weights such that the complex survey sample may be treated as a multinomial sample with probabilities proportional to those weights (see Section~\ref{sec:complex-surveys}).
+This set-up will approximately work for other complex survey samples, where we can estimate survey weights such that the complex survey sample may be treated as a multinomial sample with probabilities proportional to those weights (see Section~\ref{ch_3:sec:complex-surveys}).
 
 We can relate $\theta_i$ and $\theta_i^*$ using the sensitivity ($\phi_p$) and specificity (1-$\phi_n$) of the assay,
 where $\phi_p$ and $\phi_n$ are the proportion of positive assays from a population of positive controls (i.e., individuals known to have the disease) and
@@ -85,7 +85,7 @@ and we have
             =  \sum_{i=1}^K w_i \left( \frac{\theta_i - \phi_n}{\phi_p - \phi_n} \right) \\
             =&   \frac{\sum_{i=1}^K w_i \theta_i}{\phi_p - \phi_n} - \frac{\phi_n \sum_{i=1}^K w_i}{\phi_p - \phi_n}
             =   \frac{\sum_{i=1}^K w_i \theta_i}{\phi_p - \phi_n} - \frac{\phi_n}{\phi_p - \phi_n}
-            \label{eq:long-beta}
+            \label{ch_3:eq:long-beta}
 \end{split}
 \end{align}
 
@@ -97,21 +97,21 @@ Thus, \( C_n \sim \operatorname{Binomial}(m_n, \phi_n) \) where \( 1 - \phi_n \)
 Let \( \hat{\theta}_i = \frac{X_i}{n_i} \), \( \hat{\phi}_n = \frac{C_n}{m_n} \), and \( \hat{\phi}_p = \frac{C_p}{m_p} \).
 Then a plug-in estimator for \( \beta^* \) is
 \begin{equation}
-    \hat{\beta}^* = \frac{\sum_{i=1}^K w_i \hat{\theta}_i}{\hat{\phi}_p - \hat{\phi}_n} - \frac{\hat{\phi}_n}{\hat{\phi}_p - \hat{\phi}_n}. \label{eq:betastarhat}
+    \hat{\beta}^* = \frac{\sum_{i=1}^K w_i \hat{\theta}_i}{\hat{\phi}_p - \hat{\phi}_n} - \frac{\hat{\phi}_n}{\hat{\phi}_p - \hat{\phi}_n}. \label{ch_3:eq:betastarhat}
 \end{equation}
 
 This estimator serves as an important basis for developing confidence intervals in this work.
-Section~\ref{sec:srs-imperfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K = 1 \), \( \phi_n > 0 \), \( \phi_p < 1 \), i.e., estimating prevalence from a simple random sample with an imperfect assay.
-Section~\ref{sec:weight-perfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K > 1 \), \( \phi_n = 0 \), \( \phi_p = 1 \), i.e., estimating prevalence from a weighted sample with a perfect assay.
-Section~\ref{sec:weight-imperfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K > 1 \), \( \phi_n > 0 \), \( \phi_p < 1 \), i.e., estimating prevalence from a weighted sample with an imperfect assay.
+Section~\ref{ch_3:sec:srs-imperfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K = 1 \), \( \phi_n > 0 \), \( \phi_p < 1 \), i.e., estimating prevalence from a simple random sample with an imperfect assay.
+Section~\ref{ch_3:sec:weight-perfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K > 1 \), \( \phi_n = 0 \), \( \phi_p = 1 \), i.e., estimating prevalence from a weighted sample with a perfect assay.
+Section~\ref{ch_3:sec:weight-imperfect} is concerned with confidence intervals for \( \beta^* \) in the case where \( K > 1 \), \( \phi_n > 0 \), \( \phi_p < 1 \), i.e., estimating prevalence from a weighted sample with an imperfect assay.
 
 \subsection{Estimating Prevalence from a Simple Random Sample with an Imperfect Assay}
-\label{sec:srs-imperfect}
+\label{ch_3:sec:srs-imperfect}
 
 First we consider the scenario where \( K = 1 \), \( \phi_n > 0 \), and \( \phi_p < 1 \).
 We develop a confidence interval for the population prevalence, \( \beta^* \).
-When \( K = 1 \), the estimand in Equation~\ref{eq:long-beta} becomes $\beta^* = (\theta_1 - \phi_n)/(\phi_p-\phi_n)$. We have $\phi_p > \phi_n$ for any useful assay, and since the sample is a mixture of individuals with and without the disease of interest, $\phi_p \geq \theta_1 \geq \phi_n$. The estimator of $\beta^*$ is
-%in Equation~\ref{eq:betastarhat} becomes
+When \( K = 1 \), the estimand in Equation~\ref{ch_3:eq:long-beta} becomes $\beta^* = (\theta_1 - \phi_n)/(\phi_p-\phi_n)$. We have $\phi_p > \phi_n$ for any useful assay, and since the sample is a mixture of individuals with and without the disease of interest, $\phi_p \geq \theta_1 \geq \phi_n$. The estimator of $\beta^*$ is
+%in Equation~\ref{ch_3:eq:betastarhat} becomes
 
 \begin{equation}
 \hat{\beta}^* \equiv
@@ -125,7 +125,7 @@ g(\hat{\theta}_1, \hat{\phi}_n, \hat{\phi}_p)
 0 & \mbox{ otherwise.}
 \end{array}
 \right.
-\label{eq:srs-beta-est}
+\label{ch_3:eq:srs-beta-est}
 \end{equation}
 % Damon, that definition is arbitrary, it is just used so that
 
@@ -142,7 +142,7 @@ Denote those one-sided intervals by $[L({\bf x},1-\alpha), \infty)$ and $(-\inft
 For fixed ${\bf x}$, define the lower and upper confidence distribution random variables as $L({\bf x}, A)$ and $U({\bf x},B)$, where $A$ and $B$ are independent uniform random variables.
 Then a $100(1-\alpha)\%$ central confidence interval has the $(\alpha/2)$th quantile of $L({\bf x}, A)$ as the lower limit, and the $(1-\alpha/2)$th quantile of $U({\bf x},B)$ as the upper limit.
 
-Because each estimated component in Equation~\ref{eq:srs-beta-est} is a binomial probability parameter, we now focus on the confidence distributions associated with the exact binomial confidence interval.
+Because each estimated component in Equation~\ref{ch_3:eq:srs-beta-est} is a binomial probability parameter, we now focus on the confidence distributions associated with the exact binomial confidence interval.
 For a binomial experiment with \( x \) successes out of \( n \) trials, the lower confidence distribution is \( \operatorname{Beta}(x, n - x + 1) \) with associated random variable \( B^L \), and the upper confidence distribution is \( \operatorname{Beta}(x + 1, n - x)\) with random variable \( B^U \), where for $a>0$ we let \( \operatorname{Beta}(0,a) \) and \( \operatorname{Beta}(a,0) \) be point masses at 0 and 1, respectively.
 This result comes from the relationship between the binomial and beta distributions, namely $\mathrm{Pr}[X \leq x] = \mathrm{Pr}[B > \theta]$, where $B \sim \operatorname{Beta}(x + 1, n - x)$ for $x \in \left\{ -1,0, 1, \ldots, n \right\}$ (see e.g., \cite[Section~2]{Blyth1986}, \cite[Section~S2]{Fay2021}).
 Additionally, in the binomial case, the lower and upper confidence distributions are equivalent to
@@ -150,23 +150,23 @@ the posterior distributions that result from using well-calibrated null preferen
 Let \( q(a, W) \) be the \( a \)th quantile of a random variable \( W \). Then the exact \( 1 - \alpha \)\% central confidence interval of Clopper-Pearson\cite{10.1093/biomet/26.4.404} for the binomial parameter is
 \begin{equation}
 \left\{ q \left( \frac{\alpha}{2}, B^L \right), q \left( 1 - \frac{\alpha}{2}, B^U, \right) \right\}.
-\label{eq:C-P}
+\label{ch_3:eq:C-P}
 \end{equation}
 
 Fay et al\cite{FayP:2015} proposed the melding method for obtaining confidence intervals for functions of two parameters that are monotonic within the allowable range for each parameter, given the other is fixed.
 The melding method uses quantiles of those functions except replacing lower or upper confidence distribution random variables for their associated parameter in the function.
 Here, we generalize that method to $\beta^*$, which is a function of three parameters.
 When $1 \geq \phi_p > \theta_1 > \phi_n \geq 0$ then $\beta^*$ is monotonically increasing in $\theta_1$, monotonically decreasing in $\phi_p$, and monotonically decreasing in $\phi_n$.
-For an assessment of monotonicity in other scenarios, see Appendix~\ref{monotonicity}.
+For an assessment of monotonicity in other scenarios, see Appendix~\ref{ch_3:sec:monotonicity}.
 Then the \( 1-\alpha \)\% confidence interval for \( \beta^* \) is
 
 \begin{equation}
     \left\{ q \left( \frac{\alpha}{2}, g \left\{ B_{\theta_1}^L, B_{\phi_n}^U, B_{\phi_p}^U \right\} \right),
             q \left( 1 - \frac{\alpha}{2}, g \left\{ B_{\theta_1}^U, B_{\phi_n}^L, B_{\phi_p}^L \right\}   \right) \right\}.
-\label{eq:srs-conf-int}
+\label{ch_3:eq:srs-conf-int}
 \end{equation}
-where $g(\cdot)$ is defined in equation~\ref{eq:srs-beta-est}.
-In equation~\ref{eq:srs-conf-int}, the choice of confidence distribution random variable (lower or upper) is determined by the associated the direction of the monotonicity to attempt to ensure coverage.
+where $g(\cdot)$ is defined in equation~\ref{ch_3:eq:srs-beta-est}.
+In equation~\ref{ch_3:eq:srs-conf-int}, the choice of confidence distribution random variable (lower or upper) is determined by the associated the direction of the monotonicity to attempt to ensure coverage.
 As the sample sizes (e.g., $n_i$, $m_p$, and $m_n$) increase, there is little difference between the lower and upper confidence distributions.
 
 
@@ -194,7 +194,7 @@ where \( q_Z \equiv q\left( 1 - \frac{\alpha}{2}, Z \right)\), \( Z \sim N(0,1) 
 \end{align*}
 
 \subsection{Estimating Prevalence from a Weighted Sample with a Perfect Assay}
-\label{sec:weight-perfect}
+\label{ch_3:sec:weight-perfect}
 
 Next, we present a confidence interval for the population prevalence, \( \beta^* \), in the scenario \( K > 1 \), \( \phi_n = 0 \), \( \phi_p = 1 \).
 Our method is a straightforward adaptation of the gamma confidence interval presented in Fay and Feuer,\cite{FayF:1997} which was developed to create confidence intervals for a standardized population rate which is assumed to be a weighted sum of Poisson rate parameters.
@@ -241,7 +241,7 @@ where
 
 \begin{equation}
    n_{\text{eff}} = \frac{\left( \sum_{i=1}^k w_i \hat{\theta}_i \right) \left(1 - \sum_{i=1}^k w_i \hat{\theta}_i \right)}{\sum_{i=1}^k \frac{w_i^2}{n_i}\hat{\theta}_i}.
-   \label{eq:neff}
+   \label{ch_3:eq:neff}
 \end{equation}
 
 In the case where \( \sum_{i=1}^k \frac{w_i^2}{n_i}\hat{\theta}_i = 0 \), we instead let \( n_{\text{eff}} = \sum_{i=1}^k n_i \).
@@ -253,7 +253,7 @@ This interval is given by
     \left( q \left( \frac{\alpha}{2}, B^L_{KG} \right), q \left( 1 - \frac{\alpha}{2}, B^U_{KG} \right) \right),
 \end{equation}
 
-where, analogously to the Clopper-Pearson interval (see Equation~\ref{eq:C-P}),
+where, analogously to the Clopper-Pearson interval (see Equation~\ref{ch_3:eq:C-P}),
 \begin{align*}
     % B^L_{KG} \sim \operatorname{Beta}\left(n_{\text{eff}} \sum_{i=1}^k w_i \hat{\theta}_i, n_{\text{eff}} \left(1 -  \sum_{i=1}^k w_i \hat{\theta}_i\right) + 1\right)
     B^L_{KG} \sim& \operatorname{Beta}\left(x_{\text{eff}}, n_{\text{eff}} - x_{\text{eff}} + 1 \right), &
@@ -261,20 +261,20 @@ where, analogously to the Clopper-Pearson interval (see Equation~\ref{eq:C-P}),
     B^U_{KG} \sim& \operatorname{Beta}\left(x_{\text{eff}} + 1, n_{\text{eff}} - x_{\text{eff}} \right),
 \end{align*}
 
-with \( x_{\text{eff}} = n_{\text{eff}} \sum_{i=1}^k w_i \hat{\theta}_i \), and \( n_{\text{eff}} \) defined in Equation~\ref{eq:neff}.
+with \( x_{\text{eff}} = n_{\text{eff}} \sum_{i=1}^k w_i \hat{\theta}_i \), and \( n_{\text{eff}} \) defined in Equation~\ref{ch_3:eq:neff}.
 Although Dean and Pagano\cite{Dean:2015} expressed this in terms of \(F\)-distributions, the beta distribution representation is equivalent.
 
 \subsection{Estimating Prevalence from a Weighted Sample with an Imperfect Assay}
-\label{sec:weight-imperfect}
+\label{ch_3:sec:weight-imperfect}
 
 Lastly, we develop a confidence interval for the population prevalence, \( \beta^* \), in the case where \( K > 1 \), \( \phi_n > 0 \), \( \phi_p < 1 \).
 
-The two methods we discuss are closely related to each other and the methods discussed in Sections~\ref{sec:srs-imperfect} and \ref{sec:weight-perfect}.
-As in Section~\ref{sec:srs-imperfect}, we use the melding method\cite{FayP:2015} to create \( 1 - \alpha \)\% confidence interval very similar to Equation~\ref{eq:srs-conf-int}.
-The confidence distributions for \( \phi_p \) and \( \phi_n \) are the same Beta distributions as in Section~\ref{sec:srs-imperfect}.
+The two methods we discuss are closely related to each other and the methods discussed in Sections~\ref{ch_3:sec:srs-imperfect} and \ref{ch_3:sec:weight-perfect}.
+As in Section~\ref{ch_3:sec:srs-imperfect}, we use the melding method\cite{FayP:2015} to create \( 1 - \alpha \)\% confidence interval very similar to Equation~\ref{ch_3:eq:srs-conf-int}.
+The confidence distributions for \( \phi_p \) and \( \phi_n \) are the same Beta distributions as in Section~\ref{ch_3:sec:srs-imperfect}.
 The two methods differ in their confidence distributions for the apparent prevalence \( \beta \).
 
-In the first case, we use the adaptation of the gamma confidence interval\cite{FayF:1997} presented in Section~\ref{sec:weight-perfect} to derive the \( 1 - \alpha \)\% confidence interval for \( \beta^* \):
+In the first case, we use the adaptation of the gamma confidence interval\cite{FayF:1997} presented in Section~\ref{ch_3:sec:weight-perfect} to derive the \( 1 - \alpha \)\% confidence interval for \( \beta^* \):
 
 \begin{equation}
     \left\{ q \left( \frac{\alpha}{2}, %\frac{G_{\beta}^L + B_{\phi_n}^L }{B_{\phi_p}^U + B_{\phi_n}^L }
@@ -284,42 +284,42 @@ In the first case, we use the adaptation of the gamma confidence interval\cite{F
        \right\},
 \end{equation}
 
-where \( G_{\beta^*}^L \) and \( G_{\beta^*}^U \) are defined in Section~\ref{sec:weight-perfect}.
+where \( G_{\beta^*}^L \) and \( G_{\beta^*}^U \) are defined in Section~\ref{ch_3:sec:weight-perfect}.
 We refer to this method as the WprevSeSp Poisson - weighted prevalence with sensitivity and specificity, where the prevalence confidence distribution is based on the weighted sum of Poissons.
 
 The alternative method is very similar to that used in Kalish, et al.\cite{Kali:2021}
-We use the modification of Korn and Graubard's method\cite{Korn:1998} presented by Dean and Pagano,\cite{Dean:2015} as in Section~\ref{sec:weight-perfect}, to derive the \( 100(1 - \alpha) \)\% confidence interval for \( \beta^* \):
+We use the modification of Korn and Graubard's method\cite{Korn:1998} presented by Dean and Pagano,\cite{Dean:2015} as in Section~\ref{ch_3:sec:weight-perfect}, to derive the \( 100(1 - \alpha) \)\% confidence interval for \( \beta^* \):
 
 \begin{equation}
     \left\{ q \left( \frac{\alpha}{2}, g\left[B_{KG}^L, B_{\phi_n}^U, B_{\phi_p}^U\right] \right), q \left( 1 - \frac{\alpha}{2}, g\left[B_{KG}^U, B_{\phi_n}^L, B_{\phi_p}^L\right] \right) \right\},
 \end{equation}
 
-where \( B_{KG}^L \) and \( B_{KG}^U \) are as defined in Section~\ref{sec:weight-perfect}. Although equivalent, this expression looks different than the one used in Kalish, et al\cite{Kali:2021} because they used a parameter for specificity, rather than $\phi_n$, which is 1 minus specificity.
+where \( B_{KG}^L \) and \( B_{KG}^U \) are as defined in Section~\ref{ch_3:sec:weight-perfect}. Although equivalent, this expression looks different than the one used in Kalish, et al\cite{Kali:2021} because they used a parameter for specificity, rather than $\phi_n$, which is 1 minus specificity.
 We refer to this as WprevSeSp Binomial - weighted prevalence with sensitivity and specificity, where the prevalence confidence distributions are based on a binomial assumption.
 The WprevSeSp Binomial and WprevSeSp Poisson methods are implemented in the \texttt{asht} R package.\cite{asht}
 
 \subsection{Applications to More Complex Surveys}
-\label{sec:complex-surveys}
+\label{ch_3:sec:complex-surveys}
 
 
 \subsubsection{When We Can Use These Methods}
 
-In Section~\ref{sec-notation}, we assumed that the apparent prevalence was a weighted sum of binomial random variables,
+In Section~\ref{ch_3:sec-notation}, we assumed that the apparent prevalence was a weighted sum of binomial random variables,
 $\beta = \sum_{i=1}^{K} w_i \frac{X_i}{n_i}$, where $X_i \sim \textrm{Binomial}(n_i,\theta_i)$.
-Then in Section~\ref{sec:weight-perfect}, we used the fact that for small $\theta_i$ and large $n_i$
+Then in Section~\ref{ch_3:sec:weight-perfect}, we used the fact that for small $\theta_i$ and large $n_i$
 the binomial can be approximated by the Poisson, giving $X_i \stackrel{\cdot}{\sim} \textrm{Poisson}( n_i \theta_i)$.
 Thus, whenever we can model a complex survey estimator of apparent prevalence as a weighted sum of Poisson variates, then we can apply the methods of this paper.
 
-In the upcoming Section~\ref{sec-MultPoisson}, we give a detailed review relating the multinomial sampling model to a weighted sum of Poisson variates model.
+In the upcoming Section~\ref{ch_3:sec-MultPoisson}, we give a detailed review relating the multinomial sampling model to a weighted sum of Poisson variates model.
 The multinomial sampling model treats the survey sample as if it is a sampling with replacement from the entire population of $N$ individuals, where each of the $N$
 individuals has a probability of $P_j$ of being sampled for each of the $n$ samples from the survey, with $\sum_{j=1}^{N} P_j = 1$. Under this model the number of times each of the $N$ individuals
 is included in the sample is a multinomial with parameters $n$ and $[P_1,\ldots, P_N]$.
 The multinomial model describes sampling with replacement, but it is nevertheless used to approximate a sampling design where the $j$th individual is sampled {\it without} replacement with probability $P_j$, even though under that design (unlike the multinomial model) no individual is included in the sample more than once. The multinomial model is a common approximation for other complex survey designs.\citep[see e.g.,][p. 14]{Korn:1999}.
-For example, in the Kalish, et al\cite{Kali:2021} analysis of Section~\ref{sec-Application}, each individual in the sample is assigned a pseudo-weight approximating one over their sampling probability from
+For example, in the Kalish, et al\cite{Kali:2021} analysis of Section~\ref{ch_3:sec-Application}, each individual in the sample is assigned a pseudo-weight approximating one over their sampling probability from
 a multinomial model. The actual sample was not a probability sample. In fact, it was a quota sample from a very large pool of self-selected volunteers, and the pseudo-weights were calculated using a different large survey that was a probability weighted survey. The pseudo-weights were calculated such that if they were analyzed under the multinomial model, they would adjust for selection bias due to self-selection of the volunteers and the imperfection of the quota sampling.
 
 \subsubsection{Multinomial Sampling Model}
-\label{sec-MultPoisson}
+\label{ch_3:sec-MultPoisson}
 
 Let $Y_1,\ldots, Y_N$ be the binary indicators of event in the $N$ individuals in the population of interest,
 so the prevalence is $\beta = N^{-1} \sum_{j=1}^{N} Y_j$. There are many ways to design a complex survey sample, and it is often useful to analyze them as if
@@ -331,12 +331,12 @@ In this notation, both $y_i$ and $Y_j$ are fixed, and only the variables represe
 Under this independent multinomial model, since $E(I_{ij})=P_j$, an unbiased estimator of $\beta$ is
 \begin{eqnarray}
 \hat{\beta} & = & \frac{1}{n} \sum_{i=1}^{n} \frac{ y_i}{N p_i} = \frac{1}{n} \sum_{i=1}^{n} \sum_{j=1}^{N} \frac{ I_{ij} Y_j}{N P_j},
-\label{eq:betahatMultinomial}
+\label{ch_3:eq:betahatMultinomial}
 \end{eqnarray}
 and an unbiased estimator of $\textrm{var}(\hat{\beta})$ under the multinomial model is
 \begin{eqnarray}
 \widehat{\textrm{var}}_{M}(\hat{\beta}) & = & \frac{1}{n (n-1)} \sum_{i=1}^{n} \left( \frac{y_i}{Np_i} - \hat{\beta} \right)^2
-\label{eq:varMbetahat}
+\label{ch_3:eq:varMbetahat}
 \end{eqnarray}
 (see Korn and Graubard\cite{Korn:1999} Problem 2.2-10). We can write $\hat{\beta}$ as a weighted sum. Traditional survey weighting defines the weights so that
 the weight for the $i$th sampled individual can be interpreted as the number of individuals in the population that the $i$th sampled individual represents.
@@ -352,7 +352,7 @@ For example, in Kalish et al\cite{Kali:2021} rescaling (sometimes called post-st
 For this paper, we define the weights differently because we want to model our estimator as a weighted sum of Poisson random variables.
 Thus, we use $w_i = 1/(nNp_i)$ and $W_j= 1/(nNP_j)$ so that the sums have expectation $1$.
 In the complex survey case,
-we start with the independent multinomial model as in equation~\ref{eq:betahatMultinomial}, then we use the relationship between the multinomial and Poisson distributions.
+we start with the independent multinomial model as in equation~\ref{ch_3:eq:betahatMultinomial}, then we use the relationship between the multinomial and Poisson distributions.
 Using the ``multinomial-Poisson transformation'', the maximum
 likelihood estimates (MLE) for a multinomial random variable are equivalent to the MLEs for independent Poisson random variables, and
 the variances are asymptotically equivalent (see Baker\cite{Baker:1994}).
@@ -369,7 +369,7 @@ For the Poisson model, all the $I_{ij}$ are independent, and each mean equals it
 We estimate $\textrm{var}_P \left(\hat{\beta} \right)$ by multiplying each term in the sum by $I_{ij}/P_j$, which has an expectation of $1$ and eliminates terms of non-selected individuals, giving
 \begin{eqnarray}
 \widehat{\textrm{var}}_P \left(\hat{\beta} \right)
-& = & \sum_{i=1}^{n} \sum_{j=1}^{N} \frac{ I_{ij} Y_j}{n^2 N^2 P_j^2} = \sum_{i=1}^{n} \frac{ y_i}{n^2 N^2 p_i^2} \label{eq:hatvarbetahat1}
+& = & \sum_{i=1}^{n} \sum_{j=1}^{N} \frac{ I_{ij} Y_j}{n^2 N^2 P_j^2} = \sum_{i=1}^{n} \frac{ y_i}{n^2 N^2 p_i^2} \label{ch_3:eq:hatvarbetahat1}
 \end{eqnarray}
 Under the Poisson model $\widehat{\textrm{var}}_P \left(\hat{\beta} \right)$ is an unbiased estimator of $\textrm{var}_P \left(\hat{\beta} \right)$.
 
@@ -377,49 +377,49 @@ Under the Poisson model $\widehat{\textrm{var}}_P \left(\hat{\beta} \right)$ is 
 
 \section{Simulations}
 
-We explore simulations in a variety of scenarios; however, despite this variety, we limit the scenarios to cases similar to the application of Section~\ref{sec-Application}, which has low prevalence (when the Poisson assumption is adequate), and high
+We explore simulations in a variety of scenarios; however, despite this variety, we limit the scenarios to cases similar to the application of Section~\ref{ch_3:sec-Application}, which has low prevalence (when the Poisson assumption is adequate), and high
 sensitivity and specificity (i.e., good assays).
 
 \subsection{Estimating Prevalence from a Simple Random Sample with an Imperfect Assay}
 
-We assess and compare our new method (Melding, i.e., equation~\ref{eq:srs-conf-int}) to that of Lang and Reiczigel (LR) in a variety of simulated settings.
+We assess and compare our new method (Melding, i.e., equation~\ref{ch_3:eq:srs-conf-int}) to that of Lang and Reiczigel (LR) in a variety of simulated settings.
 In each simulation, 100 subjects are tested to estimate prevalence, 60 are tested to estimate sensitivity, and 300 are tested to estimate specificity.
 Several combinations of prevalences (0.5\%--2\%), sensitivities (75\%--100\%) and specificities (75\%--100\%) are assessed.
 Each simulated scenario is replicated 10,000 times.
-Figure~\ref{fig:coverage_comparison_plot} compares the two methods based on coverage, while Figures~\ref{fig:lower_error_frequency_comparison_plot} and \ref{fig:upper_error_frequency_comparison_plot} present the lower and upper error frequencies for these scenarios, respectively.
+Figure~\ref{ch_3:fig:coverage_comparison_plot} compares the two methods based on coverage, while Figures~\ref{ch_3:fig:lower_error_frequency_comparison_plot} and \ref{ch_3:fig:upper_error_frequency_comparison_plot} present the lower and upper error frequencies for these scenarios, respectively.
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{simple_coverage_comparison_plot}
     \caption{Coverage properties of 95\% confidence intervals for our new method (Melding) and the Lang-Reiczigel method in a variety of settings, each simulated 10,000 times.}
-    \label{fig:coverage_comparison_plot}
+    \label{ch_3:fig:coverage_comparison_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{simple_lower_error_frequency_comparison_plot}
     \caption{Lower error properties of 95\% confidence intervals for our new method (Melding) and the Lang-Reiczigel method in a variety of settings, each simulated 10,000 times.}
-    \label{fig:lower_error_frequency_comparison_plot}
+    \label{ch_3:fig:lower_error_frequency_comparison_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=0.8\textwidth]{simple_upper_error_frequency_comparison_plot}
     \caption{Upper error properties of 95\% confidence intervals for our new method (Melding) and the Lang-Reiczigel method in a variety of settings, each simulated 10,000 times.}
-    \label{fig:upper_error_frequency_comparison_plot}
+    \label{ch_3:fig:upper_error_frequency_comparison_plot}
 \end{figure}
 
-Figure~\ref{fig:coverage_comparison_plot} shows that, when specificity is less than perfect, the Lang-Reiczigel method achieves approximately nominal coverage, while the melding method is slightly more conservative, generally demonstrating 96\%-97\% coverage with 95\% confidence intervals.
+Figure~\ref{ch_3:fig:coverage_comparison_plot} shows that, when specificity is less than perfect, the Lang-Reiczigel method achieves approximately nominal coverage, while the melding method is slightly more conservative, generally demonstrating 96\%-97\% coverage with 95\% confidence intervals.
 When specificity is 100\%, both methods are very conservative, achieving nearly 100\% coverage.
 For a more nuanced depiction of each method's properties, we separate the overall coverage into lower and upper errors.
-Figure~\ref{fig:upper_error_frequency_comparison_plot} shows that both methods make upper errors with roughly the same frequency.
-Figure~\ref{fig:lower_error_frequency_comparison_plot} demonstrates that while the melding procedure bounds the lower error frequency below 2.5\%, the Lang-Reiczigel method generally has lower error frequency above 2.5\%.
+Figure~\ref{ch_3:fig:upper_error_frequency_comparison_plot} shows that both methods make upper errors with roughly the same frequency.
+Figure~\ref{ch_3:fig:lower_error_frequency_comparison_plot} demonstrates that while the melding procedure bounds the lower error frequency below 2.5\%, the Lang-Reiczigel method generally has lower error frequency above 2.5\%.
 Each of these behaviors may be undesirable, depending on the context in which the methods are applied.
 For applications in which there is a need to bound the lower errors, the melding method appears to be superior.
 
 
 \subsection{Estimating Prevalence from a Weighted Sample with a Perfect Assay}
-\label{sim-perfect}
+\label{ch_3:sim-perfect}
 We compare the wsPoisson method to the more traditional Dean-Pagano modification of the Agresti-Coull (DPAC) method and the Korn-Graubard (KG) method for survey proportions in a variety of settings.
 Our simulations examine varying levels of disease prevalence (0.5\% or 5\%), different types of survey designs (50 sampling strata with 200 subjects each or 8000 individuals, each with their own weight), distributions of weights among the sampling strata or individuals (coefficient of variation from approximately 0\% to nearly 600\%), and the number and weights of sampling strata with non-zero prevalence.
 For each combination of prevalence \( p \), and group type, up to 500 sets of weights are simulated.
@@ -430,18 +430,18 @@ Then, certain weights are chosen to have non-zero prevalence (5\%, 25\%, or 75\%
 These weights with non-zero prevalence are given a prevalence such that \( \sum_{i=1}^n w_i \theta_i = p \).
 For each simulated set of parameters and weights, 10,000 data sets are simulated and assessed.
 
-The coverage properties for these simulations are presented in Figures~\ref{fig:perfect_coverage_50_groups_0_005_prev}--\ref{fig:perfect_coverage_8000_groups_0_05_prev}.
-Additional properties for these simulations are presented in Figures~\ref{fig:perfect_lower_error_frequency_50_groups_0_005_prev}--\ref{fig:perfect_confidence_interval_width_8000_groups_0_05_prev}.
+The coverage properties for these simulations are presented in Figures~\ref{ch_3:fig:perfect_coverage_50_groups_0_005_prev}--\ref{ch_3:fig:perfect_coverage_8000_groups_0_05_prev}.
+Additional properties for these simulations are presented in Figures~\ref{ch_3:fig:perfect_lower_error_frequency_50_groups_0_005_prev}--\ref{ch_3:fig:perfect_confidence_interval_width_8000_groups_0_05_prev}.
 
-From Figures~\ref{fig:perfect_coverage_50_groups_0_005_prev}--\ref{fig:perfect_coverage_8000_groups_0_05_prev}, we note that the two competitor methods generally exhibit lower coverage as the coefficient of variation among the weights increases.
-In Figure~\ref{fig:perfect_coverage_50_groups_0_005_prev}, this coverage falls below 60\% when the prevalence is very low and is concentrated among the highest weights, and the coefficient of variation among the weights exceeds 4.
+From Figures~\ref{ch_3:fig:perfect_coverage_50_groups_0_005_prev}--\ref{ch_3:fig:perfect_coverage_8000_groups_0_05_prev}, we note that the two competitor methods generally exhibit lower coverage as the coefficient of variation among the weights increases.
+In Figure~\ref{ch_3:fig:perfect_coverage_50_groups_0_005_prev}, this coverage falls below 60\% when the prevalence is very low and is concentrated among the highest weights, and the coefficient of variation among the weights exceeds 4.
 Uniform distribution of prevalence among the weights, increased overall prevalence, and larger sample sizes among fewer groups all appear to lessen the severity of this problem.
 In contrast, the wsPoisson method appears to guarantee coverage in all scenarios.
 The wsPoisson method tends to become more conservative when the coefficient of variation among the weights increases, when the other methods can have problems guaranteeing coverage.
 In all cases, the wsPoisson method is more conservative than the competitor methods.
 In scenarios with higher overall prevalence, the Agresti-Coul and Korn-Graubard methods achieve close to nominal coverage, while the wsPoisson method strongly over-covers.
 This is similar to the behavior observed in Fay and Feuer,\cite{FayF:1997} where, in simulations, the overall error rate for the gamma intervals decreased as the variance of the weights increased.
-Because our methods appear to be very conservative, with coverage near 100\% in some cases, we present the widths of the confidence intervals in Figures~\ref{fig:perfect_confidence_interval_width_50_groups_0_005_prev}--\ref{fig:perfect_confidence_interval_width_8000_groups_0_05_prev}.
+Because our methods appear to be very conservative, with coverage near 100\% in some cases, we present the widths of the confidence intervals in Figures~\ref{ch_3:fig:perfect_confidence_interval_width_50_groups_0_005_prev}--\ref{ch_3:fig:perfect_confidence_interval_width_8000_groups_0_05_prev}.
 In scenarios where coefficient of variation among the survey weights is high, the wsPoisson intervals are often two or three times wider than intervals produced by competing methods.
 
 
@@ -452,7 +452,7 @@ In scenarios where coefficient of variation among the survey weights is high, th
 Each point represents 10,000 simulations of datasets from a population with 0.5\% prevalence, where 50 groups of 200 people are sampled.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:perfect_coverage_50_groups_0_005_prev}
+\label{ch_3:fig:perfect_coverage_50_groups_0_005_prev}
 \end{figure}
 
 \begin{figure}
@@ -462,7 +462,7 @@ Colored dashed lines are estimates from a logistic regression model using quadra
 Each point represents 10,000 simulations of datasets from a population with 0.5\% prevalence where 8000 individuals are sampled.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:perfect_coverage_8000_groups_0_005_prev}
+\label{ch_3:fig:perfect_coverage_8000_groups_0_005_prev}
 \end{figure}
 
 \begin{figure}
@@ -472,7 +472,7 @@ Colored dashed lines are estimates from a logistic regression model using quadra
 Each point represents 10,000 simulations of datasets from a population with 5\% prevalence, where 50 groups of 200 people are sampled.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:perfect_coverage_50_groups_0_05_prev}
+\label{ch_3:fig:perfect_coverage_50_groups_0_05_prev}
 \end{figure}
 
 \begin{figure}
@@ -482,7 +482,7 @@ Colored dashed lines are estimates from a logistic regression model using quadra
 Each point represents 10,000 simulations of datasets from a population with 5\% prevalence where 8000 individuals are sampled.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:perfect_coverage_8000_groups_0_05_prev}
+\label{ch_3:fig:perfect_coverage_8000_groups_0_05_prev}
 \end{figure}
 
 
@@ -491,11 +491,11 @@ Colored dashed lines are estimates from a logistic regression model using quadra
 We compare properties of our melded confidence interval, WprevSeSp Poisson, to another melded confidence interval method, WprevSeSp Binomial, for cases with weighted samples and imperfect assays.
 The methods are assessed in several simulated scenarios with varying levels of disease prevalence (0.5\% or 5\%), types of groups surveyed (50 groups of 200 subjects each or 8000 groups of 1 subject), distributions of weights among the groups (coefficient of variation from approximately 0\% to nearly 600\%), the number of groups with non-zero prevalence, and the specificity of the assay (80\% - 100\%).
 In each scenario, the assay has 95\% sensitivity.
-Each scenario creates up to 500 new sets of weights and $\theta_i$ parameters (as in Section~\ref{sim-perfect}), and each of those is simulated 10,000 times, with new prevalence, sensitivity, and specificity surveys generated and 95\% confidence intervals are created.
+Each scenario creates up to 500 new sets of weights and $\theta_i$ parameters (as in Section~\ref{ch_3:sim-perfect}), and each of those is simulated 10,000 times, with new prevalence, sensitivity, and specificity surveys generated and 95\% confidence intervals are created.
 Modeled after the study of Kalish, et al,\cite{Kali:2021} the simulated sensitivity is assessed based on 60 tests, while specificity is based on 300 tests.
 
-The coverage properties for these simulations are presented in Figures~\ref{fig:imperfect_coverage_50_groups_0_005_prev}--\ref{fig:imperfect_coverage_8000_groups_0_05_prev}.
-Additional properties for these simulations are presented in Figures~\ref{fig:imperfect_lower_error_frequency_50_groups_0_05_prev}--\ref{fig:imperfect_confidence_interval_width_8000_groups_0_05_prev}.
+The coverage properties for these simulations are presented in Figures~\ref{ch_3:fig:imperfect_coverage_50_groups_0_005_prev}--\ref{ch_3:fig:imperfect_coverage_8000_groups_0_05_prev}.
+Additional properties for these simulations are presented in Figures~\ref{ch_3:fig:imperfect_lower_error_frequency_50_groups_0_05_prev}--\ref{ch_3:fig:imperfect_confidence_interval_width_8000_groups_0_05_prev}.
 
 \begin{figure}
 \centering
@@ -505,7 +505,7 @@ Each point represents 10,000 simulations of datasets from a population with 0.5\
 Each  also includes simulated results of tests to evaluate the sensitivity and specificity of the assay performed on 60 and 300 individuals, respectively.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:imperfect_coverage_50_groups_0_005_prev}
+\label{ch_3:fig:imperfect_coverage_50_groups_0_005_prev}
 \end{figure}
 
 \begin{figure}
@@ -516,7 +516,7 @@ Each point represents 10,000 simulations of datasets from a population with 0.5\
 Each dataset also includes simulated results of tests to evaluate the sensitivity and specificity of the assay performed on 60 and 300 individuals, respectively.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:imperfect_coverage_8000_groups_0_005_prev}
+\label{ch_3:fig:imperfect_coverage_8000_groups_0_005_prev}
 \end{figure}
 
 \begin{figure}
@@ -527,7 +527,7 @@ Each point represents 10,000 simulations of datasets from a population with 5\% 
 Each dataset also includes simulated results of tests to evaluate the sensitivity and specificity of the assay performed on 60 and 300 individuals, respectively.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:imperfect_coverage_50_groups_0_05_prev}
+\label{ch_3:fig:imperfect_coverage_50_groups_0_05_prev}
 \end{figure}
 
 \begin{figure}
@@ -538,22 +538,22 @@ Each point represents 10,000 simulations of datasets from a population with 5\% 
 Each dataset also includes simulated results of tests to evaluate the sensitivity and specificity of the assay performed on 60 and 300 individuals, respectively.
 The horizontal dashed line indicates the nominal coverage, 95\%.
 Colored dashed lines are estimates from a logistic regression model using quadratic splines.}
-\label{fig:imperfect_coverage_8000_groups_0_05_prev}
+\label{ch_3:fig:imperfect_coverage_8000_groups_0_05_prev}
 \end{figure}
 
-Based on Figures~\ref{fig:imperfect_lower_error_frequency_50_groups_0_05_prev}--\ref{fig:imperfect_upper_error_frequency_8000_groups_0_05_prev}, we note that, in most settings, the two melding procedures result in conservative confidence intervals, often nearing 100\% coverage.
+Based on Figures~\ref{ch_3:fig:imperfect_lower_error_frequency_50_groups_0_05_prev}--\ref{ch_3:fig:imperfect_upper_error_frequency_8000_groups_0_05_prev}, we note that, in most settings, the two melding procedures result in conservative confidence intervals, often nearing 100\% coverage.
 With perfect specificity, the WprevSeSp Binomial method fails to maintain nominal coverage when the coefficient of variation among the weights is high and specificity is perfect.
 In the other scenarios tested, the WprevSeSp Binomial generally achieves closer to nominal coverage than the WprevSeSp Poisson, which strongly over-covers.
 Our proposed WprevSeSp Poisson method maintains or exceeds the desired coverage in all scenarios.
 In these scenarios, we also assess properties of the wsPoisson procedure, which does not account for the imperfect assay.
 This method results in approximately 0\% coverage in any scenarios where specificity is less than perfect.
 For this reason, results from that method are omitted in the figures.
-Because both WprevSeSp methods appear to be very conservative, with coverage near 100\% in some cases, we present the widths of the confidence intervals in Figures~\ref{fig:imperfect_confidence_interval_width_50_groups_0_005_prev}--\ref{fig:imperfect_confidence_interval_width_8000_groups_0_05_prev}.
+Because both WprevSeSp methods appear to be very conservative, with coverage near 100\% in some cases, we present the widths of the confidence intervals in Figures~\ref{ch_3:fig:imperfect_confidence_interval_width_50_groups_0_005_prev}--\ref{ch_3:fig:imperfect_confidence_interval_width_8000_groups_0_05_prev}.
 The WprevSeSp Binomial and WprevSeSp Poisson methods typically produce wide intervals of approximately the same size - sometimes as wide as 12\%, even when the true prevalence is 0.05\%.
-One notable exception to this is presented in Figure \ref{fig:imperfect_confidence_interval_width_8000_groups_0_005_prev}, which shows that for tests with perfect specificity, the WprevSeSP Binomial method produces much narrower confidence intervals than the other method.
+One notable exception to this is presented in Figure \ref{ch_3:fig:imperfect_confidence_interval_width_8000_groups_0_005_prev}, which shows that for tests with perfect specificity, the WprevSeSP Binomial method produces much narrower confidence intervals than the other method.
 
 \section{Application}
-\label{sec-Application}
+\label{ch_3:sec-Application}
 
 We apply these two methods to a real data set from Kalish, et al.\cite{Kali:2021}
 This data set was collected to estimate seroprevalence of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020.
@@ -561,7 +561,7 @@ The assay used in this data is estimated to have perfect sensitivity, based on 5
 First, we apply the methods to the full data set (\( n = 8058, \text{weight coefficient of variation} = 252\%\)).
 The seroprevalence in Kalish, {\it et al } was 4.6\% with (95\% CI: 2.6\% to 6.5\%), using a confidence interval method that was nearly the same as the WprevSeSp Binomial method (the method Kalish et al included a calculation of the variability of the weights due to the estimation of the weights, whereas in this paper we treat the weights as fixed constants).
 The Korn and Graubard type melded confidence interval with imperfect assay adjustments (WprevSeSp Binomial) studied in this paper produced a 95\% confidence interval for population prevalence of (2.53\%, 6.68\%), very similar to that of Kalish, et al, while the wsPoisson type melded confidence interval with imperfect assay adjustments (WprevSeSp Poisson) produced the 95\% confidence interval (2.56\%, 7.54\%).
-We also apply the wsPoisson method from Section~\ref{sec:weight-perfect}, which does not account for imperfections in the assay, resulting in a 95\% confidence interval of (3.04\%, 7.39\%).
+We also apply the wsPoisson method from Section~\ref{ch_3:sec:weight-perfect}, which does not account for imperfections in the assay, resulting in a 95\% confidence interval of (3.04\%, 7.39\%).
 While all three intervals overlap to a large degree, the WprevSeSp Poisson interval is the widest.
 Our simulations show that in this situation, the WprevSeSp Binomial interval may be the best because, with coefficient of variance about 250\% (see Figures~B15 and B20, top right panel) the error on both sides of the confidence interval is bounded at 2.5\% and the width of the intervals are better (Figure~B23).
 
