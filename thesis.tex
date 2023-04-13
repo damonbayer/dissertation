@@ -9,6 +9,7 @@
 % Notes: Add short title to figures, sections, via square brackets,
 % e.g. \section[short]{long}.
 %
+% \documentclass[12pt,fleqn,draft]{ucithesis}
 \documentclass[12pt,fleqn]{ucithesis}
 
 % A few common packages
@@ -25,6 +26,7 @@
 \usepackage{subcaption}  % \begin{subfigure}...\end{subfigure} within figure
 \usepackage{multirow}
 \usepackage{tabularx}
+\usepackage{ragged2e}
 
 % Uncomment the following to attempt to enforce Type 1 or TrueType 
 % fonts. ProQuest does not want the type 3 fonts used by default as
@@ -87,11 +89,11 @@
 \includeonly{
 ch_1_introduction,
 ch_2_background,
-% ch_3_content_1,
+ch_3_content_1,
 ch_4_content_2,
 ch_5_content_3,
 ch_6_discussion,
-% appendix_ch_3_content_1,
+appendix_ch_3_content_1,
 appendix_ch_4_content_2,
 appendix_ch_5_content_3
 }
@@ -122,7 +124,8 @@ appendix_ch_5_content_3
 
 % "References should be formatted in style most common in discipline",
 % abbrv is only a suggestion.
-\bibliographystyle{abbrv}
+% \bibliographystyle{abbrv}
+\bibliographystyle{abbrvnat}
 \bibliography{thesis}
 
 % The Thesis Manual says not to include appendix figures and tables in

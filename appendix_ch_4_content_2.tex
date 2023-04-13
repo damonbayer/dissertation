@@ -19,7 +19,8 @@ Commentary on these results is presented in Section~\ref{ch_4:sec:results} of th
 	\caption[Parameters and priors.]{Model parameters and their prior distributions.}
 	\label{ch_4:table:priors}
 	\scriptsize\centering
-	\begin{tabularx}{\columnwidth}{cXllc}
+ % \begin{tabularx}{\columnwidth}{cXllc}
+ \begin{tabularx}{\columnwidth}{c>{\RaggedRight}Xllc}
 	\thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} & \thead{Source} \\ \hline
 $S_0$ & Initial susceptible proportion & Logit-Normal(6, 0.25) & \makecell{0.998 \\ (0.993, 0.999)} & \\
 $\tilde{I}_{0}$ & Initial proportion of non-susceptibles who are infectious & Logit-Normal(0.6, 0.0009) & \makecell{0.646 \\ (0.632, 0.659)} & \\
@@ -28,17 +29,17 @@ $1 / \gamma$ & Mean latent period (weeks) & Log-Normal(-0.25, 0.01) & \makecell{
 $1 / \nu$ & Mean infectious period (weeks) & Log-Normal(0.15, 0.01) & \makecell{1.160 \\ (0.955, 1.410)} & \cite{Byrnee039856} \\
 $\expit\left(\tilde{\eta}_1\right)$ & Initial infection fatality ratio & Logit-Normal(-5.3, 0.04) & \makecell{0.00497 \\ (0.00336, 0.00733)} & \cite{Bruckner2021} \\
 $\rho^D$ & Mean death detection rate & Logit-Normal(2.3, 0.04) & \makecell{0.909 \\ (0.871, 0.937)} & \cite{Bruckner2021} \\
-$\phi_D$ & over-dispersion in observed deaths Negative-Binomial model & Log-Normal(4.16, 0.293) & \makecell{ 63.9 \\ ( 22.1, 185.0)} & \\
-$\exp\left(\tilde{\alpha}_1\right)$ & Initial proportion in proportional odds test positivity model & Log-Normal(1.35, 0.0121) & \makecell{3.86 \\ (3.11, 4.79)} & \\
+$\phi_D$ & over-dispersion in observed deaths negative-binomial model & Log-Normal(4.16, 0.293) & \makecell{ 63.9 \\ (22.1, 185.0)} & \\
+$\exp\left(\tilde{\alpha}_1\right)$ & Initial proportion in prop. odds test positivity model & Log-Normal(1.35, 0.0121) & \makecell{3.86 \\ (3.11, 4.79)} & \\
 $\phi_C$ & over-dispersion in observed cases beta-binomial model & Log-Normal(6.5, 0.0673) & \makecell{ 665 \\ (400, 1110)} & \\
-$\sigma_{R_0}$ & Standard deviation of log-Guassian Markov random field for time-varying $R_0$ & Log-Normal(-1.9, 0.09) & \makecell{0.1500 \\ (0.0831, 0.2690)} & \\
-$\sigma_\eta$ & Standard deviation of logit-Guassian Markov random field for time-varying $\eta$ & Log-Normal(-2.4, 0.0144) & \makecell{0.0907 \\ (0.0717, 0.1150)} & \\
-$\sigma_\alpha$ & Standard deviation of log-Guassian Markov random field for time-varying $\alpha$ & Log-Normal(-2.7, 0.0225) & \makecell{0.0672 \\ (0.0501, 0.0902)} & \\
+$\sigma_{R_0}$ & Standard deviation of log-GMRF for time-varying $R_0$ & Log-Normal(-1.9, 0.09) & \makecell{0.1500 \\ (0.0831, 0.2690)} & \\
+$\sigma_\eta$ & Standard deviation of logit-GMRF for time-varying $\eta$ & Log-Normal(-2.4, 0.0144) & \makecell{0.0907 \\ (0.0717, 0.1150)} & \\
+$\sigma_\alpha$ & Standard deviation of log-GMRF for time-varying $\alpha$ & Log-Normal(-2.7, 0.0225) & \makecell{0.0672 \\ (0.0501, 0.0902)} & \\
 \hline
 $\tilde{\rho}^Y_1$ & Initial case detection rate & Logit-Normal(-2.5, 0.01) & \makecell{0.0759 \\ (0.0632, 0.0908)} & \cite{Bruckner2021} \\
-$\phi_Y$ & over-dispersion in observed cases Negative-Binomial model & Log-Normal(3.93, 0.0684) & \makecell{51.1 \\ (30.6, 85.3)} & \\
-$\sigma_{\rho^Y}$ & Standard deviation of logit-Guassian Markov random field for time-varying $\rho^Y$ & Log-Normal(-2.2, 0.04) & \makecell{0.1110 \\ (0.0749, 0.1640)} &
-	\end{tabularx}
+$\phi_Y$ & over-dispersion in observed cases negative-binomial model & Log-Normal(3.93, 0.0684) & \makecell{51.1 \\ (30.6, 85.3)} & \\
+$\sigma_{\rho^Y}$ & Standard deviation of logit-GMRF for time-varying $\rho^Y$ & Log-Normal(-2.2, 0.04) & \makecell{0.1110 \\ (0.0749, 0.1640)} &
+\end{tabularx}
 \end{table}
 
 \begin{table}%[htbp]
@@ -54,7 +55,7 @@ $1 / \gamma$ & Mean latent period (weeks) &  0.7697 \\
 $1 / \nu$ & Mean infectious period (weeks) & 1.1997 \\
 $\expit\left(\tilde{\eta}_1\right)$ & Initial infection fatality ratio & 0.0005 \\
 $\rho^D$ & Mean death detection rate &  0.9061 \\
-$\phi_D$ & over-dispersion in observed deaths Negative-Binomial model & 87.2776 \\
+$\phi_D$ & over-dispersion in observed deaths negative-binomial model & 87.2776 \\
 $\exp\left(\tilde{\alpha}_1\right)$ & Initial proportion in proportional odds test positivity model & 4.3958 \\
 $\phi_C$ & over-dispersion in observed cases Beta-Binomial model & 1,026.6765 \\
 $\sigma_{R_0}$ & Standard deviation of log-Guassian Markov random field for time-varying $R_0$ & 0.1481 \\
@@ -189,12 +190,12 @@ We draw 2000 posterior samples and discard the first 1000 for this analysis.
     \label{ch_4:fig:rt_comparison_metrics_plot}
 \end{figure}
 
-\section{Comparison with modeling structured populations}
+\section{Comparison with structured populations model}
 \label{ch_4:sec:hetero}
 Here, we demonstrate that semi-parametric modeling of key parameters can obviate the need for modeling heterogeneous populations with separate compartments.
 We construct a model wherein a disease spreads among two subpopulations: the ``general" population and the ``vulnerable" population, which interact with each other.
 Progression through compartments is governed by the following system of differential equations, with ``g" subscripts denoting the general subpopulation and ``v" subscripts denoting the vulnerable subpopulation and parameters having the same interpretations as in the main text.
-The differential equations used for this model presented in \eqref{eqn:model_hetero_SIR_ODEs}.
+The differential equations used for this model presented in \eqref{ch_4:eqn:model_hetero_SIR_ODEs}.
 
 \begin{equation}
 \label{ch_4:eqn:model_hetero_SIR_ODEs}
@@ -236,7 +237,7 @@ Figure~\ref{ch_4:fig:data_ifr_age_structure_plot} shows the latent new cases and
 
 Now, we fit a semi-parametric model, similar to the one in the main text, to this data.
 We model \( \eta(t) \) with a logit-Guassian Markov random field, as in the main text.
-The differential equations used for this model presented in \eqref{eqn:model_nonparametric_SIR_ODEs}.
+The differential equations used for this model presented in \eqref{ch_4:eqn:model_nonparametric_SIR_ODEs}.
 \begin{equation}
 \label{ch_4:eqn:model_nonparametric_SIR_ODEs}
 \begin{aligned}
@@ -375,8 +376,43 @@ Additionally, all model parameters have effective sample sizes of multiple hundr
 
 We also produce a trace plot of the log-posterior probability for each chain in Figure~\ref{ch_4:fig:lp_trace_plot}, which indicates that each chain explores a region of similar probability.
 
-\input{tables/univariate_diagnostics}
-\input{tables/multivariate_diagnostics}
+\begin{table}
+
+\caption{\label{ch_4:tab:univariate_diagnostics}Convergence diagnostics for scalar parameters for the main model fit to the Orange County data set.}
+\centering
+\begin{tabular}[t]{lrr}
+\toprule
+Parameter & $\hat{R}$ & ESS\\
+\midrule
+$S_0$ & 1.00 & 992.14\\
+$\tilde{I}_{0}$ & 1.01 & 1128.48\\
+$1 / \gamma$ & 1.01 & 712.86\\
+$1 / \nu$ & 1.02 & 907.22\\
+$\phi_D$ & 1.00 & 876.28\\
+\addlinespace
+$\rho^D$ & 1.00 & 812.16\\
+$\phi_C$ & 1.00 & 841.67\\
+$\sigma_{R_0}$ & 1.00 & 544.21\\
+$\sigma_\eta$ & 1.00 & 788.91\\
+$\sigma_\alpha$ & 1.01 & 567.30\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}
+
+\caption{\label{ch_4:tab:multivariate_diagnostics}Convergence diagnostics for scalar parameters for the main model fit to the Orange County data set.}
+\centering
+\begin{tabular}[t]{lrrrrrr}
+\toprule
+Parameter & Min. $\hat{R}$ & Avg. $\hat{R}$ & Max. $\hat{R}$ & Min. ESS & Avg. ESS & Max. ESS\\
+\midrule
+$\exp\left(\tilde{\alpha}_t\right)$ & 1 & 1 & 1.01 & 630.78 & 827.20 & 1088.73\\
+$\exp\left(\tilde{R}_{t,t}\right)$ & 1 & 1 & 1.02 & 693.98 & 977.45 & 1368.80\\
+$\expit\left(\tilde{\eta}_t\right)$ & 1 & 1 & 1.02 & 563.38 & 793.53 & 1259.37\\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[htbp]
     \centering

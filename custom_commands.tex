@@ -1,3 +1,14 @@
+% urls
+\def\UrlBreaks{\do\/\do-\do_}
+
+% If you give up on fixing hboxes:
+% \usepackage{etoolbox}
+% \apptocmd{\sloppy}{\hbadness 10000\relax}{}{}
+
+% Fix bibliography hboxes
+\usepackage{etoolbox}
+\apptocmd{\thebibliography}{\raggedright}{}{}
+
 \usepackage{quiver}
 % Tikz figures
 \tikzcdset{
@@ -17,51 +28,43 @@
 
 
 % Chapter 4
-\usepackage{tikz}
 \usepackage{dsfont}
-\usepackage{tabularx}
 \usepackage{makecell}
 \usepackage{booktabs}
 
-\usetikzlibrary{arrows}
-
-\tikzset{ shorten <>/.style={ shorten >=#1, shorten <=#1 } }
-
-
-\newcommand{\argmin}{\operatornamewithlimits{argmin}}
-\newcommand{\argmax}{\operatornamewithlimits{argmax}}
-\newcommand{\sct}{SARS-CoV-2 }
 \newcommand{\rmd}{\mathrm{d}}
 \newcommand{\deriv}[2]{\frac{\rmd#1}{\rmd#2}}
-\newcommand{\bX}{\mathbf{X}}
 \newcommand{\bx}{\mathbf{x}}
-\newcommand{\bY}{\mathbf{Y}}
-\newcommand{\by}{\mathbf{y}}
-\newcommand{\bZ}{\mathbf{Z}}
-\newcommand{\bz}{\mathbf{z}}
-\newcommand{\bM}{\mathbf{M}}
+\newcommand{\bX}{\mathbf{X}}
 \newcommand{\bN}{\mathbf{N}}
-\newcommand{\bn}{\mathbf{n}}
-\newcommand{\btau}{\boldsymbol{\tau}}
+\newcommand{\brtilde}{\boldsymbol{\tilde{R}_0}}
+\newcommand{\betatilde}{\boldsymbol{\tilde{\eta}}}
 \newcommand{\etatilde}{\tilde{\eta}}
 \newcommand{\alphatilde}{\tilde{\alpha}}
-\newcommand{\rhoytilde}{\tilde{\rho}^Y}
-\newcommand{\rtilde}{\tilde{R}_0}
-\newcommand{\betatilde}{\boldsymbol{\tilde{\eta}}}
 \newcommand{\balphatilde}{\boldsymbol{\tilde{\alpha}}}
-\newcommand{\brtilde}{\boldsymbol{\tilde{R}_0}}
+\newcommand{\rhoytilde}{\tilde{\rho}^Y}
 \newcommand{\brhoytilde}{\boldsymbol{\tilde{\rho}^Y}}
-\newcommand{\e}{\mathrm{e}}
 \newcommand{\til}[1]{\widetilde{#1}}
-\newcommand{\bT}{\mathbf{T}}
-\newcommand{\bt}{\mathbf{t}}
 \newcommand{\btheta}{\boldsymbol{\theta}}
-\newcommand{\blambda}{\boldsymbol{\lambda}}
-
-\DeclareMathOperator{\logit}{logit}
+\newcommand{\bY}{\mathbf{Y}}
+\newcommand{\bM}{\mathbf{M}}
 \DeclareMathOperator{\expit}{expit}
-
-\newcommand{\Ie}{I_{e}}
-\newcommand{\Is}{I_{p}}
-
+\newcommand{\bZ}{\mathbf{Z}}
 \newcommand{\1}[1]{\mathds{1}\left[#1\right]}
+
+% \newcommand{\argmin}{\operatornamewithlimits{argmin}}
+% \newcommand{\argmax}{\operatornamewithlimits{argmax}}
+% \newcommand{\sct}{SARS-CoV-2 }
+% \newcommand{\by}{\mathbf{y}}
+% \newcommand{\bz}{\mathbf{z}}
+% \newcommand{\bn}{\mathbf{n}}
+% \newcommand{\btau}{\boldsymbol{\tau}}
+% \newcommand{\rtilde}{\tilde{R}_0}
+% \newcommand{\e}{\mathrm{e}}
+% \newcommand{\bT}{\mathbf{T}}
+% \newcommand{\bt}{\mathbf{t}}
+% \newcommand{\blambda}{\boldsymbol{\lambda}}
+
+% \DeclareMathOperator{\logit}{logit}
+
+

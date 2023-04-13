@@ -3,7 +3,7 @@
 \graphicspath{{figures/ch_4/}}
 
 \section{Introduction}
-SARS-CoV-2 is a human coronavirus associated with high morbidity and mortality that caused a pandemic in 2020 \citep{Cummings2020, Wu2020CDC, Song2020}.
+SARS-CoV-2 is a human coronavirus associated with high morbidity and mortality that caused a pandemic in 2020 \citep{Wu2020CDC, Song2020}.
 Like other human coronaviruses, SARS-CoV-2 is transmitted person to person through close contact and has high transmission potential in crowded indoor settings and around activities that generate aerosols \citep{whocoronavirustrans}.
 In the early stages of the COVID-19 pandemic, transmission dynamics modeling played an important role in alerting the public about the potential dangers of unmitigated virus spread \citep{prem2020effect, ferguson2020report9, davies2020}.
 At later pandemic stages, this modeling helped evaluate intervention effectiveness \citep{Knockeabg2021} and to quantify transmission advantages of genetic variants \citep{Davieseabg2021}.
@@ -59,7 +59,7 @@ For simplicity, we lump all seroprevalence test dates to a single time point ---
 To formulate the surveillance model for cases $\mathbf{Y}$, deaths $\mathbf{M}$, and seropositive cases $Z_{l^*}$, we first need a model for latent trajectories of incidence and prevalence of SARS-CoV-2 infections.
 
 \begin{figure}[htbp]
-\includegraphics[width=1.0\columnwidth]{figures/binned_data_plot}
+\includegraphics[width=1.0\columnwidth]{binned_data_plot}
 \caption{
 COVID-19 surveillance data from Orange County, CA.
 The figure shows weekly counts of tests, cases (positive tests), reported deaths due to COVID-19, as well as testing positivity.}
@@ -121,23 +121,20 @@ However, the cumulative incidence/transition representation of the model, shown 
 In practice, we solve the subset of the above ODEs that are needed to track $\bX(t)$ and the parts of $\bN(t)$ that ``connect'' our transmission model to data.
 We proceed to make this connection in the next subsection.
 
-\begin{figure}[htbp]
-	\centering
-	\resizebox {0.7\linewidth} {!} {
-		\begin{tikzpicture}
-		\draw (0, -1.25) circle(0.5) node (S) {$ S$};
-		\draw (2, -1.25) circle(0.5) node (E) {$ E $};
-		\draw (4, -1.25) circle(0.5) node (I) {$ I $};
-		\draw (6, -2) circle(0.5) node (D) {$ D $};
-		\draw (6, -0.5) circle(0.5) node (R) {$ R $};
 
-		\draw [thick,->,shorten >=3mm,shorten <=3mm] (S) -- (E) node[midway,above] {};
-		\draw [thick,->, shorten >=3.5mm, shorten <=3mm] (E) -- (I) node[midway,above] {};
-		\draw [thick,->,shorten >=3mm, shorten <= 3mm] (I) -- (R) node[midway,above] {};
-		\draw [thick,->,shorten >=3mm, shorten <= 3mm] (I) -- (D) node[midway,above] {};
-		\end{tikzpicture}
-	}
-	\caption{Model diagram depicting possible progressions between infection states. The model compartments are as follows: susceptible $ (S) $, infected, but not yet infectious ($ E $), infectious ($I$), recovered ($ R $), and deceased ($ D $). }
+\begin{figure}
+    \centering
+% https://q.uiver.app/?q=WzAsNSxbMCwxLCJTIl0sWzQsMSwiSSJdLFs1LDAsIlIiXSxbMiwxLCJFIl0sWzUsMiwiRCJdLFsxLDJdLFswLDNdLFszLDFdLFsxLDRdXQ==
+\begin{tikzcd}[column sep=scriptsize]
+	&&&&& R \\
+	S && E && I \\
+	&&&&& D
+	\arrow[from=2-5, to=1-6]
+	\arrow[from=2-1, to=2-3]
+	\arrow[from=2-3, to=2-5]
+	\arrow[from=2-5, to=3-6]
+\end{tikzcd}
+\caption{Model diagram depicting possible progressions between infection states. The model compartments are as follows: susceptible $ (S) $, infected, but not yet infectious ($ E $), infectious ($I$), recovered ($ R $), and deceased ($ D $). }
 	\label{ch_4:fig:seiird}
 \end{figure}
 
@@ -180,7 +177,7 @@ We assume that mean test positivity odds is proportional to the unobserved odds 
 where $\alpha_l > 0$.
 This functional form ensures that, on average, the probability of detecting a SARS-CoV-2 infection grows with the population incidence.
 Parameter $\alpha_l$ can be thought of as an effect of testing guidelines and practices.
-A model with $\alpha_l \approx 0$ (i.e., $\mu^C_l \approx \Delta N_{\Ie\Is}(t_l)$) says that in interval $(t_{l-1}, t_l]$ testing is done approximately by sampling individuals uniformly at random, so that the positivity probability over a time interval $ l $ is equal to the fraction of the population that transitions from the latent to infectious state.
+A model with $\alpha_l \approx 0$ (i.e., $\mu^C_l \approx \Delta N_{EI}(t_l)$) says that in interval $(t_{l-1}, t_l]$ testing is done approximately by sampling individuals uniformly at random, so that the positivity probability over a time interval $ l $ is equal to the fraction of the population that transitions from the latent to infectious state.
 As we increase $\alpha_l$ above 0, the model mimics preferential testing of individuals who are more likely to have severe infection (e.g., testing only individuals with certain symptoms).
 
 \par We can streamline our surveillance model for case counts by integrating over positivity probabilities and arriving at the following beta-binomial distribution:
