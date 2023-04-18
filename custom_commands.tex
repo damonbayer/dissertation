@@ -9,11 +9,12 @@
 \usepackage{etoolbox}
 \apptocmd{\thebibliography}{\raggedright}{}{}
 
-\usepackage{quiver}
 % Tikz figures
+\usepackage{quiver}
+\usetikzlibrary{shapes.geometric}
 \tikzcdset{
     cells = {
-        nodes = {draw, circle}
+        nodes = {draw, ellipse}
         },
         arrows = {shorten = 1mm}
 }

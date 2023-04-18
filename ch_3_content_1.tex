@@ -134,6 +134,7 @@ Before describing the melding method, we briefly review confidence distributions
 
 Confidence distributions are frequentist estimators of a parameter, which can be used similarly to the bootstrap or posterior distributions.
 For continuous responses (and asymptotically for discrete responses), one can formally define confidence distributions without relying on previously derived confidence interval procedures,\cite{Xie2013} but for intuition with discrete responses, it is easier to derive confidence distributions the classical way, i.e., directly from confidence interval procedures.
+Here, we reproduce the definition of confidence distributions from Section~\ref{ch_2:sec:confidence_distributions}.
 For discrete responses, there are two confidence distributions (the lower and upper ones), used to ensure validity of the resulting inferences.
 Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures, where for a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
 Denote those one-sided intervals by $[L({\bf x},1-\alpha), \infty)$ and $(-\infty, U({\bf x},1-\alpha)]$, which are defined for any observed data ${\bf x}$, and $(1-\alpha) \in (0,1)$.
