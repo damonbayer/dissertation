@@ -1,15 +1,41 @@
 \chapter{Background}
 \label{ch:background}
-
+% 8-10 pages
 \section{Bayesian Inference}
 \label{ch_2:sec:bayesian-mcmc}
-% 8-10 pages
-\begin{itemize}
-    \item What is Bayesian inference?
-    \item Describe Hamiltonian Monte Carlo % (reference neal mcmc handbook http://www.mcmchandbook.net/HandbookChapter5.pdf)
-    \item Describe Markov chain Monte Carlo % (reference neal mcmc handbook http://www.mcmchandbook.net/HandbookChapter5.pdf) 
-    \item Describe No-U-Turn Sampler % (https://www.jmlr.org/papers/volume15/hoffman14a/hoffman14a.pdf)
-\end{itemize}
+
+When performing Bayesian statistical inference, we aim to quantify uncertainty about parameters of interest, \( \btheta \), conditional on some observed data, \( \bY \).
+To accomplish this, we employ a prior distribution, which expresses our beliefs about \( \btheta \) without data, and a sampling distribution for \( \bY \).
+Formally, by Bayes' theorem and the law of total probability, we have 
+
+\begin{equation}
+    \pi \left( \btheta \mid \bY \right) = \frac{\pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right)}{\pi \left(  \bY \right)} = \frac{\pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right)}{\int \pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right) \rmd \btheta},
+\end{equation}
+
+where \( \pi \left( \bY \mid \btheta \right) \) is the sampling distribution for \( \bY \) and \( \pi \left( \btheta \right) \) is the prior distribution.
+Because \( \pi \left( \bY \right) \) is constant, with respect to \( \btheta \), we typically work with the unnormalized posterior
+
+\begin{equation}
+    \pi \left( \btheta \mid \bY \right) \propto \pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right).
+\end{equation}
+
+In practice, the posterior distribution, \( \pi \left( \btheta \mid \bY \right) \), rarely exists in closed form.
+However, we can sample from the posterior distribution via Markov chain Monte Carlo, wherein we construct a Markov Chain whose stationary distribution is the posterior distribution.
+In this work, we rely on Hamiltonian Monte Carlo.
+
+Briefly, Hamiltonian Monte Carlo is a form of the Metropolis–Hastings algorithm.
+In the Metropolis-Hastings algorithm, at each step in the Markov chain, a new state, \( \btheta^\prime \), is proposed by sampling from a proposal distribution \( q \).
+The proposed value \( \btheta^\prime \), is accepted with probability 
+
+\begin{align}
+\alpha \left( \btheta, \btheta^\prime \right)   =&   \min \left\{ 1, \frac{\pi \left( \btheta^\prime \mid \bY \right)}{\pi \left( \btheta \mid \bY \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}    \\
+=&  \min \left\{ 1, \frac{\pi \left( \bY \mid \btheta^\prime  \right)}{\pi \left( \bY \mid \btheta \right)} \frac{\pi \left( \btheta^\prime \right)}{\pi \left( \btheta \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}.
+\end{align}
+
+Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so far that they have a very low probability of acceptance.
+As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult and Markov chains tend to become ``stuck" in a small region, unable to explore the full posterior.
+Compared to simpler algorithms (e.g. random walk Metropolis-Hastings), Hamiltonian Monte Carlo can more efficiently generate proposals by using Hamiltonian dynamics, where we augment our parameter space with ``momentum" variables which guide the proposals through regions of high probability.
+For a detailed overview, see \citet{betancourt2018conceptual} and \citet{neal2011mcmc}.
 
 \section{Confidence Distributions}
 \label{ch_2:sec:confidence_distributions}
@@ -18,15 +44,35 @@ They are ``distribution estimators," similar in spirit to the bootstrap (????) a
 A modern definition and short history of confidence distributions is available in \citet{Xie2013}.
 For clarity with respect to discrete data, which is the focus of our use of confidence distributions in Chapter~\ref{ch:content_1}, we present a more classical derivation, which relies on previously derived confidence interval procedures.
 
-For discrete responses, there are two confidence distributions (the lower and upper ones), used to ensure validity of the resulting inferences.
+There are two confidence distributions (the lower and upper ones), used to ensure validity of the resulting inferences.
 Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures, where for a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
 Denote those one-sided intervals by $[L({\bf x},1-\alpha), \infty)$ and $(-\infty, U({\bf x},1-\alpha)]$, which are defined for any observed data ${\bf x}$, and $(1-\alpha) \in (0,1)$.
 For fixed ${\bf x}$, define the lower and upper confidence distribution random variables as $L({\bf x}, A)$ and $U({\bf x},B)$, where $A$ and $B$ are independent uniform random variables.
 Then a $100(1-\alpha)\%$ central confidence interval has the $(\alpha/2)$th quantile of $L({\bf x}, A)$ as the lower limit, and the $(1-\alpha/2)$th quantile of $U({\bf x},B)$ as the upper limit.
 
+As an example, let \( X_1, \ldots, X_n \) be independently and identically distributed \( \textrm{Normal}(\mu, \sigma^2) \).
+With \( \sigma^2 \) known, a \( (1 - \alpha) \)\% confidence interval for \( \mu \) is:
+
+\begin{equation}
+\left[ \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right],
+\label{ch_2:eqn:CI_normal_1}
+\end{equation}
+
+
+where \( \bar{x} \) is the sample mean and \( z_{\alpha / 2} \) satisfies \( P(Z \geq z_{\alpha / 2}) = \alpha / 2 \) and \( Z \sim \textrm{Normal}(0,1) \).
+
+Letting \( L_\mu (\bx, q) = U_\mu (\bx, q) = \bar{x} - \frac{\sigma}{\sqrt{n}} \Phi^{-1}(q) \), we have \( L_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \) and \( U_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \)
+
+We now note that \eqref{ch_2:eqn:CI_normal_1} is equivalent to
+
+\[ \left[ F_{L_{\mu}}^{-1}(\alpha / 2), F_{U_{\mu}}^{-1}(1- \alpha / 2) \right], \]
+
+where \( F_Y^{-1} \) indicates the inverse of the cumulative distribution function of a random variable \( Y \).
+Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence distribution random variables for \( \mu \).
+
 \section{Mathematical Models for the Spread of Infectious Diseases}
 \label{sec:math_models}
-% 10-20 pages
+
 \subsection{Compartmental Models}
 
 The compartmental model is a popular tool used to describe the spread of infectious disease.
@@ -126,9 +172,9 @@ Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of thes
 
 The model in Figure~\ref{fig:ch_2:SEIRDS_diagram} includes three new compartments, compared to the SIR model.
 
-\subsection{Logistic growth of variants}
+% \subsection{Logistic growth of variants}
 
-\section{Forecast Assessment}
+\section{Probabilistic Forecast Assessment}
 \label{sec:forecasting_techniques_and_assessment}
 
 \begin{itemize}
