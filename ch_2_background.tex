@@ -1,25 +1,25 @@
 \chapter{Background}
 \label{ch:background}
-% 8-10 pages
+% Aiming to hit around page 30 by the end
 \section{Bayesian Inference}
 \label{ch_2:sec:bayesian-mcmc}
 
-When performing Bayesian statistical inference, we aim to quantify uncertainty about parameters of interest, \( \btheta \), conditional on some observed data, \( \bY \).
-To accomplish this, we employ a prior distribution, which expresses our beliefs about \( \btheta \) without data, and a sampling distribution for \( \bY \).
+When performing Bayesian statistical inference, we aim to quantify uncertainty about parameters of interest, \( \btheta \), conditional on some observed data, \( \bX \).
+To accomplish this, we employ a prior distribution, which expresses our beliefs about \( \btheta \) without data, and a sampling distribution for \( \bX \).
 Formally, by Bayes' theorem and the law of total probability, we have 
 
 \begin{equation}
-    \pi \left( \btheta \mid \bY \right) = \frac{\pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right)}{\pi \left(  \bY \right)} = \frac{\pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right)}{\int \pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right) \rmd \btheta},
+    \pi \left( \btheta \mid \bX \right) = \frac{\pi \left( \bX \mid \btheta \right) \pi \left( \btheta \right)}{\pi \left(  \bX \right)} = \frac{\pi \left( \bX \mid \btheta \right) \pi \left( \btheta \right)}{\int \pi \left( \bX \mid \btheta \right) \pi \left( \btheta \right) \rmd \btheta},
 \end{equation}
 
-where \( \pi \left( \bY \mid \btheta \right) \) is the sampling distribution for \( \bY \) and \( \pi \left( \btheta \right) \) is the prior distribution.
-Because \( \pi \left( \bY \right) \) is constant, with respect to \( \btheta \), we typically work with the unnormalized posterior
+where \( \pi \left( \bX \mid \btheta \right) \) is the sampling distribution for \( \bX \) and \( \pi \left( \btheta \right) \) is the prior distribution.
+Because \( \pi \left( \bX \right) \) is constant, with respect to \( \btheta \), we typically work with the unnormalized posterior
 
 \begin{equation}
-    \pi \left( \btheta \mid \bY \right) \propto \pi \left( \bY \mid \btheta \right) \pi \left( \btheta \right).
+    \pi \left( \btheta \mid \bX \right) \propto \pi \left( \bX \mid \btheta \right) \pi \left( \btheta \right).
 \end{equation}
 
-In practice, the posterior distribution, \( \pi \left( \btheta \mid \bY \right) \), rarely exists in closed form.
+In practice, the posterior distribution, \( \pi \left( \btheta \mid \bX \right) \), rarely exists in closed form.
 However, we can sample from the posterior distribution via Markov chain Monte Carlo, wherein we construct a Markov Chain whose stationary distribution is the posterior distribution.
 In this work, we rely on Hamiltonian Monte Carlo.
 
@@ -28,8 +28,8 @@ In the Metropolis-Hastings algorithm, at each step in the Markov chain, a new st
 The proposed value \( \btheta^\prime \), is accepted with probability 
 
 \begin{align}
-\alpha \left( \btheta, \btheta^\prime \right)   =&   \min \left\{ 1, \frac{\pi \left( \btheta^\prime \mid \bY \right)}{\pi \left( \btheta \mid \bY \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}    \\
-=&  \min \left\{ 1, \frac{\pi \left( \bY \mid \btheta^\prime  \right)}{\pi \left( \bY \mid \btheta \right)} \frac{\pi \left( \btheta^\prime \right)}{\pi \left( \btheta \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}.
+\alpha \left( \btheta, \btheta^\prime \right)   =&   \min \left\{ 1, \frac{\pi \left( \btheta^\prime \mid \bX \right)}{\pi \left( \btheta \mid \bX \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}    \\
+=&  \min \left\{ 1, \frac{\pi \left( \bX \mid \btheta^\prime  \right)}{\pi \left( \bX \mid \btheta \right)} \frac{\pi \left( \btheta^\prime \right)}{\pi \left( \btheta \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}.
 \end{align}
 
 Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so far that they have a very low probability of acceptance.
@@ -40,7 +40,7 @@ For a detailed overview, see \citet{betancourt2018conceptual} and \citet{neal201
 \section{Confidence Distributions}
 \label{ch_2:sec:confidence_distributions}
 Confidence distributions are a frequentist estimator of a parameter, although they are historically associated with the fiducial distribution from fiducial statistics \citep{Xie2013}.
-They are ``distribution estimators," similar in spirit to the bootstrap (????) and the posterior distribution from Bayesian inference (see section \ref{ch_2:sec:bayesian-mcmc}).
+They are ``distribution estimators," similar in spirit to the bootstrap and the posterior distribution from Bayesian inference (see section \ref{ch_2:sec:bayesian-mcmc}).
 A modern definition and short history of confidence distributions is available in \citet{Xie2013}.
 For clarity with respect to discrete data, which is the focus of our use of confidence distributions in Chapter~\ref{ch:content_1}, we present a more classical derivation, which relies on previously derived confidence interval procedures.
 
@@ -57,7 +57,6 @@ With \( \sigma^2 \) known, a \( (1 - \alpha) \)\% confidence interval for \( \mu
 \left[ \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right],
 \label{ch_2:eqn:CI_normal_1}
 \end{equation}
-
 
 where \( \bar{x} \) is the sample mean and \( z_{\alpha / 2} \) satisfies \( P(Z \geq z_{\alpha / 2}) = \alpha / 2 \) and \( Z \sim \textrm{Normal}(0,1) \).
 
@@ -177,15 +176,56 @@ The model in Figure~\ref{fig:ch_2:SEIRDS_diagram} includes three new compartment
 \section{Probabilistic Forecast Assessment}
 \label{sec:forecasting_techniques_and_assessment}
 
-\begin{itemize}
-\item https://epiforecasts.io/scoringutils/
-\item https://www.jstatsoft.org/article/view/v090i12
-\item Maybe cite some theory from Gneiting
-\item Maybe cite some theory from Reich papers 
-\item CRPS paper Krueger, F., Lerch, S., Thorarinsdottir, T.L. and T. Gneiting (2021): ‘Predictive inference based on Markov chain Monte Carlo output’, International Statistical Review 89, 274-301. doi:10.1111/insr.12405
-\item scoringRules paper https://www.jstatsoft.org/article/view/v090i12
-\item proper scoring rules
+Probabilistic forecasts are probability distributions over future events.
+These arise naturally  from the posterior predictive distribution in the Bayesian setting.
+The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
+Following the notation from Section~\ref{ch_2:sec:bayesian-mcmc}, the posterior predictive distribution is \( \pi \left( \bX^* \mid \bX \right) = \int \pi \left( \bX^* \mid \btheta \right) \pi \left( \btheta \mid \bX \right) \rmd \btheta \).
 
-\end{itemize}
+Calibration and sharpness are desirable properties of a probabilistic forecast.
+In plain terms, a forecast is well-calibrated if events that are forecasted to have an \( x \)\% chance of happening, are actually observed \( x \)\% of the time.
+Being well-calibrated is insufficient for a forecast to be ``good."
+Take for example, the ``climatological" forecaster, who issues forecasts based on the marginal distribution of the predictand (e.g. they forecast the high temperature for 2023-09-06, based on the high temperatures from 2022-09-06, 2021-09-06, etc.)
+This forecaster is likely to be well-calibrated, but other forecasters may be well-calibrated, while making more narrow predictions (e.g. forecasting the high temperature for 2023-09-06 based on data from the preceding week).
+These forecasts are said to be sharper.
 
-% 8-10 pages
+To numerically assess these forecast qualities, a strictly proper scoring rule can be used.
+We denote a score for a probabilistic forecast \( F \) and observed outcome \( s \) by \( s(F, x) \).
+Generally, the forecaster wishes to minimize the score.
+A scoring rule is said to be proper when the expected value of the score is minimized when \( F = G \), where $x \sim G$.
+The scoring rule is strictly proper when this minimum is unique.
+
+For continuous variables, the continuous ranked probability score \eqref{ch_2:eqn:crps} is a popular scoring rule with attractive properties.
+In contrast to other scoring rules, it is based on the cumulative distribution function of the predictive distribution, rather than the density function, which may not exist in some contexts.
+Additionally, the CRPS is sensitive to distance, meaning that it gives credit to forecasts which assign high probability to values near \( x \), even if they do not assign high probability to \( x \) itself.
+For a discussion of scoring rules, see \citet{gneiting2007strictly}.
+
+\begin{equation}
+    \operatorname{CRPS}(F, x) = \int_{-\infty}^{\infty} \left( F(y) - \mathds{1} \left( y \geq x \right) \right)^2 \rmd y
+    \label{ch_2:eqn:crps}
+\end{equation}
+
+When working in the context of MCMC (Section~\ref{ch_2:sec:bayesian-mcmc}), the posterior predictive distribution, \( F \), is not available in closed form and must be approximated.
+Rather, we only have some finite number of samples from the posterior distribution, \( \left( \btheta_i, \ldots \btheta_n \right) \).
+\citet{kruger2021predictive} presents three options for using these samples from MCMC procedures to produce evaluate probabilistic forests using proper scoring rules.
+
+The first is to use the mixture-of-parameters method.
+Often, the predictive distribution conditional on \( \btheta \) is available in closed form.
+Call this \( F_c \left( x \mid \btheta \right) \).
+We can approximate \( F \) by 
+
+\begin{equation}
+    \hat{F}^\mathrm{MP}(x) = \frac{1}{n} \sum_{i=1}^n F_c \left( x \mid \btheta_i \right).
+\end{equation}
+
+Alternatively, we can work directly with samples from the posterior predictive, \( \left( x^*_1, \ldots, x^*_n \right) \).
+We could estimate \( F \) by the empirical cumulative distribution function of these samples:
+
+\begin{equation}
+    \hat{F}^\mathrm{ECDF}(x) = \frac{1}{n} \sum_{i=1}^n \1{x \geq x^*_i}.
+\end{equation}
+
+We could also estimate the predictive density, \( f \) by a kernel density estimate of the posterior predictive samples.
+
+The authors recommend using the mixture-of-parameters method when possible, as it tends to outperform the ECDF method, which is, in turn, superior to the kernel density method.
+
+% Striclty proper scoring rules decompose based on winkler 1996
