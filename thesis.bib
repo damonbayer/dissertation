@@ -289,7 +289,7 @@ URL = {https://arxiv.org/abs/1902.08877}
 @Inbook{Greenwood2009,
 author="Greenwood, Priscilla E.
 and Gordillo, Luis F.",
-editor="Chowell, Gerardo
+xeditor="Chowell, Gerardo
 and Hyman, James M.
 and Bettencourt, Lu{\'i}s M. A.
 and Castillo-Chavez, Carlos",
@@ -318,6 +318,7 @@ url="https://doi.org/10.1007/978-90-481-2313-1_2"
   publisher = {Chapman and Hall/CRC},
   bookTitle={Handbook of Markov Chain Monte Carlo},
   title = {MCMC Using Hamiltonian Dynamics},
+  pages="113--162",
   doi = {10.1201/b10905},
   isbn = {9780429138508},
   year = 2011
@@ -336,7 +337,7 @@ publisher = {Taylor & Francis},
 doi = {10.1198/016214506000001437}
 }
 
-@article{kruger2021predictive
+@article{kruger2021predictive,
 author = {Krüger, Fabian and Lerch, Sebastian and Thorarinsdottir, Thordis and Gneiting, Tilmann},
 title = {Predictive Inference Based on Markov Chain Monte Carlo Output},
 journal = {International Statistical Review},
@@ -1396,8 +1397,6 @@ year = {2021},
 doi = {https://doi.org/10.1016/j.mbs.2021.108583},
 url = {https://www.sciencedirect.com/science/article/pii/S0025556421000353},
 author = {Benjamin Nguyen-Van-Yen and Pierre {Del Moral} and Bernard Cazelles},
-keywords = {Data augmentation, Markov jump process, Poisson Random Measure, Stochastic Epidemic Model, Model diagnosis, Zika},
-abstract = {We present a new Bayesian inference method for compartmental models that takes into account the intrinsic stochasticity of the process. We show how to formulate a SIR-type Markov jump process as the solution of a stochastic differential equation with respect to a Poisson Random Measure (PRM), and how to simulate the process trajectory deterministically from a parameter value and a PRM realization. This forms the basis of our Data Augmented MCMC, which consists of augmenting parameter space with the unobserved PRM value. The resulting simple Metropolis–Hastings sampler acts as an efficient simulation-based inference method, that can easily be transferred from model to model. Compared with a recent Data Augmentation method based on Gibbs sampling of individual infection histories, PRM-augmented MCMC scales much better with epidemic size and is far more flexible. It is also found to be competitive with Particle MCMC for moderate epidemics when using approximate simulations. PRM-augmented MCMC also yields a posteriori estimates of the PRM, that represent process stochasticity, and which can be used to validate the model. A pattern of deviation from the PRM prior distribution will indicate that the model underfits the data and help to understand the cause. We illustrate this by fitting a non-seasonal model to some simulated seasonal case count data. Applied to the Zika epidemic of 2013 in French Polynesia, our approach shows that a simple SEIR model cannot correctly reproduce both the initial sharp increase in the number of cases as well as the final proportion of seropositive. PRM augmentation thus provides a coherent story for Stochastic Epidemic Model inference, where explicitly inferring process stochasticity helps with model validation.}
 }
 
 @misc{stemr,
