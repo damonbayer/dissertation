@@ -8,21 +8,21 @@ The importance of this pursuit is apparent when reflecting on the recent COVID-1
 
 \section{Epidemic Surveillance Data and Its Applications}
 \label{sec:epidemic_surveillance_data}
-This work considers both active and passive surveillance data.
 
 Infectious disease data differs from data used in traditional statistical applications because they are highly dependent in time and space, and are almost always partially observed \citep{held2019handbook}.
 People without healthcare access or who do not exhibit disease symptoms may not seek diagnosis, leading to systematic bias and under-reporting in case counts.
 Among those who seek diagnosis, their disease status may not be correctly identified, and their results may not be reported to a centralized database.
 Even among those who receive correct diagnosis and whose results are reported, the precise timing of infection, transmission, and recovery are generally unknown.
-These factors make statistical inference challenging.
+These factors make inference and forecasting challenging.
 For instance, a small outbreak with a high reporting rate may produce similar observed case counts as a large outbreak with a low reporting rate.
 The situation is even more opaque for endemic diseases, where these unreported cases contribute to differing levels of immunity throughout a population.
 
 Infectious disease surveillance data can be reported at a variety of resolutions and used for a variety of tasks.
 Some methods are designed to work with detailed data from a specific, relatively small, outbreak, while others are more suitable for widespread diseases observed with less detail.
-This work is primarily concerned with the latter scenario and uses passive surveillance data, which traditionally takes the form of aggregated counts of incidence data (e.g. new tests, new cases, and new deaths), counts of prevalence data (e.g. number of hospitalized patients with a disease) at some coarse demographic, spatial, and temporal resolution (e.g. stratified by age and county every week).
-This and other recent advances seek to integrate other forms of data into this framework \citep{Tang2022, Rasmussen2011}.
-In particular, we aim to incorporate seroprevalence studies and information derived from genetic sequencing.
+This work is primarily concerned with the latter scenario and uses both passively and actively collected surveillance data.
+These data traditionally take the form of aggregated counts of incidence data (e.g. new tests, new cases, and new deaths), counts of prevalence data (e.g. the number of hospitalized patients with a disease or the number of people with seropositive tests from a carefully sampled population) at some coarse demographic, spatial, and temporal resolution (e.g. stratified by age and county and documented weekly).
+Our work and other recent advances seek to integrate other forms of data into this framework \citep{Tang2022, Rasmussen2011}.
+
 These data and models are vital tools for both inference and prediction tasks.
 One major goal in the inference context is nowcasting, which typically involves estimating the effective reproduction number, \( R_t \), in real time \citep{10.1093/aje/kwt133}.
 This parameter is defined as the expected number of secondary cases that arise from a primary case and is influenced by factors inherent to the pathogen, as well as the environmental conditions.
@@ -34,6 +34,7 @@ When \( R_t < 1 \), the average primary case produces fewer than one secondary c
 If this is sustained, prevalence will decrease.
 When \( R_t > 1 \), the average primary case produces more than one secondary case, leading to an exponential increase in cases.
 Other inference tasks involve quantifying the effects of interventions, whether they be pharmaceutical (e.g. vaccination campaigns) or non-pharmaceutical (e.g. mask mandates).
+At the most basic level, an infectious disease modeler may simply want to infer the true proportion of the population that has been infected with a disease.
 Forecasting is concerned with anticipating future disease burden, with special attention to severe outcomes like hospitalizations and deaths \citep{10.1371/journal.pmed.1003793}.
 Forecasts can combine historical data with possible future scenarios to drive public policy by answering questions like ``in the presence of a more transmissible variant, how many people do we need to vaccinate to prevent the healthcare system from being overwhelmed?"
 
@@ -42,19 +43,33 @@ In the next section, we provide an overview of data from these settings to motiv
 \section{Motivating Examples}
 \label{sec:motivating_examples}
 
-In Chapter~\ref{ch:content_1}, we analyze data from Kalish paper, data collected from each state in the US between May and July 2020.
-In Chapter~\ref{ch:content_2}, we analyze data from Orange County, California, provided to us by the Orange County Health Care Agency as well as a seroprevalence study by idk who.
+In Chapter~\ref{ch:content_1}, we work with data originally analyzed in \citet{Kali:2021}.
+This data set was collected to estimate seroprevalence of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020.
+The data consists of 304 seropositive samples among the 8058 total antibody tests.
+The samples are weighted based on a variety of socioeconomic factors. 
+ The assay used is estimated to have perfect sensitivity, based on 56 tests on individuals with confirmed SARS-CoV-2 and perfect specificity based on 300 tests on individuals confirmed to not have SARS-CoV-2.
+In Chapter~\ref{ch:content_2}, we analyze data from Orange County, California between March 2020 and February 2021.
+This data includes case and mortality data provided by Orange County Health Care Agency, including individual-level records of all negative and positive PCR tests during the modeling period.
+The aggregated counts of cases, tests, deaths, and test-positivity (cases / tests) are presented in Figure~\ref{ch_1:fig:binned_data_plot}.
+This figure is labelled with three periods.
+In each period, there is some tension in the trend portrayed by the various data streams, each of which we believe to be reflective of the underlying number of infections.
+In the first period, there is a gradual increase in both tests and deaths, but a sudden increase in both cases and test positivity.
+In the second period, tests rise slightly, while deaths, cases, and test positivity remain nearly constant.
+In the final period, there is a sharp increase and decrease in deaths and test positivity, while tests and cases have a large dip in the middle of this period.
+Resolving the conflicting signals between these data streams is the goal of Chapter~\ref{ch:content_2}.
+To achieve this goal, we also use data from \text{Bruckner2021}, a study conducted to estimate the seroprevalence in Orange County from a population-representative sample, which consists of 343 seropositive cases among 2979 tests conducted between July 10 and August 16, 2020.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{binned_data_plot}
-    \caption{Caption}
+    \caption[COVID-19 surveillance data from Orange County, CA.]{
+    COVID-19 surveillance data from Orange County, CA.
+    The figure shows weekly counts of tests, cases (positive tests), reported deaths due to COVID-19, as well as testing positivity.
+    The distinct periods labelled with different background colors are explained in Section~\ref{sec:motivating_examples}.}
     \label{ch_1:fig:binned_data_plot}
 \end{figure}
 
-Resolving the convflinct in this figure is the goal of Chapter~\ref{ch:content_2}.
-
-In Chapter~\ref{ch:content_3}, we analyze data from tk additional California counties, provided to us by the California Department of Public Health and GISAID via outbreak package.
+In Chapter~\ref{ch:content_3}, we analyze data from tk additional California counties, provided to us by the California Department of Public Health and Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} via Outbreak.info \citep{Gangavarapu2023}.
 
 \section{Overview of this dissertation}
 Chapter~\ref{ch:background} provides background information on areas of statistics essential to understanding the methods proposed and assessed in this dissertation.
