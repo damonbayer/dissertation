@@ -21,7 +21,7 @@ Because \( \pi \left( \bX \right) \) is constant, with respect to \( \btheta \),
 
 In practice, the posterior distribution, \( \pi \left( \btheta \mid \bX \right) \), rarely exists in closed form.
 However, we can sample from the posterior distribution via Markov chain Monte Carlo, wherein we construct a Markov Chain whose stationary distribution is the posterior distribution.
-In this work, we rely on Hamiltonian Monte Carlo.
+Throughout this dissertation, we rely on Hamiltonian Monte Carlo method to perform this sampling.
 
 Briefly, Hamiltonian Monte Carlo is a form of the Metropolis–Hastings algorithm.
 In the Metropolis-Hastings algorithm, at each step in the Markov chain, a new state, \( \btheta^\prime \), is proposed by sampling from a proposal distribution \( q \).
@@ -32,8 +32,8 @@ The proposed value \( \btheta^\prime \), is accepted with probability
 =&  \min \left\{ 1, \frac{\pi \left( \bX \mid \btheta^\prime  \right)}{\pi \left( \bX \mid \btheta \right)} \frac{\pi \left( \btheta^\prime \right)}{\pi \left( \btheta \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}.
 \end{align}
 
-Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so far that they have a very low probability of acceptance.
-As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult and Markov chains tend to become ``stuck" in a small region, unable to explore the full posterior.
+Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so widely distributed that they have a very low probability of acceptance.
+As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult and Markov chains constructed with relatively simple algorithms tend to become ``stuck" in a small region, unable to explore the full posterior.
 Compared to simpler algorithms (e.g. random walk Metropolis-Hastings), Hamiltonian Monte Carlo can more efficiently generate proposals by using Hamiltonian dynamics, where we augment our parameter space with ``momentum" variables which guide the proposals through regions of high probability.
 For a detailed overview, see \citet{betancourt2018conceptual} and \citet{neal2011mcmc}.
 
@@ -44,7 +44,6 @@ They are ``distribution estimators," similar in spirit to the bootstrap and the 
 A modern definition and short history of confidence distributions is available in \citet{Xie2013}.
 For clarity with respect to discrete data, which is the focus of our use of confidence distributions in Chapter~\ref{ch:content_1}, we present a more classical derivation, which relies on previously derived confidence interval procedures.
 
-There are two confidence distributions (the lower and upper ones), used to ensure validity of the resulting inferences.
 Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures, where for a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
 Denote those one-sided intervals by $[L({\bf x},1-\alpha), \infty)$ and $(-\infty, U({\bf x},1-\alpha)]$, which are defined for any observed data ${\bf x}$, and $(1-\alpha) \in (0,1)$.
 For fixed ${\bf x}$, define the lower and upper confidence distribution random variables as $L({\bf x}, A)$ and $U({\bf x},B)$, where $A$ and $B$ are independent uniform random variables.
@@ -64,7 +63,9 @@ Letting \( L_\mu (\bx, q) = U_\mu (\bx, q) = \bar{x} - \frac{\sigma}{\sqrt{n}} \
 
 We now note that \eqref{ch_2:eqn:CI_normal_1} is equivalent to
 
-\[ \left[ F_{L_{\mu}}^{-1}(\alpha / 2), F_{U_{\mu}}^{-1}(1- \alpha / 2) \right], \]
+\begin{equation}
+    \left[ F_{L_{\mu}}^{-1}(\alpha / 2), F_{U_{\mu}}^{-1}(1- \alpha / 2) \right],
+\end{equation}
 
 where \( F_Y^{-1} \) indicates the inverse of the cumulative distribution function of a random variable \( Y \).
 Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence distribution random variables for \( \mu \).
@@ -75,7 +76,7 @@ Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence dist
 \subsection{Compartmental Models}
 
 The compartmental model is a popular tool used to describe the spread of infectious disease.
-The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model.
+The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model, which we use as an example in this section.
 In these models, the population of interest is divided into compartments which indicate a disease status (e.g., susceptible, infectious, and recovered), and individuals transition between compartments at a specified rate
 (e.g. transitions from infectious compartment to recovered compartment happen at a rate proportional to the number of infectious individuals).
 Overviews of mechanistic compartmental models for disease dynamics can be found in \citet{anderson1992infectious, Brauer2008, keeling2011modeling, 10.1093/aje/kww021}.
@@ -135,21 +136,20 @@ For the SIR model, we have
 \label{ch_2:SIR_diff_eq}
 \end{equation}
 
-Compared to the deterministic models, the stochastic models are more computationally difficult to fit and are particularly useful when there are few infections, as at the beginning or end of an outbreak.
+Compared to the deterministic models, the stochastic models are more computationally difficult to work with, but they are particularly useful when there are few infections, as at the beginning or end of an outbreak.
 In these scenarios, the randomness involved at the subject level can have a major impact on the course of the outbreak.
 In an extreme case, one infectious individual could be introduced to a population, but, by chance, not infect anyone else in the population.
 Then, no outbreak occurs.
-In contrast, deterministic models are more computationally feasible and tend to work well when all compartments are suitably large \citep{doi:10.1098/rspb.2015.0347}.
+In the deterministic treatment, the outbreak is guaranteed to begin and will last indefinitely because \( S(t) \), \(  I(t) \), and \( R(t) \) will always be greater than 0, due to the behavior of the differential equations in \eqref{ch_2:SIR_diff_eq}.
+The benefit to using the less realistic deterministic models is that they are more computationally feasible and tend to work well when all compartments are suitably large \citep{doi:10.1098/rspb.2015.0347}.
 This work focuses on the deterministic models, as we typically work in large population settings, where an outbreak is ongoing.
 
-Maybe this would be a good place to define \( R_0 \)?
-
 The basic SIR model can be augmented with more compartments, as well as time-varying parameters, to more realistically represent an outbreak.
-Additional compartments can account for different disease states (e.g. exposed, vaccinated, or deceased) or stratification of the population (e.g. by age or location).
+Additional compartments can account for different disease states (e.g. exposed, vaccinated, or deceased), competing disease variants, or stratification of the population (e.g. by age or location).
 It is also possible to model a perpetual outbreak by allowing reinfection after recovery (e.g. \(R \to S\) transitions).
 Time-varying parameters can also model changes in behavior or policy (e.g. stay at home orders and restaurant closures) that cannot be captured by the constant parameters.
 
-Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of these features.
+Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are exposed, but not infections (\( E \)) and those who are deceased (\( D \)), as well as reinfections after recovery.
 
 \begin{figure}
     \centering
@@ -169,8 +169,6 @@ Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of thes
     \label{fig:ch_2:SEIRDS_diagram}
 \end{figure}
 
-The model in Figure~\ref{fig:ch_2:SEIRDS_diagram} includes three new compartments, compared to the SIR model.
-
 % \subsection{Logistic growth of variants}
 
 \section{Probabilistic Forecast Assessment}
@@ -181,12 +179,21 @@ These arise naturally  from the posterior predictive distribution in the Bayesia
 The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
 Following the notation from Section~\ref{ch_2:sec:bayesian-mcmc}, the posterior predictive distribution is \( \pi \left( \bX^* \mid \bX \right) = \int \pi \left( \bX^* \mid \btheta \right) \pi \left( \btheta \mid \bX \right) \rmd \btheta \).
 
-Calibration and sharpness are desirable properties of a probabilistic forecast.
+We assume that the new data \( \bX^* \) are realized samples from some underlying probability distribution \( G \), which is only known to nature.
+Thus, an ideal forecaster would issue \( G \) as their forecast.
+Because \( G \) is unknown, assessing whether the forecaster's distribution and \( G \) are identical is impossible.
+The sharpness principle conjectures that issuing a forecast that maximized sharpness, subject to calibration, is equivalent to making an ideal forecast \citep{Gneiting2007Probabilistic}.
+
 In plain terms, a forecast is well-calibrated if events that are forecasted to have an \( x \)\% chance of happening, are actually observed \( x \)\% of the time.
 Being well-calibrated is insufficient for a forecast to be ``good."
-Take for example, the ``climatological" forecaster, who issues forecasts based on the marginal distribution of the predictand (e.g. they forecast the high temperature for 2023-09-06, based on the high temperatures from 2022-09-06, 2021-09-06, etc.)
-This forecaster is likely to be well-calibrated, but other forecasters may be well-calibrated, while making more narrow predictions (e.g. forecasting the high temperature for 2023-09-06 based on data from the preceding week).
-These forecasts are said to be sharper.
+Take for example, the ``climatological" forecaster, who issues forecasts based on the marginal distribution of the predictand.
+In the context of infectious disease modeling, a climatological forecaster could issue a forecast for daily influenza cases by issuing the same forecast every day, where their forecast is simply a smoothed estimate of daily influenza cases from the last decade.
+Assuming that influenza case counts in the future are, on average, distributed as they were in the last decade, this forecaster will be well-calibrated.
+However, competing forecasters should be able to make narrower forecasts while maintaining calibration, perhaps by using data from the preceding week to forecast case counts the next week.
+These forecasts are intuitively more useful and are said to be ``sharper."
+
+calibration can be assessed by looking at PIT and empirical coverage.
+sharpness can be assessed by visually inspecting forecasts or compmuting summaries like interval width or variance.
 
 To numerically assess these forecast qualities, a strictly proper scoring rule can be used.
 We denote a score for a probabilistic forecast \( F \) and observed outcome \( s \) by \( s(F, x) \).
