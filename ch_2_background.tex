@@ -21,7 +21,7 @@ Because \( \pi \left( \bX \right) \) is constant, with respect to \( \btheta \),
 
 In practice, the posterior distribution, \( \pi \left( \btheta \mid \bX \right) \), rarely exists in closed form.
 However, we can sample from the posterior distribution via Markov chain Monte Carlo, wherein we construct a Markov Chain whose stationary distribution is the posterior distribution.
-Throughout this dissertation, we rely on Hamiltonian Monte Carlo method to perform this sampling.
+Throughout this dissertation, we rely on the Hamiltonian Monte Carlo method to perform this sampling.
 
 Briefly, Hamiltonian Monte Carlo is a form of the Metropolis–Hastings algorithm.
 In the Metropolis-Hastings algorithm, at each step in the Markov chain, a new state, \( \btheta^\prime \), is proposed by sampling from a proposal distribution \( q \).
@@ -85,7 +85,7 @@ These models can be represented deterministically or stochastically.
 In the stochastic treatment, the model is formulated as a continuous-time Markov chain.
 For the SIR model, we write the state vector at the time \( t \) as \( \bX(t) = (S(t), I(t), R(t)) \).
 Where \( S(t), I(t) \), and \( R(t) \) indicate the number of people from the population in the susceptible, infectious, and recovered compartments, respectively.
-In this model, individuals may only transition from susceptible to infectious \( (S \to I) \) or from infectious to recovered \( (I \to R) \) (see Figure~\ref{fig:ch_2:SIR_diagram}).
+In this model, individuals may only transition from susceptible to infectious \( (S \to I) \) or from infectious to recovered \( (I \to R) \) (see Figure~\ref{ch_2:fig:SIR_diagram}).
 \begin{figure}
     \centering
 % https://q.uiver.app/?q=WzAsMyxbMCwwLCJTIl0sWzEsMCwiSSJdLFsyLDAsIlIiXSxbMCwxXSxbMSwyXV0=
@@ -96,7 +96,7 @@ In this model, individuals may only transition from susceptible to infectious \(
 \end{tikzcd}
     \caption[The basic SIR compartmental model.]{The basic SIR compartmental model.
     Only transitions from susceptible to infectious \( (S \to I) \) and from infectious to recovered \( (I \to R) \) are allowed.}
-    \label{fig:ch_2:SIR_diagram}
+    \label{ch_2:fig:SIR_diagram}
 \end{figure}
 Infection events are assumed to happen at the rate \( \frac{\beta}{N} S(t) I(t) \), where \( \beta \) is the contact rate
 Recovery events occur at a rate \( \gamma I \), where \( \gamma \) is the recovery rate.
@@ -149,7 +149,7 @@ Additional compartments can account for different disease states (e.g. exposed, 
 It is also possible to model a perpetual outbreak by allowing reinfection after recovery (e.g. \(R \to S\) transitions).
 Time-varying parameters can also model changes in behavior or policy (e.g. stay at home orders and restaurant closures) that cannot be captured by the constant parameters.
 
-Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are exposed, but not infections (\( E \)) and those who are deceased (\( D \)), as well as reinfections after recovery.
+Figure~\ref{ch_2:fig:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are exposed, but not infections (\( E \)) and those who are deceased (\( D \)), as well as reinfections after recovery.
 
 \begin{figure}
     \centering
@@ -166,38 +166,107 @@ Figure~\ref{fig:ch_2:SEIRDS_diagram} presents a model demonstrating some of thes
 \end{tikzcd}
     \caption{Diagram of an augmented SIR model.
     The states in this model are susceptible \( (S) \), exposed \( (E) \), infectious \( (I) \), Recovered \( (R) \) and Deceased \( D \).}
-    \label{fig:ch_2:SEIRDS_diagram}
+    \label{ch_2:fig:SEIRDS_diagram}
 \end{figure}
 
-% \subsection{Logistic growth of variants}
+\subsection{Data Integration}
 
-\section{Probabilistic Forecast Assessment}
+Broadly, we can categorize data used for this modeling as either actively or passively collected surveillance data.
+Common examples of passively collected incidence data include daily counts of diagnostic tests, confirmed cases, and deaths, as well as genetic sequences of viruses or bacteria that cause diseases.
+We refer to this as incidence data because each count is assumed to correspond to a new event during that time.
+In contrast, we work with prevalence data, which is reflective of the frequency of a condition at a given time.
+Examples of prevalence data include counts of current hospital or intensive care unit (ICU) occupants with a certain disease or the number of seropositive tests from a carefully sampled population.
+We also loosely differentiate between data that is passively or actively collected.
+Passively collected data like case counts and hospital occupancy is reported routinely by health care agencies and is generally more affordable to collect because it doesn't require a formal study to be conducted.
+Actively collected data is often the result of a survey which has been deliberately designed and conducted to measure some aspect of a population, like the current number of people infected with a disease or the contact rates between different subpopulations, is more expensive to collect, but can provide information that is difficult to gather through passive surveillance.
+% could mention mobility data somewhere here
+
+Connecting the compartmental models to infectious disease data to perform statistical inference is a non-trivial task.
+Broadly, a model uses a compartmental model and basic parameters, like the basic reproductive number, duration of infectiousness, and infection-fatality ratio, to model the size of a compartment at a series of time points.
+These compartment sizes can be mapped to prevalence data with some emission distribution or loss function.
+To use incidence data, we can keep track of the cumulative incidence (e.g. by counting the cumulative number of \( S \to I \) transitions) at each time point and compute the difference between successive times.
+Then these differences can be mapped to incidence data with an emission distribution or loss function.
+For example, let \( N_{S I}(t_l) \) be the cumulative number of \( S \to I \) transitions by time \( t = l \), as reported by the compartmental model.
+Then \( \Delta N_{S I}(t_l) = N_{S I}(t_l) - N_{S I}(t_{l-1}) \) is the number new \( S \to I \) transitions between time \( t = l \) and time \( t = l - 1 \).
+We can link this to the number of observed cases between time \( t = l \) and time \( t = l - 1 \) by
+\begin{equation}
+C_l \sim \text{Negative binomial}\left (\mu_l =  \rho \times \Delta N_{S I}(t_l),\ {\sigma^2_l} = \mu_l (1 + \mu_l / \phi )\right ),
+\label{ch_2:eqn:example_case_emission}
+\end{equation}
+where \( \rho \) is a case reporting rate, reflecting that not all people who become infected with a disease are tested, and \( \phi \) is some over-dispersion parameter.
+
+The specifics of the data and compartmental model used can make the mapping from the compartment sizes and differences challenging.
+In some cases, the distinction between incidence and prevalence data is not clear.
+For example, when someone receives a positive test result for an infectious disease with a relatively short period of infectiousness, they may test themselves several times in the following weeks to approximate whether they are still infectious.
+In that case, each positive test is not necessarily reflective of a new disease case.
+These positive test results may also not be reflective of true cases because of imperfect specificity and sensitivity of the tests.
+Similarly, there is ambiguity about the disease's relevance to an event reported in the data.
+Someone admitted to the hospital with a broken leg may also have an infectious disease and be reported as part of the hospital's passive surveillance data.
+Thus, the hospitalization data may not be truly reflective of the number of people with severe disease cases.
+Often, there is a significant delay between when data is captured and when it is reported.
+Thus, when performing inference or predictions in real time, it may appear that there are fewer cases in one week than in the previous week, simply due to the most recent week's tests not yet being fully reported.
+Furthermore, reporting practices for passive surveillance data may be inconsistent.
+The reason for the inconsistency could be due to any number of reasons.
+For example, many testing locations may not be open on the weekends or holidays, making it appear that new cases are less common on those days.
+Inconsistencies may also be due to policy changes, changes in funding, or even accidental non-reporting.
+
+While overcoming each of these individual complications is itself difficult and requires modelers to make many subtle choices, there is additional complexity involved in integrating each of the data streams in a unified model.
+This additional complexity can be worth pursuing, as integrating more data sources may make more model parameters identifiable.
+In \citet{DeAngelis2015four}, the authors present four important challenges in data integration when modeling infectious diseases.
+The first is the weighting of evidence.
+When combining data streams of varying quality, it is desirable to rely more on the high-quality data than the low-quality data.
+This can be done simply by excluding the low-quality data altogether, or more complexly by formally modeling data quality issues.
+Under the umbrella of model criticism, the authors present identifiability, conflict, and influence as areas of concern.
+In Section~\ref{ch_1:sec:motivating_examples}, we provided an example of different data sources presenting conflicting evidence about underlying disease dynamics.
+Understanding how each data stream informs modeling results and how their apparent differences are reconciled is a key challenge.
+In addition, the authors cite issues related to computational complexity when combining many data sources, as well as potential problems of dependencies between the datasets included in the model.
+
+\section{Forecasting Infectious Disease Outbreaks}
 \label{sec:forecasting_techniques_and_assessment}
 
+Look at forecasting hub for methods
+\begin{itemize}
+    \item expert opinion {McAndrew2022Expert}
+    \item ensemble forecast
+    \item least squares minimization
+    \item Bayesian
+    \item frequentist
+\end{itemize}
+
+
+\subsection{Forecast Assessment}
+
+There are other proposed ways to make assessments
+
+\citet{Cramer2022Evaluation}
+
+\citet{Bracher2021Evaluating}
+
 Probabilistic forecasts are probability distributions over future events.
-These arise naturally  from the posterior predictive distribution in the Bayesian setting.
-The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
-Following the notation from Section~\ref{ch_2:sec:bayesian-mcmc}, the posterior predictive distribution is \( \pi \left( \bX^* \mid \bX \right) = \int \pi \left( \bX^* \mid \btheta \right) \pi \left( \btheta \mid \bX \right) \rmd \btheta \).
+In this section, let \( F(x) \) denote the cumulative distribution function of a forecast.
+We assume that new data are realized samples from some underlying probability distribution \( G \), which is only known to nature.
+Thus, an ideal forecast is \( F = G \).
+Because \( G \) is unknown, assessing whether \(F = G\) is impossible.
+The sharpness principle conjectures that issuing a forecast that maximizes sharpness, subject to calibration, is equivalent to making an ideal forecast \citep{Gneiting2007Probabilistic}.
 
-We assume that the new data \( \bX^* \) are realized samples from some underlying probability distribution \( G \), which is only known to nature.
-Thus, an ideal forecaster would issue \( G \) as their forecast.
-Because \( G \) is unknown, assessing whether the forecaster's distribution and \( G \) are identical is impossible.
-The sharpness principle conjectures that issuing a forecast that maximized sharpness, subject to calibration, is equivalent to making an ideal forecast \citep{Gneiting2007Probabilistic}.
-
-In plain terms, a forecast is well-calibrated if events that are forecasted to have an \( x \)\% chance of happening, are actually observed \( x \)\% of the time.
+In plain terms, a forecast is well-calibrated if events that are forecasted to have a \( y \)\% chance of happening, are actually observed \( y \)\% of the time.
 Being well-calibrated is insufficient for a forecast to be ``good."
-Take for example, the ``climatological" forecaster, who issues forecasts based on the marginal distribution of the predictand.
+For example, consider the ``climatological" forecaster, who issues forecasts based on the marginal distribution of the predictand.
 In the context of infectious disease modeling, a climatological forecaster could issue a forecast for daily influenza cases by issuing the same forecast every day, where their forecast is simply a smoothed estimate of daily influenza cases from the last decade.
 Assuming that influenza case counts in the future are, on average, distributed as they were in the last decade, this forecaster will be well-calibrated.
-However, competing forecasters should be able to make narrower forecasts while maintaining calibration, perhaps by using data from the preceding week to forecast case counts the next week.
-These forecasts are intuitively more useful and are said to be ``sharper."
+However, competing forecasters should be able to make narrower forecasts while maintaining calibration, perhaps by using data from the preceding week to predict case counts the next week.
+These forecasts are clearly more useful and are said to be ``sharper."
 
-calibration can be assessed by looking at PIT and empirical coverage.
-sharpness can be assessed by visually inspecting forecasts or compmuting summaries like interval width or variance.
+In practice, calibration and sharpness can be assessed by both numerical and graphical summaries.
+Calibration is often assessed by computing the probability integral transform (PIT), \( p = F(x) \) for each forecast, \( F \), and its corresponding observed value, \( x \), for all forecast times.
+If the forecasts are well-calibrated, \( p_t \sim \operatorname{Uniform}(0,1) \).
+Visual inspection of a histogram of PIT values for uniformity can, therefore, diagnose issues of miscalibration.
+Calibration can also be assessed by computing the empirical coverage of prediction intervals.
+Sharpness can be assessed by visually inspecting the predictive distributions or by computing summaries like interval widths or variance of the distribution.
 
-To numerically assess these forecast qualities, a strictly proper scoring rule can be used.
-We denote a score for a probabilistic forecast \( F \) and observed outcome \( s \) by \( s(F, x) \).
-Generally, the forecaster wishes to minimize the score.
+To numerically assess both sharpness and calibration, a strictly proper scoring rule can also be used.
+We denote a score for a probabilistic forecast \( F \) and observed outcome \( x \) by \( s(F, x) \).
+Generally, the forecaster wishes to minimize the score, which can be considered a penalty or cost function.
 A scoring rule is said to be proper when the expected value of the score is minimized when \( F = G \), where $x \sim G$.
 The scoring rule is strictly proper when this minimum is unique.
 
@@ -211,12 +280,15 @@ For a discussion of scoring rules, see \citet{gneiting2007strictly}.
     \label{ch_2:eqn:crps}
 \end{equation}
 
-When working in the context of MCMC (Section~\ref{ch_2:sec:bayesian-mcmc}), the posterior predictive distribution, \( F \), is not available in closed form and must be approximated.
+Predictive distributions arise naturally from the posterior predictive distribution in the Bayesian setting.
+The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
+Following the notation from Section~\ref{ch_2:sec:bayesian-mcmc}, the posterior predictive distribution is \( \pi \left( \bX^* \mid \bX \right) = \int \pi \left( \bX^* \mid \btheta \right) \pi \left( \btheta \mid \bX \right) \rmd \btheta \).
+When working in the context of MCMC (Section~\ref{ch_2:sec:bayesian-mcmc}), the posterior predictive distribution, \( F \), is not available in closed form.
 Rather, we only have some finite number of samples from the posterior distribution, \( \left( \btheta_i, \ldots \btheta_n \right) \).
-\citet{kruger2021predictive} presents three options for using these samples from MCMC procedures to produce evaluate probabilistic forests using proper scoring rules.
+\citet{kruger2021predictive} presents three options for using these samples from MCMC procedures to produce approximated probabilistic forests.
 
 The first is to use the mixture-of-parameters method.
-Often, the predictive distribution conditional on \( \btheta \) is available in closed form.
+Often, the predictive distribution, conditional on \( \btheta \), is available in closed form.
 Call this \( F_c \left( x \mid \btheta \right) \).
 We can approximate \( F \) by 
 
@@ -233,6 +305,5 @@ We could estimate \( F \) by the empirical cumulative distribution function of t
 
 We could also estimate the predictive density, \( f \) by a kernel density estimate of the posterior predictive samples.
 
-The authors recommend using the mixture-of-parameters method when possible, as it tends to outperform the ECDF method, which is, in turn, superior to the kernel density method.
-
-% Striclty proper scoring rules decompose based on winkler 1996
+The authors recommend using the mixture-of-parameters method when possible, as it tends to produce scores closer to those obtained using the true posterior predictive distribution.
+When the mixture-of-parameters method cannot be used, the authors advocate for the use of the ECDF method over the kernel density method.
