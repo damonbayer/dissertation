@@ -33,40 +33,37 @@ The proposed value \( \btheta^\prime \), is accepted with probability
 \end{align}
 
 Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so widely distributed that they have a very low probability of acceptance.
-As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult and Markov chains constructed with relatively simple algorithms tend to become ``stuck" in a small region, unable to explore the full posterior.
+As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult, and Markov chains constructed with relatively simple algorithms tend to become ``stuck" in a small region, unable to explore the full posterior.
 Compared to simpler algorithms (e.g. random walk Metropolis-Hastings), Hamiltonian Monte Carlo can more efficiently generate proposals by using Hamiltonian dynamics, where we augment our parameter space with ``momentum" variables which guide the proposals through regions of high probability.
 For a detailed overview, see \citet{betancourt2018conceptual} and \citet{neal2011mcmc}.
 
 \section{Confidence Distributions}
 \label{ch_2:sec:confidence_distributions}
-Confidence distributions are a frequentist estimator of a parameter, although they are historically associated with the fiducial distribution from fiducial statistics \citep{Xie2013}.
+Confidence distributions are a frequentist estimators of a parameter, although they are historically associated with the fiducial distribution from fiducial statistics \citep{Xie2013}.
 They are ``distribution estimators," similar in spirit to the bootstrap and the posterior distribution from Bayesian inference (see section \ref{ch_2:sec:bayesian-mcmc}).
 A modern definition and short history of confidence distributions is available in \citet{Xie2013}.
 For clarity with respect to discrete data, which is the focus of our use of confidence distributions in Chapter~\ref{ch:content_1}, we present a more classical derivation, which relies on previously derived confidence interval procedures.
 
-Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures, where for a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
+Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures.
+For a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
 Denote those one-sided intervals by $[L({\bf x},1-\alpha), \infty)$ and $(-\infty, U({\bf x},1-\alpha)]$, which are defined for any observed data ${\bf x}$, and $(1-\alpha) \in (0,1)$.
 For fixed ${\bf x}$, define the lower and upper confidence distribution random variables as $L({\bf x}, A)$ and $U({\bf x},B)$, where $A$ and $B$ are independent uniform random variables.
 Then a $100(1-\alpha)\%$ central confidence interval has the $(\alpha/2)$th quantile of $L({\bf x}, A)$ as the lower limit, and the $(1-\alpha/2)$th quantile of $U({\bf x},B)$ as the upper limit.
 
 As an example, let \( X_1, \ldots, X_n \) be independently and identically distributed \( \textrm{Normal}(\mu, \sigma^2) \).
-With \( \sigma^2 \) known, a \( (1 - \alpha) \)\% confidence interval for \( \mu \) is:
-
+With \( \sigma^2 \) known, a \( (1 - \alpha) \)\% confidence interval for \( \mu \) is
 \begin{equation}
 \left[ \bar{x} - z_{\alpha/2} \frac{\sigma}{\sqrt{n}}, \bar{x} + z_{\alpha/2} \frac{\sigma}{\sqrt{n}} \right],
 \label{ch_2:eqn:CI_normal_1}
 \end{equation}
-
 where \( \bar{x} \) is the sample mean and \( z_{\alpha / 2} \) satisfies \( P(Z \geq z_{\alpha / 2}) = \alpha / 2 \) and \( Z \sim \textrm{Normal}(0,1) \).
 
 Letting \( L_\mu (\bx, q) = U_\mu (\bx, q) = \bar{x} - \frac{\sigma}{\sqrt{n}} \Phi^{-1}(q) \), we have \( L_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \) and \( U_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \)
 
 We now note that \eqref{ch_2:eqn:CI_normal_1} is equivalent to
-
 \begin{equation}
     \left[ F_{L_{\mu}}^{-1}(\alpha / 2), F_{U_{\mu}}^{-1}(1- \alpha / 2) \right],
 \end{equation}
-
 where \( F_Y^{-1} \) indicates the inverse of the cumulative distribution function of a random variable \( Y \).
 Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence distribution random variables for \( \mu \).
 
@@ -74,7 +71,7 @@ Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence dist
 \label{sec:math_models}
 
 \subsection{Compartmental Models}
-
+\label{ch_2:sec:compartmental_models}
 The compartmental model is a popular tool used to describe the spread of infectious disease.
 The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model, which we use as an example in this section.
 In these models, the population of interest is divided into compartments which indicate a disease status (e.g., susceptible, infectious, and recovered), and individuals transition between compartments at a specified rate
@@ -117,7 +114,7 @@ The diagram in Figure~\ref{ch_2:fig:stocastic_SIR} represents the system's evolu
 	\arrow["{\text{Infection}}", draw=none, from=1-3, to=2-1]
 	\arrow["{\text{Recovery}}"', draw=none, from=3-3, to=2-1]
 \end{tikzcd}
-    \caption[State transition diagram for SIR model.]{State transition diagram for SIR model at time \( t \) with current state \( (S(t), I(t), R(t)) \).
+    \caption[State transition diagram for SIR model.]{State transition diagram for SIR model at time \( t \) with current state \( (S(t) \), \( I(t) \),  \( R(t)) \).
     The population experiences an infection and transitions to the state \( (S(t)-1, I(t)+1, R(t)) \) at the rate \( \frac{\beta}{N}SI \).
     The population experiences a recovery and transitions to the state \( (S(t), I(t)-11, R(t)+1) \) at the rate \( \gamma I \).
     }
@@ -126,7 +123,6 @@ The diagram in Figure~\ref{ch_2:fig:stocastic_SIR} represents the system's evolu
 
 The deterministic treatment of a stochastic compartmental model is a system of ordinary differential equations, which is the infinite population limit of the stochastic model \citep{Greenwood2009}.
 For the SIR model, we have 
-
 \begin{equation}
     \deriv{S}{t} = -\beta \frac{SI}{N}, \qquad
     \deriv{I}{t} = \beta \frac{SI}{N} - \gamma I, \qquad
@@ -170,7 +166,7 @@ Figure~\ref{ch_2:fig:SEIRDS_diagram} presents a model demonstrating some of thes
 \end{figure}
 
 \subsection{Data Integration}
-
+\label{ch_2:sec:data_integration}
 Broadly, we can categorize data used for this modeling as either actively or passively collected surveillance data.
 Common examples of passively collected incidence data include daily counts of diagnostic tests, confirmed cases, and deaths, as well as genetic sequences of viruses or bacteria that cause diseases.
 We refer to this as incidence data because each count is assumed to correspond to a new event during that time.
@@ -178,17 +174,19 @@ In contrast, we work with prevalence data, which is reflective of the frequency 
 Examples of prevalence data include counts of current hospital or intensive care unit (ICU) occupants with a certain disease or the number of seropositive tests from a carefully sampled population.
 We also loosely differentiate between data that is passively or actively collected.
 Passively collected data like case counts and hospital occupancy is reported routinely by health care agencies and is generally more affordable to collect because it doesn't require a formal study to be conducted.
-Actively collected data is often the result of a survey which has been deliberately designed and conducted to measure some aspect of a population, like the current number of people infected with a disease or the contact rates between different subpopulations, is more expensive to collect, but can provide information that is difficult to gather through passive surveillance.
+Actively collected data is often the result of a survey that has been deliberately designed and conducted to measure some aspect of a population, like the current number of people infected with a disease or the contact rates between different subpopulations.
+This data is more expensive to collect, but can provide information that is difficult to gather through passive surveillance.
 % could mention mobility data somewhere here
 
-Connecting the compartmental models to infectious disease data to perform statistical inference is a non-trivial task.
-Broadly, a model uses a compartmental model and basic parameters, like the basic reproductive number, duration of infectiousness, and infection-fatality ratio, to model the size of a compartment at a series of time points.
+As alluded to in Section~\ref{ch_2:sec:compartmental_models}, modelers can construct compartmental models which encode arbitrarily complex dynamics.
+While simulating from these models can be straightforward, connecting them to real-world data to perform statistical inference is a non-trivial task.
+Broadly, a model uses a compartmental model and basic parameters, like the reproductive number, duration of infectiousness, and infection-fatality ratio, to model the size of a compartment at a series of time points.
 These compartment sizes can be mapped to prevalence data with some emission distribution or loss function.
-To use incidence data, we can keep track of the cumulative incidence (e.g. by counting the cumulative number of \( S \to I \) transitions) at each time point and compute the difference between successive times.
+To integrate incidence data, we can keep track of the cumulative incidence (e.g. by counting the cumulative number of \( S \to I \) transitions) at each time point and compute the difference between successive times.
 Then these differences can be mapped to incidence data with an emission distribution or loss function.
 For example, let \( N_{S I}(t_l) \) be the cumulative number of \( S \to I \) transitions by time \( t = l \), as reported by the compartmental model.
 Then \( \Delta N_{S I}(t_l) = N_{S I}(t_l) - N_{S I}(t_{l-1}) \) is the number new \( S \to I \) transitions between time \( t = l \) and time \( t = l - 1 \).
-We can link this to the number of observed cases between time \( t = l \) and time \( t = l - 1 \) by
+We can link this to \( C_l \), the number of observed cases between time \( t = l \) and time \( t = l - 1 \) by
 \begin{equation}
 C_l \sim \text{Negative binomial}\left (\mu_l =  \rho \times \Delta N_{S I}(t_l),\ {\sigma^2_l} = \mu_l (1 + \mu_l / \phi )\right ),
 \label{ch_2:eqn:example_case_emission}
@@ -197,18 +195,18 @@ where \( \rho \) is a case reporting rate, reflecting that not all people who be
 
 The specifics of the data and compartmental model used can make the mapping from the compartment sizes and differences challenging.
 In some cases, the distinction between incidence and prevalence data is not clear.
-For example, when someone receives a positive test result for an infectious disease with a relatively short period of infectiousness, they may test themselves several times in the following weeks to approximate whether they are still infectious.
+For example, when someone receives a positive test result for an infectious disease with a relatively short period of infectiousness, they may receive several tests in the following weeks to approximate whether they are still infectious.
 In that case, each positive test is not necessarily reflective of a new disease case.
-These positive test results may also not be reflective of true cases because of imperfect specificity and sensitivity of the tests.
+The link between positive test results and the underlying cases may also be complicated by imperfect specificity and sensitivity of the tests.
 Similarly, there is ambiguity about the disease's relevance to an event reported in the data.
 Someone admitted to the hospital with a broken leg may also have an infectious disease and be reported as part of the hospital's passive surveillance data.
 Thus, the hospitalization data may not be truly reflective of the number of people with severe disease cases.
 Often, there is a significant delay between when data is captured and when it is reported.
-Thus, when performing inference or predictions in real time, it may appear that there are fewer cases in one week than in the previous week, simply due to the most recent week's tests not yet being fully reported.
+When performing inference or predictions in real time, it may appear that there are fewer cases in one week than in the previous week, simply due to the most recent week's tests not yet being fully reported.
 Furthermore, reporting practices for passive surveillance data may be inconsistent.
-The reason for the inconsistency could be due to any number of reasons.
+The inconsistency could be due to any number of reasons.
 For example, many testing locations may not be open on the weekends or holidays, making it appear that new cases are less common on those days.
-Inconsistencies may also be due to policy changes, changes in funding, or even accidental non-reporting.
+Inconsistencies may also be due to policy changes, changes in funding, shifting demographics among the infected population, or even accidental non-reporting.
 
 While overcoming each of these individual complications is itself difficult and requires modelers to make many subtle choices, there is additional complexity involved in integrating each of the data streams in a unified model.
 This additional complexity can be worth pursuing, as integrating more data sources may make more model parameters identifiable.
@@ -224,23 +222,17 @@ In addition, the authors cite issues related to computational complexity when co
 \section{Forecasting Infectious Disease Outbreaks}
 \label{sec:forecasting_techniques_and_assessment}
 
-Look at forecasting hub for methods
-\begin{itemize}
-    \item expert opinion {McAndrew2022Expert}
-    \item ensemble forecast
-    \item least squares minimization
-    \item Bayesian
-    \item frequentist
-\end{itemize}
-
+While compartmental models are a common framework for forecasting infectious disease outbreaks, other methods are available for the task.
+A sample of these methods are gathered in the COVID-19 Forecast Hub, which collected and synthesized forecasts from a variety of modelers with diverse approaches throughout the COVID-19 pandemic \citep{Cramer2022Evaluation}.
+Among the methods presented are those using compartmental models, along with approaches common to other areas of statistics, such as time series and machine learning methods.
+In addition, \citet{Cramer2022Evaluation} evaluates an ensemble forecast, which combines the models into a single forecast, which is generally shown to have superior performance to any of the individual models.
+These methods typically use the data described in Section~\ref{ch_2:sec:data_integration}, but some incorporate additional data sources, such as mobility data collected from mobile phones.
 
 \subsection{Forecast Assessment}
 
-There are other proposed ways to make assessments
-
-\citet{Cramer2022Evaluation}
-
-\citet{Bracher2021Evaluating}
+Methods used for forecast assessment differ based on the format of the forecasts.
+We begin with detailed exploration of forecasts in the form of full probability distributions, which we use throughout this work.
+We end this section with a brief overview of other forecast evaluation methods.
 
 Probabilistic forecasts are probability distributions over future events.
 In this section, let \( F(x) \) denote the cumulative distribution function of a forecast.
@@ -274,12 +266,10 @@ For continuous variables, the continuous ranked probability score \eqref{ch_2:eq
 In contrast to other scoring rules, it is based on the cumulative distribution function of the predictive distribution, rather than the density function, which may not exist in some contexts.
 Additionally, the CRPS is sensitive to distance, meaning that it gives credit to forecasts which assign high probability to values near \( x \), even if they do not assign high probability to \( x \) itself.
 For a discussion of scoring rules, see \citet{gneiting2007strictly}.
-
 \begin{equation}
     \operatorname{CRPS}(F, x) = \int_{-\infty}^{\infty} \left( F(y) - \mathds{1} \left( y \geq x \right) \right)^2 \rmd y
     \label{ch_2:eqn:crps}
 \end{equation}
-
 Predictive distributions arise naturally from the posterior predictive distribution in the Bayesian setting.
 The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
 Following the notation from Section~\ref{ch_2:sec:bayesian-mcmc}, the posterior predictive distribution is \( \pi \left( \bX^* \mid \bX \right) = \int \pi \left( \bX^* \mid \btheta \right) \pi \left( \btheta \mid \bX \right) \rmd \btheta \).
@@ -291,19 +281,44 @@ The first is to use the mixture-of-parameters method.
 Often, the predictive distribution, conditional on \( \btheta \), is available in closed form.
 Call this \( F_c \left( x \mid \btheta \right) \).
 We can approximate \( F \) by 
-
 \begin{equation}
     \hat{F}^\mathrm{MP}(x) = \frac{1}{n} \sum_{i=1}^n F_c \left( x \mid \btheta_i \right).
 \end{equation}
-
 Alternatively, we can work directly with samples from the posterior predictive, \( \left( x^*_1, \ldots, x^*_n \right) \).
 We could estimate \( F \) by the empirical cumulative distribution function of these samples:
-
 \begin{equation}
     \hat{F}^\mathrm{ECDF}(x) = \frac{1}{n} \sum_{i=1}^n \1{x \geq x^*_i}.
 \end{equation}
-
 We could also estimate the predictive density, \( f \) by a kernel density estimate of the posterior predictive samples.
 
 The authors recommend using the mixture-of-parameters method when possible, as it tends to produce scores closer to those obtained using the true posterior predictive distribution.
 When the mixture-of-parameters method cannot be used, the authors advocate for the use of the ECDF method over the kernel density method.
+
+Forecasts may be represented with less detail than a full probabilistic forecast distribution (or samples from such a distribution).
+If, instead, only quantiles of the forecast distribution are provided, it is common to use the pinball loss function  to assess forecast quality:
+\begin{equation}
+    \operatorname{Pinball-Loss}(f_\alpha, x) = \left( \mathds{1} \left\{ x \leq f_\alpha \right\} - \alpha \right) \left( f_\alpha - x \right) =
+    \begin{cases}
+    \left( 1 - \alpha \right) \left( f_\alpha - x \right)   &   x \leq f_\alpha\\
+    \alpha \left( x - f_\alpha \right)  &   x \geq f_\alpha
+    \end{cases},
+    \label{ch_2:eqn:pinball_loss}
+\end{equation}
+where \( x \) is the observed value and \( f_\alpha \) is the \( \alpha \) quantile of the predictive distribution.
+When \( \alpha = 0.5 \), this is the same as \( 1 / 2  \) of the absolute error.
+When \( \alpha \neq 0.5 \), the penalty is weighted based on the probability of \( f_\alpha - x \) being positive or negative.
+
+When forecasts are presented in an interval format (or intervals are constructed from quantiles), the Winkler score is commonly used:
+\begin{equation}
+    \operatorname{Winkler}_\alpha \left( l_\alpha, u_\alpha, x \right) = \left( u_\alpha - l_\alpha \right) + \frac{2}{\alpha} \left( l_\alpha - x \right) \mathds{1} \left\{ x < l_\alpha \right\} + \frac{2}{\alpha} \left( x - u_\alpha \right) \mathds{1} \left\{ x > u_\alpha \right\},
+\end{equation}
+where \( \left[ l_\alpha, u_\alpha \right] \) is a \( 100 (1 - \alpha) \)\% prediction interval.
+In \citet{Bracher2021Evaluating}, a weighted interval score is developed for combining Winkler scores at several levels of \( \alpha \).
+A recent overview of methods for evaluating forecast quantiles is available in \citet{Gneiting2023Model}.
+Further discussion of all of the above scoring methods is presented in \citet{gneiting2007strictly}.
+
+When only point forecasts are available, many standard loss functions are applicable to measure the error between an observed value, \( x \), and a forecasted value, \( \hat{x} \).
+The most common of these are the absolute error, \( \abs{x - \hat{x}} \), and the squared error, \( \left( x - \hat{x} \right)^2 \).
+These measures are scale-dependent, making them inappropriate for comparing forecasts on quantities of different units.
+To overcome this limitation, the absolute percentage error \( \abs{100 \left( x - \hat{x} \right)/ x} \) can be used.
+A detailed discussion of error measurements available for point forecasts is presented in \citet{Hyndman2006Another}.
