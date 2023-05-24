@@ -231,6 +231,7 @@ Now, we discuss our model for \( \delta(t) \), the proportion of currently infec
 We assume that, after the novel variant is introduced, its proportion in the population evolves according to logistic growth:
 \begin{equation}
     \delta(t) = \frac{\exp \left\{ \iota_0 + \iota_1 \left( t \right) \right\}}{\exp \left\{ \iota_0 + \iota_1 \left( t \right) \right\} + 1}.
+    \label{ch_5:eqn:logistic_growth}
 \end{equation}
 To set interpretable priors on \( \iota_0 \) and \( \iota_1 \), we parameterize as 
 \begin{equation}
@@ -254,15 +255,20 @@ We base all our inferences and predictions on the posterior distribution of all 
 \begin{equation}
 \Pr\left(\btheta \mid \bW, \bX, \bY, \bZ, \bV^N, \bV^O \right) \propto \Pr\left(\bW, \bX, \bY, \bZ, \bV^N, \bV^O \mid \btheta \right) \pi \left( \btheta \right).
 \end{equation}
-We sample from this posterior using the No-U-Turn Sampler \citep{NUTS} as implemented in the Turing Julia package \citep{turing}.
+We sample from this posterior using the No-U-Turn Sampler, \citep{NUTS} as implemented in the Turing Julia package \citep{turing}.
 Model code and data are available at the following GitHub repository: \url{https://github.com/damonbayer/immunity_semi_parametric_model}.
 
 \section{Results}
 \label{ch_5:sec:results}
 
-In our simulation study and application in Section~\ref{ch_5:sec:results}, we observe the non-genetic data at a weekly resolution, while the genetic data is reported at a daily resolution, so the two groups of time series
+In our simulation study and application, we observe the non-genetic data at a weekly resolution, while the genetic data is reported at a daily resolution.
+In addition, to appropriately meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth} we only observe the genetic data after some time, \( t^\dag \), at which we assume the new variant is introduced.
+We generally choose \( t^\dag \) to be about one week before the first sequence from the novel variant is observed.
+
 \subsection{Simulation study}
 \label{ch_5:subsec:simulation}
+
+
 
 \begin{itemize}
     \item We simulate from a two strain model
