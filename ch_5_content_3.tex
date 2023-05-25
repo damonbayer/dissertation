@@ -239,7 +239,6 @@ To set interpretable priors on \( \iota_0 \) and \( \iota_1 \), we parameterize 
 \end{equation}
 where \( t^* \) is the time point for which \( \delta(t^*) = \frac{ \exp \left\{ \iota_0 \right\} }{\exp \left\{ \iota_0 \right\} + 1} \).
 Then \( \iota_1 = \frac{\ln \left( \frac{0.99}{1 - 0.99} \right) - \ln \left( \frac{0.01}{1 - 0.01} \right)}{\iota_1^*} \), where \( \iota_1^* \) is the amount of time the novel variant takes to grow from 1\% of the infectious population to 99\% of the infectious population.
-Examples of these curves used in our simulation study are presented in Figure~tk.
 
 With these parameters all defined, we describe our Bayesian procedure.
 We collect all our model parameters into a vector $\boldsymbol{\theta}$ and write the likelihood function as 
@@ -262,39 +261,53 @@ Model code and data are available at the following GitHub repository: \url{https
 \label{ch_5:sec:results}
 
 In our simulation study and application, we observe the non-genetic data at a weekly resolution, while the genetic data is reported at a daily resolution.
+We find that the daily reporting of genetic data is crucial to capturing the early exponential-like growth of the the novel variant, relative to the other variants.
 In addition, to appropriately meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth} we only observe the genetic data after some time, \( t^\dag \), at which we assume the new variant is introduced.
 We generally choose \( t^\dag \) to be about one week before the first sequence from the novel variant is observed.
 
 \subsection{Simulation study}
 \label{ch_5:subsec:simulation}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{simulated_binned_data_medium_plot}
-    \caption{Caption}
-    \label{fig:my_label1}
-\end{figure}
+We simulate three data sets for this study, each where the novel variant becomes dominant at a different speed: slow (24 weeks to go from 1\% to 99\% of sequences), medium (13 weeks), and fast (7 weeks).
+The data sets are simulated from a two strain model, which is depicted in Figure~\ref{ch_5:fig:full_model_diagram_compact} and explained in full detail in Appendix~\ref{ch_5:sec:full_simulation_model_explanation}.
+Briefly, the model is similar to the one depicted in Figure~\ref{ch_5:fig:model_diagram} but is modified accounts for two distinct disease variants.
+The variants associated with each compartment are indicated by the subscripts: ``N" for the novel variant, ``O" for other variants, and ``A" for all types for variants.
+When all compartments associated with one variant type are empty, the model is equivalent to the one from Figure~\ref{ch_5:fig:model_diagram}.
 
+These otherwise independent models are linked by allowing transitions from \( S_B \) and \( R_O \) to \( E_N \).
+That is, people who are susceptible to all variant types and those who are only recovered from other variants can become infected with the novel variant.
+The rates for these transitions are given by
+\begin{equation}
+   \lambda_{{S_B}{E_N}}\left( S_B, I_N \right) = \frac{\beta}{N} S_B I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta}{N} R_O I_N,
+\end{equation}
+where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents partial immunity to the novel variant conferred by the other variants.
+After some time, all the people in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=1.0\columnwidth]{proportion_novel_variant_simulated_data_plot}
-    \caption{Caption}
-    \label{fig:my_label2}
-\end{figure}
-\begin{itemize}
-    \item We simulate from a two strain model
-    \item 
-\end{itemize}
+\begin{table}
+\caption{Simulation parameters that differ by scenario.}
+\label{ch_5:table:scenario_differing_parameters}
+\centering
+\label{table}
+\begin{tabular}{lrr}
+Scenario & \( \beta \) & \( \epsilon \) \\ \hline
+Slow     & 2.1         & 0.75           \\
+Medium   & 2.1         & 1.0            \\
+Fast     & 3.5         & 1.0            \\
+\end{tabular}
+\end{table}
 
 \begin{figure}
     \centering
 % https://q.uiver.app/?q=WzAsMTMsWzAsMCwiU18wIl0sWzEsMCwiRV8xIl0sWzIsMCwiSV8xIl0sWzIsMSwiUl8xIl0sWzEsMiwiRV97Mn0iXSxbMiwyLCJJXzIiXSxbMiwzLCJSXzIiXSxbMCwyLCJTXzIiXSxbMywwLCJIXzEiXSxbNCwwLCJJQ1VfMSJdLFszLDIsIkhfMiJdLFs0LDIsIklDVV8yIl0sWzQsMSwiRCJdLFswLDFdLFsxLDJdLFsyLDNdLFswLDRdLFs0LDVdLFszLDBdLFszLDRdLFs1LDZdLFs2LDddLFsyLDhdLFs4LDldLFs5LDNdLFs4LDNdLFs1LDEwXSxbMTAsNl0sWzEwLDExXSxbMTEsNl0sWzcsNF0sWzExLDEyXSxbOSwxMl1d
 \begin{tikzcd}[sep=scriptsize]
-	{S_0} & {E_1} & {I_1} & {H_1} & {ICU_1} \\
-	&& {R_1} && D \\
-	{S_2} & {E_{2}} & {I_2} & {H_2} & {ICU_2} \\
-	&& {R_2}
+	% {S_0} & {E_1} & {I_1} & {H_1} & {U_1} \\
+	% && {R_1} && D \\
+	% {S_2} & {E_2} & {I_2} & {H_2} & {U_2} \\
+	% && {R_2}
+        {S_A} & {E_O} & {I_O} & {H_O} & {U_O} \\
+	&& {R_O} && {D_A} \\
+	{S_N} & {E_N} & {I_N} & {H_N} & {U_N} \\
+	&& {R_N}
 	\arrow[from=1-1, to=1-2]
 	\arrow[from=1-2, to=1-3]
 	\arrow[from=1-3, to=2-3]
@@ -320,59 +333,57 @@ We generally choose \( t^\dag \) to be about one week before the first sequence 
     \label{ch_5:fig:full_model_diagram_compact}
 \end{figure}
 
-% More text
+For our simulations, the compartments are initiated with the entire population (3 million) in \( S_0 \), except a small number who are in \( E_1 \).
+Because all the \( N \) subscript compartments are empty, this behaves like the model in Figure~\ref{ch_5:fig:model_diagram}.
+We simulate the compartment trajectories until the initial surge begins to subside.
+While the overall prevalence is beginning to decrease, we simulate an importation of 1000 people who are infectious with the novel variant into the \( I_2 \) compartment.
+Then, the population begins to transition into the \( N \) subscript compartments, resulting in a second wave.
+Forecasting this second wave is the objective of our modeling efforts.
+We influence the size of this wave and the speed that the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
+Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
+The other simulation parameters are given in Table~tk.
+The resulting proportion of infectious population with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
+The simulated data for the medium takover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we create forecasts.
+Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
+In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
+Genetic data is reported at a daily resolution beginning one week prior to the novel variant import event.
 
-% \begin{figure}
-%     \centering
-% % https://q.uiver.app/?q=WzAsMjQsWzEsMiwiU18wIl0sWzIsMiwiRV8xIl0sWzMsMiwiSV8xIl0sWzUsMiwiUl8xIl0sWzMsMSwiSF8xIl0sWzMsMCwiSUNVXzEiXSxbNSwwLCJEXzEiXSxbMSwzLCJFXzIiXSxbMSw0LCJJXzIiXSxbNSwzLCJFX3sxMn0iXSxbNSw0LCJJX3sxMn0iXSxbMyw1LCJSXzIiXSxbNiw0LCJIX3sxMn0iXSxbNiw1LCJJQ1VfezEyfSJdLFs2LDYsIkRfezEyfSJdLFswLDQsIkhfezJ9Il0sWzAsNSwiSUNVXzIiXSxbMCw2LCJEXzIiXSxbMyw2LCJTX3syMn0iXSxbMyw3LCJFX3syMn0iXSxbMyw4LCJJX3syMn0iXSxbNCw4LCJIX3syMn0iXSxbNSw4LCJJQ1VfezIyfSJdLFs2LDgsIkRfezIyfSJdLFswLDFdLFsxLDJdLFsyLDNdLFsyLDRdLFs0LDVdLFs1LDZdLFs1LDNdLFs0LDNdLFszLDAsIiIsMCx7ImN1cnZlIjotNX1dLFswLDddLFs4LDExXSxbMTAsMTFdLFs5LDEwXSxbMyw5XSxbNyw4XSxbMTAsMTJdLFsxMiwxM10sWzEzLDExXSxbMTIsMTFdLFsxMywxNF0sWzgsMTVdLFsxNSwxNl0sWzE2LDE3XSxbMTUsMTFdLFsxNiwxMV0sWzExLDE4XSxbMjAsMTEsIiIsMCx7ImN1cnZlIjotNX1dLFsxOCwxOV0sWzE5LDIwXSxbMjAsMjFdLFsyMSwyMl0sWzIyLDIzXSxbMjEsMTFdLFsyMiwxMV1d
-% \begin{tikzcd}[sep=scriptsize]
-% 	&&& {ICU_1} && {D_1} \\
-% 	&&& {H_1} \\
-% 	& {S_0} & {E_1} & {I_1} && {R_1} \\
-% 	& {E_2} &&&& {E_{12}} \\
-% 	{H_{2}} & {I_2} &&&& {I_{12}} & {H_{12}} \\
-% 	{ICU_2} &&& {R_2} &&& {ICU_{12}} \\
-% 	{D_2} &&& {S_{22}} &&& {D_{12}} \\
-% 	&&& {E_{22}} \\
-% 	&&& {I_{22}} & {H_{22}} & {ICU_{22}} & {D_{22}}
-% 	\arrow[from=3-2, to=3-3]
-% 	\arrow[from=3-3, to=3-4]
-% 	\arrow[from=3-4, to=3-6]
-% 	\arrow[from=3-4, to=2-4]
-% 	\arrow[from=2-4, to=1-4]
-% 	\arrow[from=1-4, to=1-6]
-% 	\arrow[from=1-4, to=3-6]
-% 	\arrow[from=2-4, to=3-6]
-% 	\arrow[curve={height=-30pt}, from=3-6, to=3-2]
-% 	\arrow[from=3-2, to=4-2]
-% 	\arrow[from=5-2, to=6-4]
-% 	\arrow[from=5-6, to=6-4]
-% 	\arrow[from=4-6, to=5-6]
-% 	\arrow[from=3-6, to=4-6]
-% 	\arrow[from=4-2, to=5-2]
-% 	\arrow[from=5-6, to=5-7]
-% 	\arrow[from=5-7, to=6-7]
-% 	\arrow[from=6-7, to=6-4]
-% 	\arrow[from=5-7, to=6-4]
-% 	\arrow[from=6-7, to=7-7]
-% 	\arrow[from=5-2, to=5-1]
-% 	\arrow[from=5-1, to=6-1]
-% 	\arrow[from=6-1, to=7-1]
-% 	\arrow[from=5-1, to=6-4]
-% 	\arrow[from=6-1, to=6-4]
-% 	\arrow[from=6-4, to=7-4]
-% 	\arrow[curve={height=-30pt}, from=9-4, to=6-4]
-% 	\arrow[from=7-4, to=8-4]
-% 	\arrow[from=8-4, to=9-4]
-% 	\arrow[from=9-4, to=9-5]
-% 	\arrow[from=9-5, to=9-6]
-% 	\arrow[from=9-6, to=9-7]
-% 	\arrow[from=9-5, to=6-4]
-% 	\arrow[from=9-6, to=6-4]
-% \end{tikzcd}
-%     \caption{Caption}
-%     \label{ch_5:fig:full_model_diagram_sprawl}
-% \end{figure}
+We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
+The first model is reflective of typical practice in infectious disease modeling.
+The second is a slight variation on the first, where we make the immune duration vary over time, rather than the basic reproductive number.
+The third model is our main innovation, which models the immune duration based on genetic data.
+The priors used in these models are presented in Table~tk.
+
+While these models forecast several data streams, we present only those related to hopsitalization in the main text, as this is the most relevant for consumers of these models.
+We present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
+In general, these results exhibit the same patterns as observed in the hospitalization results.
+Additionally, we conducted a sensitivity analysis wherein we modifidied the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
+The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
+
+
+\begin{itemize}
+    \item x-week ahead forecast plots
+    \item CRPS plot
+    \item other metrics in appendix
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{proportion_novel_variant_simulated_data_plot}
+    \caption{Proportion of infectious population with novel variant over time for three simulated scenarios.
+    The dashed line indicates the time that the initial importation event of the novel variant occurrs.}
+    \label{ch_5:fig:proportion_novel_variant_simulated_data_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{simulated_binned_data_medium_plot}
+    \caption[Simulated data set for medium takeover speed scenario.]{Simulated data set for medium takeover speed scenario.
+    The gray shaded areas indicating the time points for which we create forecasts}
+    \label{ch_5:fig:simulated_binned_data_medium_plot}
+\end{figure}
+
+In addition, we performed a sensitiviy analysis.
 
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
