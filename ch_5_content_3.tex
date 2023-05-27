@@ -261,7 +261,7 @@ Model code and data are available at the following GitHub repository: \url{https
 \label{ch_5:sec:results}
 
 In our simulation study and application, we observe the non-genetic data at a weekly resolution, while the genetic data is reported at a daily resolution.
-We find that the daily reporting of genetic data is crucial to capturing the early exponential-like growth of the the novel variant, relative to the other variants.
+We find that the daily reporting of genetic data is crucial to capturing the early exponential-like growth of the novel variant, relative to the other variants.
 In addition, to appropriately meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth} we only observe the genetic data after some time, \( t^\dag \), at which we assume the new variant is introduced.
 We generally choose \( t^\dag \) to be about one week before the first sequence from the novel variant is observed.
 
@@ -343,10 +343,10 @@ We influence the size of this wave and the speed that the novel variant takes ov
 Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
 The other simulation parameters are given in Table~tk.
 The resulting proportion of infectious population with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
-The simulated data for the medium takover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we create forecasts.
+The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we create forecasts.
 Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
 In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
-Genetic data is reported at a daily resolution beginning one week prior to the novel variant import event.
+Genetic data is reported at a daily resolution beginning one week before the novel variant import event.
 
 We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
 The first model is reflective of typical practice in infectious disease modeling.
@@ -354,10 +354,10 @@ The second is a slight variation on the first, where we make the immune duration
 The third model is our main innovation, which models the immune duration based on genetic data.
 The priors used in these models are presented in Table~tk.
 
-While these models forecast several data streams, we present only those related to hopsitalization in the main text, as this is the most relevant for consumers of these models.
+While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
 We present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
 In general, these results exhibit the same patterns as observed in the hospitalization results.
-Additionally, we conducted a sensitivity analysis wherein we modifidied the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
+Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
 The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
 
 
@@ -371,7 +371,7 @@ The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitiv
     \centering
     \includegraphics[width=1.0\columnwidth]{proportion_novel_variant_simulated_data_plot}
     \caption{Proportion of infectious population with novel variant over time for three simulated scenarios.
-    The dashed line indicates the time that the initial importation event of the novel variant occurrs.}
+    The dashed line indicates the time that the initial importation event of the novel variant occurs.}
     \label{ch_5:fig:proportion_novel_variant_simulated_data_plot}
 \end{figure}
 
@@ -383,7 +383,7 @@ The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitiv
     \label{ch_5:fig:simulated_binned_data_medium_plot}
 \end{figure}
 
-In addition, we performed a sensitiviy analysis.
+In addition, we performed a sensitivity analysis.
 
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
