@@ -348,25 +348,6 @@ Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:s
 In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
 Genetic data is reported at a daily resolution beginning one week before the novel variant import event.
 
-We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
-The first model is reflective of typical practice in infectious disease modeling.
-The second is a slight variation on the first, where we make the immune duration vary over time, rather than the basic reproductive number.
-The third model is our main innovation, which models the immune duration based on genetic data.
-The priors used in these models are presented in Table~tk.
-
-While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
-We present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
-In general, these results exhibit the same patterns as observed in the hospitalization results.
-Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
-The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
-
-
-\begin{itemize}
-    \item x-week ahead forecast plots
-    \item CRPS plot
-    \item other metrics in appendix
-\end{itemize}
-
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{proportion_novel_variant_simulated_data_plot}
@@ -383,7 +364,45 @@ The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitiv
     \label{ch_5:fig:simulated_binned_data_medium_plot}
 \end{figure}
 
-In addition, we performed a sensitivity analysis.
+
+We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
+The first model is reflective of typical practice in infectious disease modeling.
+The second is a slight variation on the first, where we make the immune duration vary over time, rather than the basic reproductive number.
+The third model is our main innovation, which models the immune duration based on genetic data.
+The priors used in these models are presented in Table~tk.
+
+While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
+We present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
+In general, these results exhibit the same patterns as observed in the hospitalization results.
+Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
+The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
+
+We first show 1, 2, and 4-week ahead forecasts for the simulated medium takeover speed data in Figure~\ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}.
+Analogous plots for the slow and fast takeover data are presented in Figures~\ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_slow_plot} and \ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_fast_plot}, respectively.
+
+From these figures, we note that, for all models and all datasets, one-week ahead forecasts match the data quite closely.
+As may be expected, performance degrades as the forecast horizon increases.
+For the slow data, the model where \( 1 / \kappa(t) \) is informed by the genetic data closely matches the data up to the four-week ahead forecasts.
+The model where \( 1 / \kappa(t) \) is a GMRF also matches quite well, while the model where \( R_0(t) \) is a GMRF is much less sharp than the other models.
+For then the medium data, the model with \( 1 / \kappa(t) \) informed by the genetic data again fits the data well up to the four-week forecast horizon.
+The \( 1 / \kappa(t) \) GMRF model misjudges the height and the timing of the peak, and the forecasts from the \( R_0(t) \) GMRF model are again too much wider than the other models.
+When forecasting the fast data, the \( R_0(t) \) GMRF model is competitive with the \( 1 / \kappa(t) \) genetic model, while the \( 1 / \kappa(t) \) GMRF model again misjudges the peak.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{simulated_forecast_comparison_data_hospitalizations_medium_plot}
+    \caption{Forecast from three models at 1, 2, and 4-week forecast horizons for the simulated medium takeover speed data.}
+    \label{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}
+\end{figure}
+
+\begin{itemize}
+    \item x-week ahead forecast plots
+    \item CRPS plot
+    \item other metrics in appendix
+\end{itemize}
+
+
+
 
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
