@@ -332,7 +332,9 @@ Fast     & 3.5         & 1.0            \\
 	\arrow[from=3-5, to=2-5]
 	\arrow[from=1-5, to=2-5]
 \end{tikzcd}
-    \caption{Caption}
+    \caption[Compartmental diagram for simulation model.]{Compartmental diagram for simulation model.
+    Model compartments are susceptible individuals \( (S) \), infected, but not yet infectious, individuals \( (E) \), infectious individuals \( (I) \), individuals hospitalized with infection \( (H) \), individuals in the ICU with infection \( (U) \),  recovered individuals \( (R) \), and individuals who died due to infection \( (D) \).
+    The variants associated with each compartment are indicated by the subscripts: ``N" for the novel variant, ``O" for other variants, and ``A" for all types for variants.}
     \label{ch_5:fig:full_model_diagram_compact}
 \end{figure}
 
@@ -413,11 +415,42 @@ For the medium takeover data, the two GMRF models are competitive with each othe
     \label{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}
 \end{figure}
 
+We also specifically assess our each model's ability to estimate the timing and size of the peak hospital occupancy.
+Posterior credible intervals for the peak timing  and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
+In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest credible interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when more data is included in the model.
+The model where \( R_0(t) \) follows a GMRF has the widest intervals and is, in general, under confident about the peak timing and value, even when the peak has already passed.
+The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_time_plot}
+    \caption{Caption}
+    \label{ch_5:fig:simulated_peak_assessment_time_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{figures/ch_5/simulated_peak_assessment_value_plot}
+    \caption{Caption}
+    \label{ch_5:fig:simulated_peak_assessment_value_plot}
+\end{figure}
+
+Summaries of scores for these forecasts are depicted in Figure~\ref{ch_5:fig:simulated_peak_crps_boxplot_plot}, while the score at each forecast time is shown in Figure~\ref{ch_5:fig:simulated_peak_crps_plot}.
+For the slow takeover data, the model where \( 1 / \kappa(t) \) is informed by the genetic data achieves the best scores for both peak timing and value.
+When the models are fit to the medium and fast takeover data, the model where \( R_0(t) \) is a GMRF performs the best.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{simulated_peak_crps_boxplot_plot}
+    \caption{Caption}
+    \label{ch_5:fig:simulated_peak_crps_boxplot_plot}
+\end{figure}
+
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
 
 In our application, we focus on modeling the wave of cases, hospitalizations, ICU admissions, and deaths associated with the first Omicron variant of SARS-CoV-2 in California.
-This wave lasted from roughly December 2021 to March 2022, but we use data beginning in May 2021 to forecast this time period.
+This wave lasted from roughly December 2021 to March 2022, but we use data beginning in May 2021 to forecast this time period, as this time period includes the previous wave of cases.
 We fit models to both Orange County data and statewide data.
 The time series of daily counts of positive tests (cases), hospital occupancy and ICU occupancy are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
 Additionally, the daily counts of sequenced viruses, aggregated by pango lineage \citep{pango}, are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} and made available via Outbreak.info \citep{Gangavarapu2023}.
@@ -450,9 +483,16 @@ The gray highlighted regions indicate the times for which we create forecasts.}
 
 \subsection{Discussion}
 \label{ch_5:subsec:discussion}
-Modeling hospitalization with/for is somewhat complicated.
-Assume that with is dominated by for time we care about.
-Hospitalization may change for other reasons, but we assume negligible unless there is a natural disaster or something.
-We assume that genetic sequences from each variant happens at the same rate, probably not true.
-I think there is a note in GISAID or on outbreak.info about this.
-The camel that is the likelihood
+
+\begin{itemize}
+    \item Modeling hospitalization with/for is somewhat complicated.
+    \item Assume that with is dominated by for time we care about.
+    \item Hospitalization may change for other reasons, but we assume negligible unless there is a natural disaster or something.
+    \item We assume that genetic sequences from each variant happens at the same rate, probably not true.
+    \item I think there is a note in GISAID or on outbreak.info about this.
+    \item Assume variants don't differ any way, but you can accommodate
+    \item Beta Binomial vs Neg binomial
+\end{itemize}
+
+
+
