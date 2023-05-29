@@ -9,7 +9,7 @@
 
 \begin{itemize}
     \item Forecasting in Epidemic modeling is important.
-    \item data integration is hard
+    \item data integration is hard.
     \item A lot of forecasting methods have been tried recently.
     \item COVID-19 saw changing dynamics due to new variants
     \item When new variants arise, they can lead to waves, either due to increased transmissibility or immune escape
@@ -398,16 +398,20 @@ When forecasting the fast data, the \( R_0(t) \) GMRF model is competitive with 
     \label{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}
 \end{figure}
 
-\begin{itemize}
-    \item x-week ahead forecast plots
-    
-    \item x-week ahead CRPS box plot
-    \item CRPS plot
-    \item other metrics in appendix
-\end{itemize}
+To numerically assess the quality of these forecasts, we compute the continuous rank probability score (CRPS) for each forecast at 1, 2, and 4-week horizons.
+Boxplots summarizing the scores of the hospitalization forecasts are displayed in Figure~\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}.
+Analogous plots for forecasts of cases, ICU occupancy, and deaths are presented in Figures~\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_new_cases_plot}--\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_new_deaths_plot}.
+Additionally, we show the scores for each individual forecast for each data stream in Figures~\ref{ch_5:fig:simulated_crps_comparison_data_new_cases_plot}--\ref{ch_5:fig:simulated_crps_comparison_data_new_deaths_plot}.
+We observe that across all simulated scenarios and data streams, the model where \( 1 / \kappa(t) \) is informed by the genetic data achieves the lowest (best) scores.
+For the slow takeover data, the model where \( 1 / \kappa(t) \) is modeled by a GMRF performs better than the model where \( R_0(t) \) is a GMRF.
+For the medium takeover data, the two GMRF models are competitive with each other, while the \( R_0(t) \) GMRF model outperforms the \( 1 / \kappa(t) \) GMRF model for the fast takeover data.
 
-
-
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{simulated_crps_comparison_boxplot_data_hospitalizations_plot}
+    \caption[CRPS summaries for hospital occupancy forecasts.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for three simulated data sets. Lower CRPS is better.}
+    \label{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}
+\end{figure}
 
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
@@ -417,8 +421,10 @@ This wave lasted from roughly December 2021 to March 2022, but we use data begin
 We fit models to both Orange County data and statewide data.
 The time series of daily counts of positive tests (cases), hospital occupancy and ICU occupancy are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
 Additionally, the daily counts of sequenced viruses, aggregated by pango lineage \citep{pango}, are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} and made available via Outbreak.info \citep{Gangavarapu2023}.
-To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g. BA.1, BA.1.1, BA.1.1.1, BA.1.17.2) and those that do not.
+To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g. BA.1, BA.1.1, BA.1.17.2) and those that do not.
+The BA.1 sequences are the ``novel" variant, and the non-BA.1 sequences are the ``other" variants.
 The non-genetic time series are aggregated at a weekly level, while the genetic data is used at a daily resolution.
+Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
 The gray highlighted regions indicate the times for which we create forecasts.
 
