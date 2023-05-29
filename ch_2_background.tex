@@ -121,7 +121,11 @@ The diagram in Figure~\ref{ch_2:fig:stocastic_SIR} represents the system's evolu
     \label{ch_2:fig:stocastic_SIR}
 \end{figure}
 
-The deterministic treatment of a stochastic compartmental model is a system of ordinary differential equations, which is the infinite population limit of the stochastic model \citep{Greenwood2009}.
+The deterministic treatment of a stochastic compartmental model is a system of ordinary differential equations (ODEs).
+Let \( s(t) = S(t) / N \), \( i(t) = I(t) / N \), \( r(t) = R(t) / N \).
+The system of ODEs can be viewed as the diffusion limit of the stochastic model as \( N \to \infty \), while \( s(0), i(0), r(0) \) are held constant \citep{Greenwood2009, fuchs2013inference}.
+% The latter corresponds to a deterministic model and can be obtained by ignoring the stochastic part of
+% which is the infinite population limit of the stochastic model.
 For the SIR model, we have 
 \begin{equation}
     \deriv{S}{t} = -\beta \frac{SI}{N}, \qquad
@@ -144,6 +148,9 @@ The basic SIR model can be augmented with more compartments, as well as time-var
 Additional compartments can account for different disease states (e.g. exposed, vaccinated, or deceased), competing disease variants, or stratification of the population (e.g. by age or location).
 It is also possible to model a perpetual outbreak by allowing reinfection after recovery (e.g. \(R \to S\) transitions).
 Time-varying parameters can also model changes in behavior or policy (e.g. stay at home orders and restaurant closures) that cannot be captured by the constant parameters.
+
+This book cites extensions
+\url{https://www.google.com/books/edition/Inference_for_Diffusion_Processes/kRJEAAAAQBAJ?hl=en&gbpv=0}
 
 Figure~\ref{ch_2:fig:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are exposed, but not infections (\( E \)) and those who are deceased (\( D \)), as well as reinfections after recovery.
 
