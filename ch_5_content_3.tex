@@ -460,6 +460,12 @@ The non-genetic time series are aggregated at a weekly level, while the genetic 
 Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
 The gray highlighted regions indicate the times for which we create forecasts.
+We note that, while the peak weekly case count in the BA.1 wave is about six times higher than the first wave depicted in the figure, the peak hospitalizations are only twice as high in the second wave, and the peak ICU occupancy is only about 20\% higher in the second wave.
+This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak, so we chose to adjust the models used in the simulation study to also include modeling the case detection rate with a Gaussian Markov random field.
+In reality, the reasoning for the changing relationship between the peaks is complex and difficult to untangle, even in retrospect.
+It would be even harder to anticipate this changing relationship in a real forecasting scenario with a novel variant.
+We simply chose to incorporate some additional flexibility into the model in a place that might be useful.
+
 
 \begin{figure}
     \centering
@@ -480,6 +486,9 @@ The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-1
 The gray highlighted regions indicate the times for which we create forecasts.}
     \label{ch_5:fig:orange_county_binned_data_plot}
 \end{figure}
+
+
+
 
 \subsection{Discussion}
 \label{ch_5:subsec:discussion}
