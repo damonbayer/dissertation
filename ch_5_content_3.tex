@@ -424,14 +424,16 @@ The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_time_plot}
-    \caption{Caption}
+    \caption[Posterior credible intervals for peak hospital occupancy timing for simulated data sets.]{Posterior credible intervals for the time at which hospital occupancy reaches its maximum in three simulated data sets.
+    Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:simulated_peak_assessment_time_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{figures/ch_5/simulated_peak_assessment_value_plot}
-    \caption{Caption}
+\caption[Posterior credible intervals for peak hospital occupancy for simulated data sets.]{Posterior credible intervals for the maximum hospital occupancy in three simulated data sets.
+    Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:simulated_peak_assessment_value_plot}
 \end{figure}
 
@@ -442,7 +444,7 @@ When the models are fit to the medium and fast takeover data, the model where \(
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_crps_boxplot_plot}
-    \caption{Caption}
+    \caption[CRPS summaries for peak hospital occupancy.]{CRPS summaries for peak hospital occupancy timing and size for three simulated data sets. Lower CRPS is better.}
     \label{ch_5:fig:simulated_peak_crps_boxplot_plot}
 \end{figure}
 
@@ -458,14 +460,15 @@ To match the format described in Section~\ref{ch_5:sec:methods}, the lineages ar
 The BA.1 sequences are the ``novel" variant, and the non-BA.1 sequences are the ``other" variants.
 The non-genetic time series are aggregated at a weekly level, while the genetic data is used at a daily resolution.
 Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
+
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
 The gray highlighted regions indicate the times for which we create forecasts.
 We note that, while the peak weekly case count in the BA.1 wave is about six times higher than the first wave depicted in the figure, the peak hospitalizations are only twice as high in the second wave, and the peak ICU occupancy is only about 20\% higher in the second wave.
-This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak, so we chose to adjust the models used in the simulation study to also include modeling the case detection rate with a Gaussian Markov random field.
+This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak, so we chose to fit the same models as in the simulation study, but modified also include modeling the case detection rate with a Gaussian Markov random field.
 In reality, the reasoning for the changing relationship between the peaks is complex and difficult to untangle, even in retrospect.
 It would be even harder to anticipate this changing relationship in a real forecasting scenario with a novel variant.
 We simply chose to incorporate some additional flexibility into the model in a place that might be useful.
-
+The priors used for our models are presented in Table~tk.
 
 \begin{figure}
     \centering
@@ -486,6 +489,7 @@ The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-1
 The gray highlighted regions indicate the times for which we create forecasts.}
     \label{ch_5:fig:orange_county_binned_data_plot}
 \end{figure}
+
 
 
 
