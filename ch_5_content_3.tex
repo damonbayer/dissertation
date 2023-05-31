@@ -5,21 +5,26 @@
 \section{Introduction}
 \label{ch_5:sec:intro}
 
+Accurate forecasting of epidemic surges is an important tool for public health organizations to make informed decisions about  interventions and resource allocation.
+Throughout the COVID-19 pandemic, the need for these forecasts has been addressed by a large number of researchers who have developed and applied new models to predict disease burden.
+As the pandemic progressed, the effects of novel variants such as the Alpha, Delta, and Omicron variants were repeatedly accompanied by waves of increased cases, hospitalizations, and deaths.
+Despite the apparent relevance of the novel variants, a recent comprehensive review of 136 models noted that not one of the papers analyzed incorporated variant prevalence data \citep{Nixon2022evaluation}.
+Since that review's publication, we are aware of two papers which have attempted to use this data \citep{Du2023Incorporating, Rashed2022Covid}.
+These two works use a deep learning framework and develop long short-term memory (LSTM) models which incorporate many data sources, including pre-processed estimates of variant proportions.
+In contrast to these methods, we propose a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
 
+While compartmental models for dynamics of pathogens with multiple strains have been used to study disease transmission for a long time (see \citet{Kucharski2016Capturing} for an overview) these models have not been incorporated into forecasting efforts.
+Rather than adapting one of these models, which necessitate many additional compartments and parameters compared to the single strain models, we propose a modification to a single strain model.
+Our proposed method models the average duration of immunity as a flexible function of the proportion of the infectious population with a novel variant.
+The form of our function ensures that the immune duration decreases when the new variant is introduced to the population, before increasing again once the new variant becomes dominant.
+We assume that the observed count of sequences of the novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and this proportion.
 
-\begin{itemize}
-    \item Forecasting in Epidemic modeling is important.
-    \item data integration is hard.
-    \item A lot of forecasting methods have been tried recently.
-    \item COVID-19 saw changing dynamics due to new variants
-    \item When new variants arise, they can lead to waves, either due to increased transmissibility or immune escape
-    \item We would like to incorporate this data into our models in a simple, but flexible way.
-    \item Multi-strain models have been proposed, but are rarely (never?) fit to data.
-    \item We base our forecasting on mechanistic modeling.
-    \item We assess our models in a simulation study with different takeover speeds
-    \item We apply to real data from Orange County, CA and the entire state of CA.
-    \item We show our method is superior at forecasting and esp at forecasting peak timing of hosp (something healthcare people care a lot about) compared to a typical semi-parametric model.
-\end{itemize}
+We evaluate our method in a simulation study wherein novel variants become dominant at varying rates and compare our forecasts to those from more conventional Bayesian compartmental models with time-varying parameters.
+We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by continuous rank probability scores.
+We also apply our model to real data from the Omicron wave in Orange County, California, and the state of California as a whole.
+We show superior performance of forecasting these data streams at long forecast horizons.
+In particular, our proposed model is much better at forecasting the timing and magnitude of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
+
 
 \section{Methods}
 \label{ch_5:sec:methods}
@@ -194,7 +199,7 @@ which follow the Gaussian Markov random field priors
 	\tilde{R}_{0,l} \sim& N\left(\tilde{R}_{0, l - 1}, \sigma_{R_0}^2\right)\text{, where } l=2,\ldots,L \text{ and } \tilde{R}_{0,1} \sim N\left(\mu_{R_{01}},\sigma^2_{R_{01}}\right),\\
 	\frac{1}{\kappatilde_{l}} \sim& N\left(\frac{1}{\kappatilde_{l - 1}}, \sigma_\kappa^2\right)\text{, where } l=2,\ldots,L \text{ and } \frac{1}{\kappatilde_1} \sim N\left(\mu_{\kappa_1},\sigma^2_{\kappa_1}\right),\\
 	\rhowtilde_{l} \sim& N\left(\rhowtilde_{l - 1}, \sigma_{\rho^Y}^2\right)\text{, where } l=2,\ldots,L \text{ and } \rhowtilde_1 \sim N\left(\mu_{\rho^Y_1}, \sigma^2_{\rho^Y_1}\right),
- \label{ch_4:eqn:GMRF}
+ \label{ch_5:eqn:GMRF}
 \end{aligned}
 \end{equation}
 and define the piecewise constant functions:
@@ -273,7 +278,7 @@ We generally choose \( t^\dag \) to be about one week before the first sequence 
 
 We simulate three data sets for this study, each where the novel variant becomes dominant at a different speed: slow (24 weeks to go from 1\% to 99\% of sequences), medium (13 weeks), and fast (7 weeks).
 The data sets are simulated from a two strain model, which is depicted in Figure~\ref{ch_5:fig:full_model_diagram_compact} and explained in full detail in Appendix~\ref{ch_5:sec:full_simulation_model_explanation}.
-Briefly, the model is similar to the one depicted in Figure~\ref{ch_5:fig:model_diagram} but is modified accounts for two distinct disease variants.
+Briefly, the model is similar to the one depicted in Figure~\ref{ch_5:fig:model_diagram} but is modified to account for two distinct disease variants.
 The variants associated with each compartment are indicated by the subscripts: ``N" for the novel variant, ``O" for other variants, and ``A" for all types for variants.
 When all compartments associated with one variant type are empty, the model is equivalent to the one from Figure~\ref{ch_5:fig:model_diagram}.
 
@@ -283,8 +288,8 @@ The rates for these transitions are given by
 \begin{equation}
    \lambda_{{S_B}{E_N}}\left( S_B, I_N \right) = \frac{\beta}{N} S_B I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta}{N} R_O I_N,
 \end{equation}
-where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents partial immunity to the novel variant conferred by the other variants.
-After some time, all the people in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
+where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents partial immunity to the novel variant conferred by a recent infection from  another variant.
+After some time, all the population in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
 
 \begin{table}
 \caption{Simulation parameters that differ by scenario.}
@@ -344,6 +349,7 @@ We simulate the compartment trajectories until the initial surge begins to subsi
 While the overall prevalence is beginning to decrease, we simulate an importation of 1000 people who are infectious with the novel variant into the \( I_2 \) compartment.
 Then, the population begins to transition into the \( N \) subscript compartments, resulting in a second wave.
 Forecasting this second wave is the objective of our modeling efforts.
+
 We influence the size of this wave and the speed that the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
 Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
 The other simulation parameters are given in Table~tk.
@@ -372,12 +378,12 @@ Genetic data is reported at a daily resolution beginning one week before the nov
 
 We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
 The first model is reflective of typical practice in infectious disease modeling.
-The second is a slight variation on the first, where we make the immune duration vary over time, rather than the basic reproductive number.
+The second is a slight variation on the first, where we make the immune duration, rather than the basic reproductive number, vary over time.
 The third model is our main innovation, which models the immune duration based on genetic data.
 The priors used in these models are presented in Table~tk.
 
 While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
-We present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
+We present additional results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
 In general, these results exhibit the same patterns as observed in the hospitalization results.
 Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
 The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
@@ -389,14 +395,14 @@ From these figures, we note that, for all models and all datasets, one-week ahea
 As may be expected, performance degrades as the forecast horizon increases.
 For the slow data, the model where \( 1 / \kappa(t) \) is informed by the genetic data closely matches the data up to the four-week ahead forecasts.
 The model where \( 1 / \kappa(t) \) is a GMRF also matches quite well, while the model where \( R_0(t) \) is a GMRF is much less sharp than the other models.
-For then the medium data, the model with \( 1 / \kappa(t) \) informed by the genetic data again fits the data well up to the four-week forecast horizon.
+For the medium data, the model with \( 1 / \kappa(t) \) informed by the genetic data again fits the data well up to the four-week forecast horizon.
 The \( 1 / \kappa(t) \) GMRF model misjudges the height and the timing of the peak, and the forecasts from the \( R_0(t) \) GMRF model are again too much wider than the other models.
 When forecasting the fast data, the \( R_0(t) \) GMRF model is competitive with the \( 1 / \kappa(t) \) genetic model, while the \( 1 / \kappa(t) \) GMRF model again misjudges the peak.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_forecast_comparison_data_hospitalizations_medium_plot}
-    \caption{Forecast from three models at 1, 2, and 4-week forecast horizons for the simulated medium takeover speed data.}
+    \caption[Hospital occupancy forecasts for simulated medium takeover speed data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the simulated medium takeover speed data.}
     \label{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}
 \end{figure}
 
@@ -411,13 +417,13 @@ For the medium takeover data, the two GMRF models are competitive with each othe
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_crps_comparison_boxplot_data_hospitalizations_plot}
-    \caption[CRPS summaries for hospital occupancy forecasts.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for three simulated data sets. Lower CRPS is better.}
+    \caption[CRPS summaries for hospital occupancy forecasts for simulated data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for three simulated data sets. Lower CRPS is better.}
     \label{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}
 \end{figure}
 
-We also specifically assess our each model's ability to estimate the timing and size of the peak hospital occupancy.
-Posterior credible intervals for the peak timing  and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
-In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest credible interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when more data is included in the model.
+We also specifically assess each model's ability to estimate the timing and size of the peak hospital occupancy.
+Posterior credible intervals for the peak timing and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
+In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest credible interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when later data is included in the model.
 The model where \( R_0(t) \) follows a GMRF has the widest intervals and is, in general, under confident about the peak timing and value, even when the peak has already passed.
 The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle.
 
@@ -431,30 +437,31 @@ The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{figures/ch_5/simulated_peak_assessment_value_plot}
-\caption[Posterior credible intervals for peak hospital occupancy for simulated data sets.]{Posterior credible intervals for the maximum hospital occupancy in three simulated data sets.
+    \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_value_plot}
+    \caption[Posterior credible intervals for peak hospital occupancy for simulated data sets.]{Posterior credible intervals for the maximum hospital occupancy in three simulated data sets.
     Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:simulated_peak_assessment_value_plot}
 \end{figure}
 
-Summaries of scores for these forecasts are depicted in Figure~\ref{ch_5:fig:simulated_peak_crps_boxplot_plot}, while the score at each forecast time is shown in Figure~\ref{ch_5:fig:simulated_peak_crps_plot}.
+Summaries of scores for these forecasts are depicted in Figure~\ref{ch_5:fig:simulated_peak_crps_boxplot_plot}.
+The score at each forecast time is shown in Figure~\ref{ch_5:fig:simulated_peak_crps_plot}.
 For the slow takeover data, the model where \( 1 / \kappa(t) \) is informed by the genetic data achieves the best scores for both peak timing and value.
 When the models are fit to the medium and fast takeover data, the model where \( R_0(t) \) is a GMRF performs the best.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_crps_boxplot_plot}
-    \caption[CRPS summaries for peak hospital occupancy.]{CRPS summaries for peak hospital occupancy timing and size for three simulated data sets. Lower CRPS is better.}
+    \caption[CRPS summaries for peak hospital occupancy in simulated data sets.]{CRPS summaries for peak hospital occupancy timing and size for three simulated data sets. Lower CRPS is better.}
     \label{ch_5:fig:simulated_peak_crps_boxplot_plot}
 \end{figure}
 
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
 
-In our application, we focus on modeling the wave of cases, hospitalizations, ICU admissions, and deaths associated with the first Omicron variant of SARS-CoV-2 in California.
-This wave lasted from roughly December 2021 to March 2022, but we use data beginning in May 2021 to forecast this time period, as this time period includes the previous wave of cases.
-We fit models to both Orange County data and statewide data.
-The time series of daily counts of positive tests (cases), hospital occupancy and ICU occupancy are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
+In our real data application, we focus on modeling the wave of cases, hospitalizations, ICU admissions, and deaths associated with the first Omicron variant of SARS-CoV-2 in California.
+This wave lasted from roughly December 2021 to March 2022, but we use data beginning in May 2021 to forecast the wave, as this time period includes the previous wave of cases.
+We fit models to both Orange County data and statewide California data.
+The time series of daily counts of cases, hospital occupancy, ICU occupancy, and deaths due to COVID-19 are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
 Additionally, the daily counts of sequenced viruses, aggregated by pango lineage \citep{pango}, are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} and made available via Outbreak.info \citep{Gangavarapu2023}.
 To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g. BA.1, BA.1.1, BA.1.17.2) and those that do not.
 The BA.1 sequences are the ``novel" variant, and the non-BA.1 sequences are the ``other" variants.
@@ -464,11 +471,11 @@ Because the BA.1 variant becomes dominant so quickly, the daily observation of t
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
 The gray highlighted regions indicate the times for which we create forecasts.
 We note that, while the peak weekly case count in the BA.1 wave is about six times higher than the first wave depicted in the figure, the peak hospitalizations are only twice as high in the second wave, and the peak ICU occupancy is only about 20\% higher in the second wave.
-This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak, so we chose to fit the same models as in the simulation study, but modified also include modeling the case detection rate with a Gaussian Markov random field.
+This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak is the same for all data streams.
+Because of this, we chose to fit the same models as in the simulation study, but modified them to also include modeling the case detection rate with a Gaussian Markov random field.
 In reality, the reasoning for the changing relationship between the peaks is complex and difficult to untangle, even in retrospect.
-It would be even harder to anticipate this changing relationship in a real forecasting scenario with a novel variant.
-We simply chose to incorporate some additional flexibility into the model in a place that might be useful.
-The priors used for our models are presented in Table~tk.
+It is likely that some combination of partial protection from previous infections or vaccinations and possible less inherent propensity for severe outcomes in the Omicron variant is at play.
+Anticipating and modeling this scenario in a real forecasting scenario with a novel variant would be extremely difficult, so we chose to incorporate some additional flexibility into the model in a place that could be realistic and useful.
 
 \begin{figure}
     \centering
@@ -490,9 +497,65 @@ The gray highlighted regions indicate the times for which we create forecasts.}
     \label{ch_5:fig:orange_county_binned_data_plot}
 \end{figure}
 
+The priors used for our models are presented in Table~tk.
+As in the simulation study, in the main text, we focus on results related to hospital occupancy, but present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:real_cases_icu_death}.
+In general, these results exhibit the similar patterns as observed in the hospitalization results.
 
+Figures~\ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot} and \ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot} show the 1, 2, and 4-week ahead forecasts for hospital occupancy in Orange County and California, respectively.
+For both data sets, we note that one-week ahead forecasts match the data quite closely for the models that do not use the genetic data, but the model where \( 1 / \kappa(t) \) is informed by the genetic data exhibits comparatively wider credible intervals.
+As the forecast horizon increases, the two models where \( 1 / \kappa(t) \) varies in time can correctly identify the peak of the hospital occupancy, while the model where \( 1 / \kappa(t) \) is constant greatly overestimates the peak.
+These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_hospitalizations_plot}, where we observe that the models where \( 1 / \kappa(t) \) varies in time achieve lower CRPS values at for the two and four-week forecast horizons, compared to the model where \( 1 / \kappa(t) \) is constant.
+Analogous figures for the other data streams are presented in Figures~\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_new_deaths_plot}.
+We show the individual scores for each forecast in Figures~\ref{ch_5:fig:real_data_crps_comparison_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_data_new_deaths_plot}.
+In Figures~\ref{ch_5:fig:real_data_peak_assessment_time_plot} and \ref{ch_5:fig:real_data_peak_assessment_value_plot}, we present posterior credible intervals for the peak timing and peak value for hospital occupancy.
+One again, the models where \( 1 / \kappa(t) \) varies in time are shown to be superior, with narrower credible intervals near the observed value in the data.
+In particular, the model where \( 1 / \kappa(t) \) is informed by genetic data appears to be best at forecasting the time of the hospital occupancy peak.
+This is demonstrated in Figure~\ref{ch_5:fig:real_data_peak_crps_boxplot_plot}, which shows a summary of the CRPS for forecasts of peak hospital occupancy time and amount.
+Individual CRPS for each forecast of a peak hospital occupancy time and amount are presented in Figure~\ref{ch_5:fig:real_data_peak_crps_plot}.
 
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_forecast_comparison_data_hospitalizations_Orange_plot}
+    \caption[Hospital occupancy forecasts for Orange County data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the Orange County data.}
+    \label{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot}
+\end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_forecast_comparison_data_hospitalizations_California_plot}
+    \caption[Hospital occupancy forecasts for California data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the California data.}
+    \label{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_boxplot_data_hospitalizations_plot}
+    \caption[CRPS summaries for hospital occupancy forecasts for real data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_boxplot_data_hospitalizations_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_time_plot}
+    \caption[Posterior credible intervals for peak hospital occupancy timing for real data sets.]{Posterior credible intervals for the time at which hospital occupancy reaches its maximum in Orange County and California data sets.
+    Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
+    \label{ch_5:fig:real_data_peak_assessment_time_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_value_plot}
+    \caption[Posterior credible intervals for peak hospital occupancy for real data sets.]{Posterior credible intervals for the maximum hospital occupancy in Orange County and California  data sets.
+    Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
+    \label{ch_5:fig:real_data_peak_assessment_value_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_peak_crps_boxplot_plot}
+    \caption[CRPS summaries for peak hospital occupancy in real data sets.]{CRPS summaries for peak hospital occupancy timing and size in Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_peak_crps_boxplot_plot}
+\end{figure}
 
 \subsection{Discussion}
 \label{ch_5:subsec:discussion}
@@ -505,6 +568,9 @@ The gray highlighted regions indicate the times for which we create forecasts.}
     \item I think there is a note in GISAID or on outbreak.info about this.
     \item Assume variants don't differ any way, but you can accommodate
     \item Beta Binomial vs Neg binomial
+    \item what about areas with little genetic surveillance - hierarchical modeling?
+    \item real-time reporting
+    \item variants can emerge without leading to  waves
 \end{itemize}
 
 

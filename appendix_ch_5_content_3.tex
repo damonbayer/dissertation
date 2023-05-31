@@ -30,14 +30,14 @@
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_forecast_comparison_data_hospitalizations_slow_plot}
-    \caption{Forecast from three models at 1, 2, and 4-week forecast horizons for the simulated slow takeover speed data.}
+\caption[Hospital occupancy forecasts for simulated slow takeover speed data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the simulated slow takeover speed data.}
     \label{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_slow_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_forecast_comparison_data_hospitalizations_fast_plot}
-    \caption{Forecast from three models at 1, 2, and 4-week forecast horizons for the simulated fast takeover speed data.}
+\caption[Hospital occupancy forecasts for simulated fast takeover speed data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the simulated fast takeover speed data.}
     \label{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_fast_plot}
 \end{figure}
 
@@ -99,3 +99,63 @@
 
 \section{Simulation study sensitivity analysis}
 \label{ch_5:sec:sim_sensitivity}
+
+\section{Additional California data results}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_boxplot_data_new_cases_plot}
+    \caption[CRPS summaries for new cases forecasts for real data sets.]{CRPS summaries for new cases forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_boxplot_data_new_cases_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_boxplot_data_icu_plot}
+    \caption[CRPS summaries for ICU occupancy forecasts for real data sets.]{CRPS summaries for ICU occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_boxplot_data_icu_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_boxplot_data_new_deaths_plot}
+    \caption[CRPS summaries for new deaths occupancy forecasts for real data sets.]{CRPS summaries for new deaths occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_boxplot_data_new_deaths_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_data_new_cases_plot}
+    \caption{Individual CRPS for new cases forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_data_new_cases_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_data_hospitalizations_plot}
+    \caption{Individual CRPS for hospital occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_data_hospitalizations_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_data_icu_plot}
+    \caption{Individual CRPS for ICU occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_data_icu_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_data_new_deaths_plot}
+    \caption{Individual CRPS for new deaths forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_crps_comparison_data_new_deaths_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_peak_crps_plot}
+    \caption[Individual CRPS for peak hospital occupancy in real data sets.]{Individual CRPS for peak hospital occupancy timing and size in Orange County and California data sets. Lower CRPS is better.}
+    \label{ch_5:fig:real_data_peak_crps_plot}
+\end{figure}
+
+\label{ch_5:sec:real_cases_icu_death}
