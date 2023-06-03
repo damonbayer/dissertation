@@ -5,19 +5,35 @@
 \section{Introduction}
 \label{ch_5:sec:intro}
 
-Accurate forecasting of epidemic surges is an important tool for public health organizations to make informed decisions about  interventions and resource allocation.
-Throughout the COVID-19 pandemic, the need for these forecasts has been addressed by a large number of researchers who have developed and applied new models to predict disease burden.
-As the pandemic progressed, the effects of novel variants such as the Alpha, Delta, and Omicron variants were repeatedly accompanied by waves of increased cases, hospitalizations, and deaths.
+Accurate forecasting of epidemic surges is an important tool for public health organizations to make informed decisions about interventions and resource allocation.
+Forecasting is particular challenging when conditions in the environment change.
+These changes could be due to a variety of factors including policy decisions, vaccination campaigns, treatment developments, or phenotypic changes in the disease due to evolution.
+These phenotypic changes may result in increased transmissibility, severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
+This has been particularly relevant throughout the COVID-19 pandemic, where the emergence of novel virus strains such as the Alpha, Delta, and Omicron variants was repeatedly accompanied by these surges.
+In this work, we focus on developing forecasting methodology for these times when a new variant becomes dominant.
+
+Forecasting in changing environments has previously been addressed by including time-varying parameters in forecast models.
+These time-varying parameters can be treated as fixed inputs or estimated via parametric or non-parametric methods.
+Many models focus on incorporating a time-varying transmission rate.
+For example, \citet{Zhou2020Semiparametric} modeled the time-varying transmission rate via a Gaussian process.
+In \citet{Iyaniwura2022Mathematical}, the authors use survey data to derive separate time-varying contact rates for different subpopulations and incorporate these derived rates into their transmission rate model.
+Other models include additional time-varying parameters.
+In Chapter~\ref{ch:content_2}, we developed a model which included time-varying transmission rate, testing policy, and case detection rate.
+In \citet{ODea2021semi} time-varying transmission rate, reporting probability, and observation variance are modeled with random walks.
+Similarly, \citet{Gibson2020real} also models time-varying transmission rate and case detection rate with random walks.
+Additionally, \citet{morozova2021one} incorporates time-varying contact rate, transmission rate, recovery rate, severe fraction, hospital discharge rate, and hospital case fatality ratio into a Bayesian model.
+While none of the above models allow for the average immune duration to vary in time, their methods could easily be adapted to model this dynamic behavior.
+
 Despite the apparent relevance of the novel variants, a recent comprehensive review of 136 models noted that not one of the papers analyzed incorporated variant prevalence data \citep{Nixon2022evaluation}.
 Since that review's publication, we are aware of two papers which have attempted to use this data \citep{Du2023Incorporating, Rashed2022Covid}.
-These two works use a deep learning framework and develop long short-term memory (LSTM) models which incorporate many data sources, including pre-processed estimates of variant proportions.
-In contrast to these methods, we propose a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
+These two works used a deep learning framework and developed long short-term memory (LSTM) models which incorporate many data sources, including pre-processed estimates of variant proportions.
 
-While compartmental models for dynamics of pathogens with multiple strains have been used to study disease transmission for a long time (see \citet{Kucharski2016Capturing} for an overview) these models have not been incorporated into forecasting efforts.
-Rather than adapting one of these models, which necessitate many additional compartments and parameters compared to the single strain models, we propose a modification to a single strain model.
-Our proposed method models the average duration of immunity as a flexible function of the proportion of the infectious population with a novel variant.
+In contrast to these methods, we propose a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
+Rather than adapting one of the traditional models for multiple strains (see \citet{Kucharski2016Capturing} for an overview), which would necessitate many additional compartments and parameters, we propose a modification to a single strain model.
+We take inspiration from \citet{Figgins2021variant}, which models variant proportions over time using a Dirichlet-multinomial likelihood to estimate variant-specific effective reproduction numbers.
+Analogously, we assume that the observed count of sequences of a novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and the proportion of the infectious population with the novel variant.
+We then model the average duration of immunity as a flexible function of this proportion.
 The form of our function ensures that the immune duration decreases when the new variant is introduced to the population, before increasing again once the new variant becomes dominant.
-We assume that the observed count of sequences of the novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and this proportion.
 
 We evaluate our method in a simulation study wherein novel variants become dominant at varying rates and compare our forecasts to those from more conventional Bayesian compartmental models with time-varying parameters.
 We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by continuous rank probability scores.
@@ -557,21 +573,37 @@ Individual CRPS for each forecast of a peak hospital occupancy time and amount a
     \label{ch_5:fig:real_data_peak_crps_boxplot_plot}
 \end{figure}
 
-\subsection{Discussion}
-\label{ch_5:subsec:discussion}
+\section{Discussion}
+\label{ch_5:sec:discussion}
 
-\begin{itemize}
-    \item Modeling hospitalization with/for is somewhat complicated.
-    \item Assume that with is dominated by for time we care about.
-    \item Hospitalization may change for other reasons, but we assume negligible unless there is a natural disaster or something.
-    \item We assume that genetic sequences from each variant happens at the same rate, probably not true.
-    \item I think there is a note in GISAID or on outbreak.info about this.
-    \item Assume variants don't differ any way, but you can accommodate
-    \item Beta Binomial vs Neg binomial
-    \item what about areas with little genetic surveillance - hierarchical modeling?
-    \item real-time reporting
-    \item variants can emerge without leading to  waves
-\end{itemize}
+We developed a Bayesian model that integrates time series of cases, hospitalizations, ICU admissions, and deaths, as well as genetic data to create forecasts during time periods where a novel virus variant becomes dominant.
+Our approach is based on the idea that the introduction of a novel variant leads to increased infections due primarily to immune escape.
+As such, we allow the parameter in our model reflecting the average immune duration to change over time and consider modeling this time-varying parameter both parametrically using genetic data, and non-parametrically.
+We applied our model to simulated data sets as well as real data from the Omicron wave in Orange County and the state of California, with a particular focus on forecasting hospital occupancy.
+We compare our models with time-varying immune duration to a standard model where the basic reproduction number varies in time and is modeled non-parametrically.
+In simulated data sets, the model where the time-varying immune duration is informed by genetic data produces superior forecasts when the new variant becomes dominant at a ``slow" or ``medium" pace (24 or 13 weeks to go from 1\% to 99\% of sequences, respectively).
+When the new variant becomes dominant quickly (6 weeks), this model is competitive with the standard model, which performs the best.
+In the real data scenarios, the model where the time-varying immune duration is informed by genetic data is shown to be especially useful for forecasting the timing and magnitude of peak hospital occupancy, a metric that is of great interest to public health agencies.
+
+Despite these advancements, some potential issues remain unaddressed by our model.
+First, our model asserts that a novel variant must lead to reduced immunity in the population, and therefore cause a second wave.
+In reality, a variant may become dominant simply due to genetic drift and not be accompanied by an increase in cases, hospitalizations or deaths.
+Importantly, we assess our model only on retrospective data and do not account for reporting delays.
+In a real-time forecasting, it should be possible to obtain up-to-date counts of hospital and ICU occupancy, but case, death, and sequence counts may be reported with significant delays.
+Since our likelihood for the new variant sequences is conditional on the total number of sequences, this data does not directly impact our estimates of latent incidence, and it may not be necessary to model these delays for the genetic data.
+In contrast, the case and death counts do directly influence estimates of latent incidence, so they would likely need to be modeled in a real-world use case.
+Our model also assumes that genetic sequences from each variant are reported at the same rate.
+In practice, genetic sequences reporting is likely to be biased.
+For example, samples for sequencing may come disproportionately from an outbreak in a certain location or for patients who have severe symptoms.
+Certain lineages may also be able to be identified more easily than others (e.g. the  B.1.1.7 variant was easily identified by S-gene target failures in PCR testing).
+Some effort could be made to correct for this in either the model or the data collection.
+Finally, it should be possible to use the estimated proportion of the infectious population with the novel variant to inform model parameters which might differ between variants (e.g. the infection hospitalization ratio or duration of infectiousness).
+However, understanding which of these parameters may differ between variants may be difficult to do in real-time.
+
+% \begin{itemize}
+%     \item Beta Binomial vs Neg binomial
+%     \item what about areas with little genetic surveillance - hierarchical modeling?
+% \end{itemize}
 
 
 
