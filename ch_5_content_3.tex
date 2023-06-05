@@ -1,44 +1,44 @@
-\chapter{Forecasting epidemic surges of competing pathogen variants}
+\chapter{Forecasting during epidemic surges of pathogen variants capable of immune escape}
 \graphicspath{{figures/ch_5/}}
 \label{ch:content_3}
 
 \section{Introduction}
 \label{ch_5:sec:intro}
 
-Accurate forecasting of epidemic surges is an important tool for public health organizations to make informed decisions about interventions and resource allocation.
-Forecasting is particular challenging when conditions in the environment change.
-These changes could be due to a variety of factors including policy decisions, vaccination campaigns, treatment developments, or phenotypic changes in the disease due to evolution.
-These phenotypic changes may result in increased transmissibility, severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
+Accurate forecasting of epidemic surges is an important tool for public health agencies to make informed decisions about interventions and resource allocation.
+Forecasting is particularly challenging when conditions in the environment change.
+These changes could be due to a variety of factors including non-pharmaceutical interventions, vaccination campaigns, treatment developments, or phenotypic changes in the disease due to evolution.
+These phenotypic changes may result in increased transmissibility, disease severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
 This has been particularly relevant throughout the COVID-19 pandemic, where the emergence of novel virus strains such as the Alpha, Delta, and Omicron variants was repeatedly accompanied by these surges.
-In this work, we focus on developing forecasting methodology for these times when a new variant becomes dominant.
+In this work, we focus on developing forecasting methodology for these times when a new variant becomes dominant due to its ability to escape immunity induced by infections from previously circulating variants.
 
-Forecasting in changing environments has previously been addressed by including time-varying parameters in forecast models.
+Forecasting epidemic surges in changing environments has previously been addressed by including time-varying parameters in infectious disease dynamics models.
 These time-varying parameters can be treated as fixed inputs or estimated via parametric or non-parametric methods.
-Many models focus on incorporating a time-varying transmission rate.
+Many models focus on a time-varying transmission rate.
 For example, \citet{Zhou2020Semiparametric} modeled the time-varying transmission rate via a Gaussian process.
-In \citet{Iyaniwura2022Mathematical}, the authors use survey data to derive separate time-varying contact rates for different subpopulations and incorporate these derived rates into their transmission rate model.
+\citet{Iyaniwura2022Mathematical} use survey data to derive separate time-varying contact rates for different subpopulations and incorporate these derived rates into their transmission rate model.
 Other models include additional time-varying parameters.
 In Chapter~\ref{ch:content_2}, we developed a model which included time-varying transmission rate, testing policy, and case detection rate.
-In \citet{ODea2021semi} time-varying transmission rate, reporting probability, and observation variance are modeled with random walks.
-Similarly, \citet{Gibson2020real} also models time-varying transmission rate and case detection rate with random walks.
-Additionally, \citet{morozova2021one} incorporates time-varying contact rate, transmission rate, recovery rate, severe fraction, hospital discharge rate, and hospital case fatality ratio into a Bayesian model.
-While none of the above models allow for the average immune duration to vary in time, their methods could easily be adapted to model this dynamic behavior.
+In \citep{ODea2021semi} time-varying transmission rate, reporting probability, and observation variance are modeled with random walks.
+Similarly, \citet{Gibson2020real} also model time-varying transmission rate and case detection rate with random walks.
+Additionally, \citet{morozova2021one} incorporate time-varying contact rate, transmission rate, recovery rate, severe fraction, hospital discharge rate, and hospital case fatality ratio into a Bayesian model.
+While none of the above models allow for the average immune duration to vary in time, a topic of interest in this chapter, their methods could easily be adapted to model this dynamic behavior.
 
-Despite the apparent relevance of the novel variants, a recent comprehensive review of 136 models noted that not one of the papers analyzed incorporated variant prevalence data \citep{Nixon2022evaluation}.
-Since that review's publication, we are aware of two papers which have attempted to use this data \citep{Du2023Incorporating, Rashed2022Covid}.
+Despite the apparent relevance of the novel variants, a recent comprehensive review of 136 infectious disease dynamics models noted that not one of the papers analyzed used variant prevalence data \citep{Nixon2022evaluation}.
+Since that review's publication, we are aware of two papers which have attempted to use this type of data \citep{Du2023Incorporating, Rashed2022Covid}.
 These two works used a deep learning framework and developed long short-term memory (LSTM) models which incorporate many data sources, including pre-processed estimates of variant proportions.
 
 In contrast to these methods, we propose a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
 Rather than adapting one of the traditional models for multiple strains (see \citet{Kucharski2016Capturing} for an overview), which would necessitate many additional compartments and parameters, we propose a modification to a single strain model.
-We take inspiration from \citet{Figgins2021variant}, which models variant proportions over time using a Dirichlet-multinomial likelihood to estimate variant-specific effective reproduction numbers.
-Analogously, we assume that the observed count of sequences of a novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and the proportion of the infectious population with the novel variant.
+We take inspiration from \citet{Figgins2021variant}, who model variant proportions over time using a Dirichlet-multinomial likelihood to estimate variant-specific effective reproduction numbers.
+Analogously, we assume that the observed count of sequences of a novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and the proportion of the infectious population infected with the novel variant.
 We then model the average duration of immunity as a flexible function of this proportion.
 The form of our function ensures that the immune duration decreases when the new variant is introduced to the population, before increasing again once the new variant becomes dominant.
 
 We evaluate our method in a simulation study wherein novel variants become dominant at varying rates and compare our forecasts to those from more conventional Bayesian compartmental models with time-varying parameters.
-We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by continuous rank probability scores.
+We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by the continuous rank probability score - a popular proper scoring rule for probabilistic forecasts \citep{gneiting2007strictly}.
 We also apply our model to real data from the Omicron wave in Orange County, California, and the state of California as a whole.
-We show superior performance of forecasting these data streams at long forecast horizons.
+% We show superior performance of forecasting these data streams at long forecast horizons.
 In particular, our proposed model is much better at forecasting the timing and magnitude of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
 
 
@@ -48,10 +48,10 @@ In particular, our proposed model is much better at forecasting the timing and m
 \subsection{Data}
 \label{ch_5:subsec:data}
 
-We work with time series of daily numbers of cases, infected hospital occupants, infected ICU occupants, deaths due to the infection, genetic sequences from a novel variant, and genetic sequences from other variants.
+We seek to integrate the following data sources into our modeling: time series of daily numbers of cases, infected hospital occupants, infected ICU occupants, deaths due to the infection, genetic sequences from a novel variant, and genetic sequences from other variants.
 These time series need not be observed at the same temporal resolution, but, for clear exposition in this section, we assume they are each reported at times \( t_1, \ldots, t_L \).
-We denote the vector of cases, \( \bW = \left( W_1, \ldots, W_L \right) \); infected hospital occupants, \( \bX = \left( X_1, \ldots, X_L \right) \); infected ICU occupants, \( \bY = \left( Y_1, \ldots, Y_L \right) \); deaths due to the infection, \( \bZ = \left( Z_1, \ldots, Z_L \right) \); genetic sequences from the novel variant, \( \bV^N =  \left( V^N_1, \ldots, V^N_L \right)\); genetic sequences from other variants, \( \bV^O =  \left( V^O_1, \ldots, V^O_L \right)\). In each vector, the subscript indicates that the observation is made at the corresponding time, \( t_1, \ldots, t_L \).
-We work up to a surveillance model for these time series by first describing a transmission model for the underlying population dynamics.
+We denote the vector of cases, \( \bW = \left( W_1, \ldots, W_L \right) \); infected hospital occupants, \( \bX = \left( X_1, \ldots, X_L \right) \); infected ICU occupants, \( \bY = \left( Y_1, \ldots, Y_L \right) \); deaths due to the infection, \( \bZ = \left( Z_1, \ldots, Z_L \right) \); number of genetic sequences from the novel variant, \( \bV^N =  \left( V^N_1, \ldots, V^N_L \right)\); total number of genetic sequences from all variants, \( \bV^A =  \left( V^A_1, \ldots, V^A_L \right)\). In each vector, the subscript indicates that the observation is made at the corresponding time, \( t_1, \ldots, t_L \).
+We work our way up to a surveillance model for these time series by first describing a transmission model for the underlying population dynamics.
 
 \subsection{Transmission model}
 \label{ch_5:subsec:transmission}
@@ -79,7 +79,7 @@ The potential progression of an individual through these states is presented in 
     Model compartments are susceptible individuals \( (S) \), infected, but not yet infectious, individuals \( (E) \), infectious individuals \( (I) \), individuals hospitalized with infection \( (H) \), individuals in the ICU with infection \( (U) \),  recovered individuals \( (R) \), and individuals who died due to infection \( (D) \).}
     \label{ch_5:fig:model_diagram}
 \end{figure}
-We model the time-evolution of the proportions of individuals occupying these compartments with a set of deterministic ordinary differential equations (ODEs).
+We model the time-evolution of the proportions of individuals occupying these compartments with a set of ordinary differential equations (ODEs).
 For simplicity, we assume a homogeneously mixing population of fixed size \( N \).
 Let \( \bA(t) = \left(S(t) \right.\), \( E(t) \), \( I(t) \), \( H(t) \), \( U(t) \), \( R(t) \), \( \left. D(t) \right)^T \) denote the population proportion in each compartment at time \( t \).
 We normalize \( \bA(t_0) \) so that \( \bA(t_0)^T\boldsymbol{1} = 1\), where \( \boldsymbol{1} = (1, 1, 1, 1, 1, 1, 1)^T \).
@@ -88,24 +88,24 @@ To describe mathematically how vectors $\bA(t)$ and $\bN(t)$ change through time
 
 \begin{equation}
 \begin{aligned}
-\lambda_{SE}(S, I)  =&  \frac{\beta}{N} S I   \\
-\lambda_{EI}(E)  =& \gamma E    \\
-\lambda_{IH}(I)  =& \nu \tau I   \\
-\lambda_{HU}(H)  =& \eta  \upsilon H   \\
-\lambda_{UD}(U)  =& \omega \chi U \\
+\lambda_{SE}(S, I)  =&  \frac{\beta}{N} S I,   \\
+\lambda_{EI}(E)  =& \gamma E,    \\
+\lambda_{IH}(I)  =& \nu \tau I,   \\
+\lambda_{HU}(H)  =& \eta  \upsilon H,   \\
+\lambda_{UD}(U)  =& \omega \chi U, \\
 \end{aligned}
 \qquad \quad \quad
 \begin{aligned}
-\lambda_{IR}(I)  =& \nu \left(1 - \tau \right) I   \\
-\lambda_{HR}(H)  =& \eta \left(1 - \upsilon \right) H \\
-\lambda_{UR}(U)  =& \omega \left( 1 - \chi \right) U    \\
-\lambda_{RS}(R)  =& \kappa R
+\lambda_{IR}(I)  =& \nu \left(1 - \tau \right) I,   \\
+\lambda_{HR}(H)  =& \eta \left(1 - \upsilon \right) H, \\
+\lambda_{UR}(U)  =& \omega \left( 1 - \chi \right) U,    \\
+\lambda_{RS}(R)  =& \kappa R,
 \end{aligned}
 \label{ch_5:eqn:transition_rates}
 \end{equation}
 
-where \( \beta \) is the transmission rate, \( N \) is the constant population size, \( 1 / \gamma  \) is the mean latent period duration, \( 1 / \nu \) is the mean infectious period duration, \( 1 / \eta \) is the mean hospitalization duration, \( 1 / \omega \) is the mean ICU stay duration, \( 1 / \kappa \) is the mean immune duration, \( \tau \) is the infection-hospitalization ratio, \( \upsilon \) is the hospitalization-ICU admission ratio, and \( \chi \) is the ICU-fatality ratio.
-In some cases, we can allow certain parameters to vary in time to capture changing dynamics without the needing for additional compartments in the model.
+where \( \beta \) is the transmission rate, \( N \) is the population size, \( 1 / \gamma  \) is the mean latent period duration, \( 1 / \nu \) is the mean infectious period duration, \( 1 / \eta \) is the mean hospitalization duration, \( 1 / \omega \) is the mean ICU stay duration, \( 1 / \kappa \) is the mean immune duration, \( \tau \) is the infection-hospitalization ratio, \( \upsilon \) is the hospitalization-ICU admission ratio, and \( \chi \) is the ICU-fatality ratio.
+In some cases, we allow certain parameters to vary in time to capture changing dynamics without the needing for additional compartments in the model.
 These changing dynamics could be due to policy or behavioral changes, or the presence of a new variant with increased transmissibility or immune escape.
 In particular, in the models we consider in our simulation study and application, we replace \( \beta \) and \( \kappa \) with time-varying versions, \( \beta(t) \), and \( \kappa(t) \).
 We discuss the details of this implementation in Section~\ref{ch_5:subsec:bayesian}.
@@ -114,38 +114,40 @@ Using the transition rates in \eqref{ch_5:eqn:transition_rates}, we define the O
 
 \begin{equation}
 \begin{aligned}
-\deriv{S}{t}    =&  \lambda_{RS}(R) - \lambda_{SE}(S, I) \\
-\deriv{E}{t}    =&  \lambda_{SE}(S, I) - \lambda_{EI}(E)    \\
-\deriv{I}{t}    =&  \lambda_{EI}(E) - \left( \lambda_{IH}(I) + \lambda_{IR}(I) \right)\\
-\deriv{H}{t}    =&  \lambda_{IH}(I) - \left( \lambda_{HU}(H) +  \lambda_{HR}(H) \right)\\
-\deriv{U}{t}    =&  \lambda_{HU}(H) - \left( \lambda_{UD}(U) + \lambda_{UR}(U) \right)\\
+\deriv{S}{t}    =&  \lambda_{RS}(R) - \lambda_{SE}(S, I), \\
+\deriv{E}{t}    =&  \lambda_{SE}(S, I) - \lambda_{EI}(E),    \\
+\deriv{I}{t}    =&  \lambda_{EI}(E) - \left( \lambda_{IH}(I) + \lambda_{IR}(I) \right),\\
+\deriv{H}{t}    =&  \lambda_{IH}(I) - \left( \lambda_{HU}(H) +  \lambda_{HR}(H) \right),\\
+\deriv{U}{t}    =&  \lambda_{HU}(H) - \left( \lambda_{UD}(U) + \lambda_{UR}(U) \right),\\
 \deriv{D}{t}    =&  \lambda_{UD}(U) \\
-\deriv{R}{t}    =&  \left( \lambda_{IR}(I) + \lambda_{HR}(H) + \lambda_{UR}(U) \right) - \lambda_{RS}(R)    \\
+\deriv{R}{t}    =&  \lambda_{IR}(I) + \lambda_{HR}(H) + \lambda_{UR}(U) - \lambda_{RS}(R),    \\
 \end{aligned}
 \qquad
 \begin{aligned}
-\deriv{N_{SE}}{t}  =&  \lambda_{SE}(S, I) \\
-\deriv{N_{EI}}{t}  =&  \lambda_{EI}(E) \\
-\deriv{N_{IH}}{t}  =&  \lambda_{IH}(I) \\
-\deriv{N_{HU}}{t}  =&  \lambda_{HU}(H) \\
-\deriv{N_{UD}}{t}  =&  \lambda_{UD}(U) \\
-\deriv{N_{IR}}{t}  =&  \lambda_{IR}(I) \\
-\deriv{N_{HR}}{t}  =&  \lambda_{HR}(H) \\
-\deriv{N_{UR}}{t}  =&  \lambda_{UR}(U) \\
-\deriv{N_{RS}}{t}  =&  \lambda_{RS}(R)
+\deriv{N_{SE}}{t}  =&  \lambda_{SE}(S, I), \\
+\deriv{N_{EI}}{t}  =&  \lambda_{EI}(E), \\
+\deriv{N_{IH}}{t}  =&  \lambda_{IH}(I), \\
+\deriv{N_{HU}}{t}  =&  \lambda_{HU}(H), \\
+\deriv{N_{UD}}{t}  =&  \lambda_{UD}(U), \\
+\deriv{N_{IR}}{t}  =&  \lambda_{IR}(I), \\
+\deriv{N_{HR}}{t}  =&  \lambda_{HR}(H), \\
+\deriv{N_{UR}}{t}  =&  \lambda_{UR}(U), \\
+\deriv{N_{RS}}{t}  =&  \lambda_{RS}(R),
 \end{aligned}
 \label{ch_5:eqn:ODEs}
 \end{equation}
 subject to initial conditions \( \bA(t_0) = \left( S_0, E_0, I_0, H_0, U_0, D_0, R_0 \right) \).
-Because the total population size is fixed at size \( N \), and we take \( H_0 \) , \( U_0 \), and \( D_0 \) to match the reported values of the hospitalizations, ICU occupancy, and deaths in the data at \( t_0 \), we are left with \( E_0 \), \( I_0 \), and \( R_0 \) as free parameters (because \( S_0 = N - \left( E_0 + I_0 + H_0 + U_0 + D_0 + R_0 \right) \).
+Because the total population size is fixed at size \( N \), and we take \( H_0 \) , \( U_0 \), and \( D_0 \) to match the reported values of the hospitalizations, ICU occupancy, and deaths in the data at \( t_0 \), we are left with \( E_0 \), \( I_0 \), and \( R_0 \) as free parameters (because \( S_0 = N - \left( E_0 + I_0 + H_0 + U_0 + D_0 + R_0 \right) \)).
 The equations in \eqref{ch_5:eqn:ODEs} are redundant, but tracking both the prevalence (left column) and the cumulative incidence (right column) are useful for linking the transmission model to data via a surveillance model.
 
 \subsection{Surveillance model}
 \label{ch_5:subsec:surveillance}
 
-We fit the transmission model to six time series: number of new cases \( \left( \bW \right) \),  number of infected hospital occupants \( \left( \bX \right) \), number of infected ICU occupants \( \left( \bY \right) \), number of new deaths due to the infection \( \left( \bZ \right) \), number of  genetic sequences from the novel variant \( \left( \bV^N \right) \), and number of genetic sequences from other variants \( \left( \bV^O \right) \) observed at time points \( t_1, \ldots t_l \).
-The count for each data stream at each time \( \left( l \right) \) is modelled by a negative binomial distribution, which we parameterize in terms of its mean \( \left( \mu \right) \) and variance \( \left( \sigma^2 \right) \).
-Each of these negative binomial distributions is allowed to be over-dispersed by the inclusion of a \( \phi \) parameter.
+We fit the transmission model to six time series: number of new cases \( \left( \bW \right) \),  number of infected hospital occupants \( \left( \bX \right) \), number of infected ICU occupants \( \left( \bY \right) \), number of new deaths due to the infection \( \left( \bZ \right) \), number of genetic sequences from the novel variant \( \left( \bV^N \right) \), and number of genetic sequences from all variants \( \left( \bV^A \right) \) observed at time points \( t_1, \ldots t_l \).
+The count for each non-genetic data stream at each time \( \left( l \right) \) is modelled by a negative binomial distribution, which we parameterize in terms of its mean \( \left( \mu \right) \) and variance \( \left( \sigma^2 \right) \).
+The degree of over-dispersion in each of these negative binomial distributions is controlled by a \( \phi \) parameter.
+The number of sequences from the novel variant, is modeled with a beta-binomial distribution which is conditional on the total number of observed sequences.
+We parameterize this distribution in terms of \( \delta \), its mean success probability and \( \phi \), an over-dispersion parameter.
 
 We model the observed cases, \( W_l \), in the interval \( \left( t_{l - 1}, t_l \right] \) for \( l =1 \ldots L \) by
 % cases
@@ -154,6 +156,8 @@ W_l \sim \operatorname{Negative Binomial} \left( \mu^{W}_l = \rho^W \cdot N \cdo
 \label{ch_5:eqn:case_emission}
 \end{equation}
 where \( \rho^W \in [0,1]\) is the overall case detection rate, meaning that the number of observed cases is assumed to be some noisy realization of the fraction of the true new cases in the population, as estimated by the ODE model.
+In some models, we allow the case detection rate to vary over time, in which case we replace \( \rho^W \) with \( \rho^W \left( t_l \right) \) in \eqref{ch_5:eqn:case_emission}.
+We discuss modeling choices for this and \( \delta \left( t_l \right) \) in the next section.
 
 The observed number of hospital occupants with an infection at time \( t_l \) is modeled by
 % hospi
@@ -179,21 +183,13 @@ Z_l \sim \operatorname{Negative Binomial} \left( \mu^{Z}_l = \rho^Z \cdot N \cdo
 \end{equation}
 where \( \rho^Z \in [0,1]\) is the overall death detection rate, meaning that the number of observed deaths is assumed to be some noisy realization of the fraction of the true new deaths in the population, as estimated by the ODE model.
 
-We model the observed counts of genetic sequences of the novel variant and of other variants by
+We model the observed counts of genetic sequences of the novel variant, conditional on the observed number of all genetic sequences by
 \begin{equation}
-V^N_l \sim \operatorname{Negative Binomial} \left( \mu^{V^N}_l = \rho^V \cdot \mu^{W}_l \cdot \delta \left( t_l \right), {\sigma^2_l}^{V^N} = \mu^{V^N}_l \left( 1 + \mu^{V^N}_l / \phi_V \right) \right)
+V^N_l \sim \operatorname{Beta-Binomial} \left( V^A_l, \alpha = \phi_V \delta \left( t_l \right), \beta = \phi_V \left( 1 -  \delta \left( t_l \right) \right) \right),
 \label{ch_5:eqn:novel_variant_emission}
 \end{equation}
-and
-\begin{equation}
-V^O_l \sim \operatorname{Negative Binomial} \left( \mu^{V^O}_l = \rho^V \cdot \mu^{W}_l \cdot \left( 1 - \delta \left( t_l \right) \right), {\sigma^2_l}^{V^O} = \mu^{V^O}_l \left( 1 + \mu^{V^O}_l / \phi_V \right)  \right),
-\label{ch_5:eqn:other_variant_emission}
-\end{equation}
-respectively, where \( \delta \left( t_l \right) \) is the proportion of currently infectious individuals who are infected with the novel variant, and \( \rho^V \in [0,1] \) is the overall case sequencing rate (relative to observed cases).
-Thus, the observed number of genetic sequences with each variant classification is a noisy realization of some fraction of the true number of new cases in the population, as estimated by the ODE model.
-
-In some models, we allow \( \rho^W \) to vary over time, in which case we replace \( \rho^W \) with \( \rho^W \left( t_l \right) \) in \eqref{ch_5:eqn:case_emission}.
-We discuss modeling choices for this and \( \delta \left( t_l \right) \) in the next section.
+where \( \delta \left( t_l \right) \) is the proportion of currently infectious individuals who are infected with the novel variant.
+Thus, the observed proportion of genetic sequences of the novel variant is a noisy realization of the true proportion in the population.
 
 \subsection{Bayesian model}
 \label{ch_5:subsec:bayesian}
@@ -225,7 +221,8 @@ and define the piecewise constant functions:
 	\rho^W(t) =& \sum_{l=1}^L \frac{\exp{\left( \rhowtilde_l \right) \1{t \in (t_{l-1}, t_l]} }}{\exp{\left( \rhowtilde_l \right) \1{t \in (t_{l-1}, t_l]} } + 1}.
 \end{align}
 
-In other models, we instead define the time-varying parameters as functions of \( \delta(t) \), the proportion of currently infectious individuals who are infected with the novel variant.
+In our simulation study and application, we assume that these time-varying dynamics are due to the emergence of a novel variant to which the population has reduced immunity.
+Thus, we hypothesize that defining time-varying parameters as a function of \( \delta(t) \), the proportion of currently infectious individuals who are infected with the novel variant, may lead to improvements in forecasting capabilities.
 In principle, we can do this for any of any parameters in the model that might differ by variant, but we only consider this framing for the average immune duration, \( 1 / \kappa \), in our simulation study and application.
 We model \( 1 / \kappa(t) \) as dependent on \( \delta(t) \) by
 \begin{equation}
@@ -233,14 +230,21 @@ We model \( 1 / \kappa(t) \) as dependent on \( \delta(t) \) by
     \label{ch_5:eqn:kappa_delta}
 \end{equation}
 where \( \alpha_2 > 0 \).
-This ensures that \( 1 / \hat{\kappa}(0) = 1 / \hat{\kappa}(1) = \exp \left( \alpha_0 \right)\) and that or \( 1 / \kappa(t) \) is minimized) when \( \delta = 0.5 \), while being relatively flexible.
+This functional form ensures that the average immune duration is maximized when the entire infectious population is infected with the same variant (i.e., \( \delta = 0 \) or \( \delta = 1 \)) and minimized when \( \delta = 0.5 \).
+Thus, when a new variant is introduced, but only constitutes a small proportion of the infectious population, the average immune duration begins to decrease, moving more of the population to the susceptible compartments.
+The immune duration continues to decrease until the new variant is half of the infectious population, at which point there is a large infectious population carrying the new variant and a large proportion of the population with reduced immunity to the new variant.
+As the new variant reaches dominance, the immune duration returns to its original level.
+We allow this relationship to be flexible by including an offset in time, \( \zeta \).
+
+We note that the maximum immune duration is \( \exp \left( \alpha_0 \right)\), and the minimum immune duration is \(\exp \left\{ \alpha_0 + \alpha_1 \left( 1/4  \right)^{\alpha_2} \right\} \).
 To use a more interpretable prior on \( \alpha_1 \), we reparameterize as 
 \begin{equation}
     \alpha_1 = 4^{\alpha_2} \ln \left( \alpha_1^* \right).
     \label{ch_5:eqn:alpha_1}
 \end{equation}
-Then \( \alpha_1^* \cdot \exp \alpha_0 \) is the minimum value of \( 1 / \kappa (t) \).
-Recall that \( \exp \alpha_0 \) is the maximum value of \( 1 / \kappa (t) \), so \( \alpha_1^* \in [0,1] \) is simply a scaling factor, which determines the minimum value, based on the maximum value.
+Then the minimum immune duration is 
+\( \exp \left\{ \alpha_0 + 4^{\alpha_2} \ln \left( \alpha_1^* \right) \left( 1/4  \right)^{\alpha_2} \right\} = \alpha_1^* \exp \alpha_0 \).
+Recalling that \( \exp \alpha_0 \) is the maximum immune duration, we see that  \( \alpha_1^* \in [0,1] \) is simply a scaling factor, which determines the minimum duration, based on the maximum duration.
 We show several example curves for \eqref{ch_5:eqn:kappa_delta} in Figure~\ref{ch_5:fig:example_immune_durration_plot}.
 
 \begin{figure}
@@ -257,9 +261,10 @@ We assume that, after the novel variant is introduced, its proportion in the pop
     \delta(t) = \frac{\exp \left\{ \iota_0 + \iota_1 \left( t \right) \right\}}{\exp \left\{ \iota_0 + \iota_1 \left( t \right) \right\} + 1}.
     \label{ch_5:eqn:logistic_growth}
 \end{equation}
+This approach is borrowed from population genetics literature which commonly assumes this logistic growth of the novel variant proportion \citep{Lacerda2014Population, Zhao2023mechanism}.
 To set interpretable priors on \( \iota_0 \) and \( \iota_1 \), we parameterize as 
 \begin{equation}
-    \delta(t) = \frac{\exp \left\{ \iota_0 + \iota_1 \left( t - t^* \right) \right\}}{\exp \left\{ \iota_0 + \iota_1 \left( t - t^* \right) \right\} + 1}.
+    \delta(t) = \frac{\exp \left\{ \iota_0 + \iota_1 \left( t - t^* \right) \right\}}{\exp \left\{ \iota_0 + \iota_1 \left( t - t^* \right) \right\} + 1},
 \end{equation}
 where \( t^* \) is the time point for which \( \delta(t^*) = \frac{ \exp \left\{ \iota_0 \right\} }{\exp \left\{ \iota_0 \right\} + 1} \).
 Then \( \iota_1 = \frac{\ln \left( \frac{0.99}{1 - 0.99} \right) - \ln \left( \frac{0.01}{1 - 0.01} \right)}{\iota_1^*} \), where \( \iota_1^* \) is the amount of time the novel variant takes to grow from 1\% of the infectious population to 99\% of the infectious population.
@@ -267,27 +272,25 @@ Then \( \iota_1 = \frac{\ln \left( \frac{0.99}{1 - 0.99} \right) - \ln \left( \f
 With these parameters all defined, we describe our Bayesian procedure.
 We collect all our model parameters into a vector $\boldsymbol{\theta}$ and write the likelihood function as 
 \begin{align*}
-& \Pr\left(\bW, \bX, \bY, \bZ, \bV^N, \bV^O \mid \btheta \right) \\
-=& \Pr\left(\bW \mid \btheta \right) \Pr\left(\bX \mid \btheta \right) \Pr\left(\bY \mid \btheta \right) \Pr\left(\bZ \mid \btheta \right) \Pr\left(\bV^N \mid \btheta \right) \Pr\left(\bV^O \mid \btheta \right)    \\
-=&   \prod_{l=1}^{L} \Pr\left(W_l \mid \btheta \right) \Pr\left(X_l \mid \btheta \right) \Pr\left(Y_l \mid \btheta \right) \Pr\left(Z_l \mid \btheta \right) \Pr\left(V^N_l \mid \btheta \right) \Pr\left(V^O_l \mid \btheta \right),
+& \Pr\left(\bW, \bX, \bY, \bZ, \bV^N \mid \btheta \right) \\
+=& \Pr\left(\bW \mid \btheta \right) \Pr\left(\bX \mid \btheta \right) \Pr\left(\bY \mid \btheta \right) \Pr\left(\bZ \mid \btheta \right) \Pr\left(\bV^N \mid \btheta \right)    \\
+=&   \prod_{l=1}^{L} \Pr\left(W_l \mid \btheta \right) \Pr\left(X_l \mid \btheta \right) \Pr\left(Y_l \mid \btheta \right) \Pr\left(Z_l \mid \btheta \right) \Pr\left(V^N_l \mid \btheta \right) ,
 \end{align*}
-where \( \Pr\left(W_l \mid \btheta \right) \), \( \Pr\left(X_l \mid \btheta \right) \), \( \Pr\left(Y_l \mid \btheta \right) \), \( \Pr\left(Z_l \mid \btheta \right) \), \( \Pr\left(V^N_l \mid \btheta \right) \), and \( \Pr\left(V^O_l \mid \btheta \right)  \) are the probability mass functions given by \eqref{ch_5:eqn:case_emission}, \eqref{ch_5:eqn:hosp_emission}, \eqref{ch_5:eqn:icu_emission}, \eqref{ch_5:eqn:death_emission}, \eqref{ch_5:eqn:novel_variant_emission}, and \eqref{ch_5:eqn:other_variant_emission}, respectively.
+where \( \Pr\left(W_l \mid \btheta \right) \), \( \Pr\left(X_l \mid \btheta \right) \), \( \Pr\left(Y_l \mid \btheta \right) \), \( \Pr\left(Z_l \mid \btheta \right) \), and \( \Pr\left(V^N_l \mid \btheta \right) \), are the probability mass functions given by \eqref{ch_5:eqn:case_emission}, \eqref{ch_5:eqn:hosp_emission}, \eqref{ch_5:eqn:icu_emission}, \eqref{ch_5:eqn:death_emission}, and \eqref{ch_5:eqn:novel_variant_emission}, respectively.
 We encode available information about our model parameters in a prior distribution with density $\pi(\btheta)$.
 We assume that all univariate non-GMRF distributed parameters are \textit{a priori} independent and list our prior assumptions for our simulation study in Table~tk and for our application in Table~tk.
 We base all our inferences and predictions on the posterior distribution of all model parameters:
 \begin{equation}
-\Pr\left(\btheta \mid \bW, \bX, \bY, \bZ, \bV^N, \bV^O \right) \propto \Pr\left(\bW, \bX, \bY, \bZ, \bV^N, \bV^O \mid \btheta \right) \pi \left( \btheta \right).
+\Pr\left(\btheta \mid \bW, \bX, \bY, \bZ, \bV^N \right) \propto \Pr\left(\bW, \bX, \bY, \bZ, \bV^N \mid \btheta \right) \pi \left( \btheta \right).
 \end{equation}
 We sample from this posterior using the No-U-Turn Sampler, \citep{NUTS} as implemented in the Turing Julia package \citep{turing}.
 Model code and data are available at the following GitHub repository: \url{https://github.com/damonbayer/immunity_semi_parametric_model}.
 
+In total, the form of the model without any GMRF components has 24 parameters.
+Adding a GMRF component requires one additional parameter per observation time.
+
 \section{Results}
 \label{ch_5:sec:results}
-
-In our simulation study and application, we observe the non-genetic data at a weekly resolution, while the genetic data is reported at a daily resolution.
-We find that the daily reporting of genetic data is crucial to capturing the early exponential-like growth of the novel variant, relative to the other variants.
-In addition, to appropriately meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth} we only observe the genetic data after some time, \( t^\dag \), at which we assume the new variant is introduced.
-We generally choose \( t^\dag \) to be about one week before the first sequence from the novel variant is observed.
 
 \subsection{Simulation study}
 \label{ch_5:subsec:simulation}
@@ -298,14 +301,14 @@ Briefly, the model is similar to the one depicted in Figure~\ref{ch_5:fig:model_
 The variants associated with each compartment are indicated by the subscripts: ``N" for the novel variant, ``O" for other variants, and ``A" for all types for variants.
 When all compartments associated with one variant type are empty, the model is equivalent to the one from Figure~\ref{ch_5:fig:model_diagram}.
 
-These otherwise independent models are linked by allowing transitions from \( S_B \) and \( R_O \) to \( E_N \).
-That is, people who are susceptible to all variant types and those who are only recovered from other variants can become infected with the novel variant.
+These otherwise independent models are linked by allowing transitions from \( S_A \) and \( R_O \) to \( E_N \).
+That is, people who are susceptible to all variant (\( S_A \)) types and those who are only recovered from other (\( R_O \)) variants can become infected with the novel variant (\( (E_N \)).
 The rates for these transitions are given by
 \begin{equation}
-   \lambda_{{S_B}{E_N}}\left( S_B, I_N \right) = \frac{\beta}{N} S_B I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta}{N} R_O I_N,
+   \lambda_{{S_A}{E_N}}\left( S_A, I_N \right) = \frac{\beta}{N} S_A I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta}{N} R_O I_N,
 \end{equation}
-where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents partial immunity to the novel variant conferred by a recent infection from  another variant.
-After some time, all the population in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
+where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents the effect of partial immunity to the novel variant conferred by a recent infection from  another variant.
+After some time, all the individuals in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments, and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
 
 \begin{table}
 \caption{Simulation parameters that differ by scenario.}
@@ -362,18 +365,19 @@ Fast     & 3.5         & 1.0            \\
 For our simulations, the compartments are initiated with the entire population (3 million) in \( S_0 \), except a small number who are in \( E_1 \).
 Because all the \( N \) subscript compartments are empty, this behaves like the model in Figure~\ref{ch_5:fig:model_diagram}.
 We simulate the compartment trajectories until the initial surge begins to subside.
-While the overall prevalence is beginning to decrease, we simulate an importation of 1000 people who are infectious with the novel variant into the \( I_2 \) compartment.
-Then, the population begins to transition into the \( N \) subscript compartments, resulting in a second wave.
+While the overall prevalence is beginning to decrease, we simulate an importation of 1000 people who are infectious with the novel variant into the \( I_N \) compartment.
+Then, the individuals begin to transition into the \( N \) subscript compartments, resulting in a second wave.
 Forecasting this second wave is the objective of our modeling efforts.
 
-We influence the size of this wave and the speed that the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
+We manipulate the size of this wave and the speed that the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
 Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
 The other simulation parameters are given in Table~tk.
-The resulting proportion of infectious population with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
+Changes of the resulting proportion of individuals infected with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
 The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we create forecasts.
 Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
 In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
-Genetic data is reported at a daily resolution beginning one week before the novel variant import event.
+Genetic data is reported at a daily resolution, which is crucial to capturing the early exponential-like growth of the novel variant, relative to the other variants.
+Additionally, the genetic data is only reported beginning one week before the novel variant import event, which is necessary to meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth}.
 
 \begin{figure}
     \centering
@@ -397,6 +401,7 @@ The first model is reflective of typical practice in infectious disease modeling
 The second is a slight variation on the first, where we make the immune duration, rather than the basic reproductive number, vary over time.
 The third model is our main innovation, which models the immune duration based on genetic data.
 The priors used in these models are presented in Table~tk.
+For each simulated dataset, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 
 While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
 We present additional results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
@@ -471,6 +476,24 @@ When the models are fit to the medium and fast takeover data, the model where \(
     \label{ch_5:fig:simulated_peak_crps_boxplot_plot}
 \end{figure}
 
+Beyond the forecasting advantages, the model that uses genetic data is more computationally efficient and uses the same number of parameters, regardless of the number of observation times.
+In contrast, the number of parameters in the models with GMRFs scales with the number of observation times.
+A summary of the computation time required to fit models in the simulation study is presented in Table~\ref{ch_5:table:simmulation_study_cpu_time}
+
+\begin{table}
+\caption[Computation time for models in simulation study.]{Computation time summary for all models in our simulation study.
+Each fit consists of four Markov chains run in parallel to draw a total of 1000 posterior samples.}
+\label{ch_5:table:simmulation_study_cpu_time}
+\centering
+\begin{tabular}{lrrr}
+ Model & Avg. CPU Hrs & Min. CPU Hrs & Max. CPU Hrs \\ 
+  \hline
+\( R_0(t) \): Constant, \( 1 / \kappa(t) \): Genetic & 2.54 & 1.53 & 3.61 \\ 
+\( R_0(t) \): Constant, \( 1 / \kappa(t) \): GMRF & 5.47 & 2.93 & 8.63 \\ 
+\( R_0(t) \): GMRF, \( 1 / \kappa(t) \): Constant & 11.05 & 4.15 & 21.70
+\end{tabular}
+\end{table}
+
 \subsection{Application to California data}
 \label{ch_5:subsec:application}
 
@@ -480,8 +503,8 @@ We fit models to both Orange County data and statewide California data.
 The time series of daily counts of cases, hospital occupancy, ICU occupancy, and deaths due to COVID-19 are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
 Additionally, the daily counts of sequenced viruses, aggregated by pango lineage \citep{pango}, are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} and made available via Outbreak.info \citep{Gangavarapu2023}.
 To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g. BA.1, BA.1.1, BA.1.17.2) and those that do not.
-The BA.1 sequences are the ``novel" variant, and the non-BA.1 sequences are the ``other" variants.
-The non-genetic time series are aggregated at a weekly level, while the genetic data is used at a daily resolution.
+The BA.1 sequences are the ``novel" variant, and the BA.1 and non-BA.1 sequences are summed together as ``all" variants.
+The non-genetic time series are aggregated at a weekly level, while the genetic data is used at a daily resolution, beginning about one week before the first novel variant is observed.
 Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
 
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
@@ -514,6 +537,7 @@ The gray highlighted regions indicate the times for which we create forecasts.}
 \end{figure}
 
 The priors used for our models are presented in Table~tk.
+For each dataset, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 As in the simulation study, in the main text, we focus on results related to hospital occupancy, but present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:real_cases_icu_death}.
 In general, these results exhibit the similar patterns as observed in the hospitalization results.
 
@@ -572,6 +596,23 @@ Individual CRPS for each forecast of a peak hospital occupancy time and amount a
     \caption[CRPS summaries for peak hospital occupancy in real data sets.]{CRPS summaries for peak hospital occupancy timing and size in Orange County and California data sets. Lower CRPS is better.}
     \label{ch_5:fig:real_data_peak_crps_boxplot_plot}
 \end{figure}
+
+As in the simulation study, the model that uses genetic data is more computationally efficient than the models that use more GMRFs.
+A summary of the computation time required to fit models in the simulation study is presented in Table~\ref{ch_5:table:real_data_cpu_time}
+
+\begin{table}
+\caption[Computation time for models in real data application.]{Computation time summary for all models in our real data application.
+Each fit consists of four Markov chains run in parallel to draw a total of 1000 posterior samples.}
+\label{ch_5:table:real_data_cpu_time}
+\centering
+\begin{tabular}{lrrr}
+ Model & Avg. CPU Hrs & Min. CPU Hrs & Max. CPU Hrs \\ 
+  \hline
+\( R_0(t) \): Constant, \( 1 / \kappa(t) \): Genetic & 4.47 & 2.00 & 9.12 \\ 
+\( R_0(t) \): Constant, \( 1 / \kappa(t) \): GMRF & 16.17 & 9.10 & 28.01 \\ 
+\( R_0(t) \): GMRF, \( 1 / \kappa(t) \): Constant & 30.98 & 22.44 & 41.15
+\end{tabular}
+\end{table}
 
 \section{Discussion}
 \label{ch_5:sec:discussion}
