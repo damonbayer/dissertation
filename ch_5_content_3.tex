@@ -373,7 +373,7 @@ We manipulate the size of this wave and the speed that the novel variant takes o
 Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
 The other simulation parameters are given in Table~tk.
 Changes of the resulting proportion of individuals infected with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
-The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we create forecasts.
+The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we produce forecasts.
 Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
 In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
 Genetic data is reported at a daily resolution, which is crucial to capturing the early exponential-like growth of the novel variant, relative to the other variants.
@@ -382,7 +382,7 @@ Additionally, the genetic data is only reported beginning one week before the no
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{proportion_novel_variant_simulated_data_plot}
-    \caption{Proportion of infectious population with novel variant over time for three simulated scenarios.
+    \caption{Proportion of infectious individuals infected with the novel variant over time for three simulated scenarios.
     The dashed line indicates the time that the initial importation event of the novel variant occurs.}
     \label{ch_5:fig:proportion_novel_variant_simulated_data_plot}
 \end{figure}
@@ -390,35 +390,35 @@ Additionally, the genetic data is only reported beginning one week before the no
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_binned_data_medium_plot}
-    \caption[Simulated data set for medium takeover speed scenario.]{Simulated data set for medium takeover speed scenario.
-    The gray shaded areas indicating the time points for which we create forecasts}
+    \caption[simulated data set for the medium takeover speed scenario.]{simulated data set for the medium takeover speed scenario.
+    The gray shaded areas indicate the time points for which we produce forecasts}
     \label{ch_5:fig:simulated_binned_data_medium_plot}
 \end{figure}
 
 
-We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is modeled by \eqref{ch_5:eqn:kappa_delta} a function of the proportion of infectious population with novel variant.
+We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
 The first model is reflective of typical practice in infectious disease modeling.
-The second is a slight variation on the first, where we make the immune duration, rather than the basic reproductive number, vary over time.
-The third model is our main innovation, which models the immune duration based on genetic data.
+The second is a slight variation on the first, where we make the immunity duration, rather than the basic reproductive number, vary over time.
+The third model is our main innovation, which models the mean immune duration based on genetic data.
 The priors used in these models are presented in Table~tk.
-For each simulated dataset, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
+For each simulated data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 
-While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these models.
+While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these forecasts.
 We present additional results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
 In general, these results exhibit the same patterns as observed in the hospitalization results.
 Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
-The results of that analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
+The results of this analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
 
 We first show 1, 2, and 4-week ahead forecasts for the simulated medium takeover speed data in Figure~\ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}.
 Analogous plots for the slow and fast takeover data are presented in Figures~\ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_slow_plot} and \ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_fast_plot}, respectively.
 
-From these figures, we note that, for all models and all datasets, one-week ahead forecasts match the data quite closely.
+From these figures, we note that, for all models and all data sets, one-week ahead forecasts match the data quite closely.
 As may be expected, performance degrades as the forecast horizon increases.
-For the slow data, the model where \( 1 / \kappa(t) \) is informed by the genetic data closely matches the data up to the four-week ahead forecasts.
-The model where \( 1 / \kappa(t) \) is a GMRF also matches quite well, while the model where \( R_0(t) \) is a GMRF is much less sharp than the other models.
-For the medium data, the model with \( 1 / \kappa(t) \) informed by the genetic data again fits the data well up to the four-week forecast horizon.
-The \( 1 / \kappa(t) \) GMRF model misjudges the height and the timing of the peak, and the forecasts from the \( R_0(t) \) GMRF model are again too much wider than the other models.
-When forecasting the fast data, the \( R_0(t) \) GMRF model is competitive with the \( 1 / \kappa(t) \) genetic model, while the \( 1 / \kappa(t) \) GMRF model again misjudges the peak.
+For the slow data, the forecasts where \( 1 / \kappa(t) \) is informed by the genetic data closely match the data up to the four-week ahead forecasts.
+The forecasts where \( 1 / \kappa(t) \) is a priori modeled as a GMRF also match the data quite well, while the model where \( R_0(t) \) is a priori modeled as a GMRF is much less sharp than the other models.
+For the medium data, the forecasts with \( 1 / \kappa(t) \) informed by the genetic data again predict the data well up to the four-week forecast horizon.
+The \( 1 / \kappa(t) \) GMRF model misjudges the height and the timing of the peak, and the forecasts from the \( R_0(t) \) GMRF model are again much wider than the other models.
+When forecasting the fast variant takeover data, the \( R_0(t) \) GMRF model is competitive with the \( 1 / \kappa(t) \) genetic model, while the \( 1 / \kappa(t) \) GMRF model again misjudges the peak.
 
 \begin{figure}
     \centering
@@ -428,30 +428,30 @@ When forecasting the fast data, the \( R_0(t) \) GMRF model is competitive with 
 \end{figure}
 
 To numerically assess the quality of these forecasts, we compute the continuous rank probability score (CRPS) for each forecast at 1, 2, and 4-week horizons.
-Boxplots summarizing the scores of the hospitalization forecasts are displayed in Figure~\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}.
-Analogous plots for forecasts of cases, ICU occupancy, and deaths are presented in Figures~\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_new_cases_plot}--\ref{ch_5:fig:simulated_crps_comparison_boxplot_data_new_deaths_plot}.
+Boxplots summarizing the scores of the hospitalization forecasts are displayed in Figure~\ref{ch_5:fig:simulated_crps_comparison_dotplot_data_hospitalizations_plot}.
+Analogous plots for forecasts of cases, ICU occupancy, and deaths are presented in Figures~\ref{ch_5:fig:simulated_crps_comparison_dotplot_data_new_cases_plot}--\ref{ch_5:fig:simulated_crps_comparison_dotplot_data_new_deaths_plot}.
 Additionally, we show the scores for each individual forecast for each data stream in Figures~\ref{ch_5:fig:simulated_crps_comparison_data_new_cases_plot}--\ref{ch_5:fig:simulated_crps_comparison_data_new_deaths_plot}.
 We observe that across all simulated scenarios and data streams, the model where \( 1 / \kappa(t) \) is informed by the genetic data achieves the lowest (best) scores.
-For the slow takeover data, the model where \( 1 / \kappa(t) \) is modeled by a GMRF performs better than the model where \( R_0(t) \) is a GMRF.
+For the slow takeover data, the model where \( 1 / \kappa(t) \) is modeled by a GMRF performs better than the model where \( R_0(t) \) is a priori modeled as a GMRF.
 For the medium takeover data, the two GMRF models are competitive with each other, while the \( R_0(t) \) GMRF model outperforms the \( 1 / \kappa(t) \) GMRF model for the fast takeover data.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{simulated_crps_comparison_boxplot_data_hospitalizations_plot}
+    \includegraphics[width=1.0\columnwidth]{simulated_crps_comparison_dotplot_data_hospitalizations_plot}
     \caption[CRPS summaries for hospital occupancy forecasts for simulated data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for three simulated data sets. Lower CRPS is better.}
-    \label{ch_5:fig:simulated_crps_comparison_boxplot_data_hospitalizations_plot}
+    \label{ch_5:fig:simulated_crps_comparison_dotplot_data_hospitalizations_plot}
 \end{figure}
 
 We also specifically assess each model's ability to estimate the timing and size of the peak hospital occupancy.
-Posterior credible intervals for the peak timing and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
-In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest credible interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when later data is included in the model.
+Posterior predictive intervals for the peak timing and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
+In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest predictive interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when later data is included in the model.
 The model where \( R_0(t) \) follows a GMRF has the widest intervals and is, in general, under confident about the peak timing and value, even when the peak has already passed.
 The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_time_plot}
-    \caption[Posterior credible intervals for peak hospital occupancy timing for simulated data sets.]{Posterior credible intervals for the time at which hospital occupancy reaches its maximum in three simulated data sets.
+    \caption[Posterior predictive intervals for peak hospital occupancy timing for simulated data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in three simulated data sets.
     Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:simulated_peak_assessment_time_plot}
 \end{figure}
@@ -459,21 +459,21 @@ The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_value_plot}
-    \caption[Posterior credible intervals for peak hospital occupancy for simulated data sets.]{Posterior credible intervals for the maximum hospital occupancy in three simulated data sets.
+    \caption[Posterior predictive intervals for peak hospital occupancy for simulated data sets.]{Posterior predictive intervals for the maximum hospital occupancy in three simulated data sets.
     Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:simulated_peak_assessment_value_plot}
 \end{figure}
 
-Summaries of scores for these forecasts are depicted in Figure~\ref{ch_5:fig:simulated_peak_crps_boxplot_plot}.
+Summaries of scores for these forecasts are depicted in Figure~\ref{ch_5:fig:simulated_peak_crps_dotplot_plot}.
 The score at each forecast time is shown in Figure~\ref{ch_5:fig:simulated_peak_crps_plot}.
 For the slow takeover data, the model where \( 1 / \kappa(t) \) is informed by the genetic data achieves the best scores for both peak timing and value.
-When the models are fit to the medium and fast takeover data, the model where \( R_0(t) \) is a GMRF performs the best.
+When the models are fit to the medium and fast takeover data, the model where \( R_0(t) \) is a priori modeled as a GMRF performs the best.
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{simulated_peak_crps_boxplot_plot}
+    \includegraphics[width=1.0\columnwidth]{simulated_peak_crps_dotplot_plot}
     \caption[CRPS summaries for peak hospital occupancy in simulated data sets.]{CRPS summaries for peak hospital occupancy timing and size for three simulated data sets. Lower CRPS is better.}
-    \label{ch_5:fig:simulated_peak_crps_boxplot_plot}
+    \label{ch_5:fig:simulated_peak_crps_dotplot_plot}
 \end{figure}
 
 Beyond the forecasting advantages, the model that uses genetic data is more computationally efficient and uses the same number of parameters, regardless of the number of observation times.
@@ -508,9 +508,9 @@ The non-genetic time series are aggregated at a weekly level, while the genetic 
 Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
 
 Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the statewide level, while Figure~\ref{ch_5:fig:orange_county_binned_data_plot} displays the binned data from Orange County.
-The gray highlighted regions indicate the times for which we create forecasts.
+The gray highlighted regions indicate the times for which we produce forecasts.
 We note that, while the peak weekly case count in the BA.1 wave is about six times higher than the first wave depicted in the figure, the peak hospitalizations are only twice as high in the second wave, and the peak ICU occupancy is only about 20\% higher in the second wave.
-This is a clear departure from the models we fit in our simulation study, where the second peak's size compared to the first peak is the same for all data streams.
+This is a clear departure from the models we fit in our simulation study, where the second peak's height compared to the first peak is the same for all data streams.
 Because of this, we chose to fit the same models as in the simulation study, but modified them to also include modeling the case detection rate with a Gaussian Markov random field.
 In reality, the reasoning for the changing relationship between the peaks is complex and difficult to untangle, even in retrospect.
 It is likely that some combination of partial protection from previous infections or vaccinations and possible less inherent propensity for severe outcomes in the Omicron variant is at play.
@@ -521,8 +521,8 @@ Anticipating and modeling this scenario in a real forecasting scenario with a no
     \includegraphics[width=1.0\columnwidth]{california_binned_data_plot.pdf}
     \caption[COVID-19 surveillance data from California.]{
 COVID-19 surveillance data from California.
-The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-19, reported deaths due to COVID-19, as well as genetic virus sequences for BA.1 and non-BA.1 lineages.
-The gray highlighted regions indicate the times for which we create forecasts.}
+The plots show weekly counts of cases, hospital and ICU occupancy with COVID-19, reported deaths due to COVID-19, as well as counts of virus sequences for BA.1 and all lineages, and the proportion of BA.1 lineages.
+The gray highlighted regions indicate the times for which we produce forecasts.}
     \label{ch_5:fig:california_binned_data_plot}
 \end{figure}
 
@@ -531,26 +531,26 @@ The gray highlighted regions indicate the times for which we create forecasts.}
     \includegraphics[width=1.0\columnwidth]{orange_county_binned_data_plot.pdf}
     \caption[COVID-19 surveillance data from Orange County, California.]{
 COVID-19 surveillance data from Orange County, CA.
-The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-19, reported deaths due to COVID-19, as well as genetic virus sequences for BA.1 and non-BA.1 lineages.
-The gray highlighted regions indicate the times for which we create forecasts.}
+The plots show weekly counts of cases, hospital and ICU occupancy with COVID-19, reported deaths due to COVID-19, as well as counts of virus sequences for BA.1 and all lineages, and the proportion of BA.1 lineages.
+The gray highlighted regions indicate the times for which we produce forecasts.}
     \label{ch_5:fig:orange_county_binned_data_plot}
 \end{figure}
 
 The priors used for our models are presented in Table~tk.
-For each dataset, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
+For each data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 As in the simulation study, in the main text, we focus on results related to hospital occupancy, but present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:real_cases_icu_death}.
 In general, these results exhibit the similar patterns as observed in the hospitalization results.
 
 Figures~\ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot} and \ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot} show the 1, 2, and 4-week ahead forecasts for hospital occupancy in Orange County and California, respectively.
 For both data sets, we note that one-week ahead forecasts match the data quite closely for the models that do not use the genetic data, but the model where \( 1 / \kappa(t) \) is informed by the genetic data exhibits comparatively wider credible intervals.
 As the forecast horizon increases, the two models where \( 1 / \kappa(t) \) varies in time can correctly identify the peak of the hospital occupancy, while the model where \( 1 / \kappa(t) \) is constant greatly overestimates the peak.
-These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_hospitalizations_plot}, where we observe that the models where \( 1 / \kappa(t) \) varies in time achieve lower CRPS values at for the two and four-week forecast horizons, compared to the model where \( 1 / \kappa(t) \) is constant.
-Analogous figures for the other data streams are presented in Figures~\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_boxplot_data_new_deaths_plot}.
+These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}, where we observe that the models where \( 1 / \kappa(t) \) varies in time achieve lower CRPS values at for the two and four-week forecast horizons, compared to the model where \( 1 / \kappa(t) \) is constant.
+Analogous figures for the other data streams are presented in Figures~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_new_deaths_plot}.
 We show the individual scores for each forecast in Figures~\ref{ch_5:fig:real_data_crps_comparison_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_data_new_deaths_plot}.
-In Figures~\ref{ch_5:fig:real_data_peak_assessment_time_plot} and \ref{ch_5:fig:real_data_peak_assessment_value_plot}, we present posterior credible intervals for the peak timing and peak value for hospital occupancy.
+In Figures~\ref{ch_5:fig:real_data_peak_assessment_time_plot} and \ref{ch_5:fig:real_data_peak_assessment_value_plot}, we present posterior predictive intervals for the peak timing and peak value for hospital occupancy.
 One again, the models where \( 1 / \kappa(t) \) varies in time are shown to be superior, with narrower credible intervals near the observed value in the data.
 In particular, the model where \( 1 / \kappa(t) \) is informed by genetic data appears to be best at forecasting the time of the hospital occupancy peak.
-This is demonstrated in Figure~\ref{ch_5:fig:real_data_peak_crps_boxplot_plot}, which shows a summary of the CRPS for forecasts of peak hospital occupancy time and amount.
+This is demonstrated in Figure~\ref{ch_5:fig:real_data_peak_crps_dotplot_plot}, which shows a summary of the CRPS for forecasts of peak hospital occupancy time and amount.
 Individual CRPS for each forecast of a peak hospital occupancy time and amount are presented in Figure~\ref{ch_5:fig:real_data_peak_crps_plot}.
 
 \begin{figure}
@@ -569,15 +569,15 @@ Individual CRPS for each forecast of a peak hospital occupancy time and amount a
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_boxplot_data_hospitalizations_plot}
+    \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_dotplot_data_hospitalizations_plot}
     \caption[CRPS summaries for hospital occupancy forecasts for real data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
-    \label{ch_5:fig:real_data_crps_comparison_boxplot_data_hospitalizations_plot}
+    \label{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_time_plot}
-    \caption[Posterior credible intervals for peak hospital occupancy timing for real data sets.]{Posterior credible intervals for the time at which hospital occupancy reaches its maximum in Orange County and California data sets.
+    \caption[Posterior predictive intervals for peak hospital occupancy timing for real data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in Orange County and California data sets.
     Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:real_data_peak_assessment_time_plot}
 \end{figure}
@@ -585,16 +585,16 @@ Individual CRPS for each forecast of a peak hospital occupancy time and amount a
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_value_plot}
-    \caption[Posterior credible intervals for peak hospital occupancy for real data sets.]{Posterior credible intervals for the maximum hospital occupancy in Orange County and California  data sets.
+    \caption[Posterior predictive intervals for peak hospital occupancy for real data sets.]{Posterior predictive intervals for the maximum hospital occupancy in Orange County and California  data sets.
     Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:real_data_peak_assessment_value_plot}
 \end{figure}
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{real_data_peak_crps_boxplot_plot}
+    \includegraphics[width=1.0\columnwidth]{real_data_peak_crps_dotplot_plot}
     \caption[CRPS summaries for peak hospital occupancy in real data sets.]{CRPS summaries for peak hospital occupancy timing and size in Orange County and California data sets. Lower CRPS is better.}
-    \label{ch_5:fig:real_data_peak_crps_boxplot_plot}
+    \label{ch_5:fig:real_data_peak_crps_dotplot_plot}
 \end{figure}
 
 As in the simulation study, the model that uses genetic data is more computationally efficient than the models that use more GMRFs.
@@ -617,7 +617,7 @@ Each fit consists of four Markov chains run in parallel to draw a total of 1000 
 \section{Discussion}
 \label{ch_5:sec:discussion}
 
-We developed a Bayesian model that integrates time series of cases, hospitalizations, ICU admissions, and deaths, as well as genetic data to create forecasts during time periods where a novel virus variant becomes dominant.
+We developed a Bayesian model that integrates time series of cases, hospitalizations, ICU admissions, and deaths, as well as genetic data to produce forecasts during time periods where a novel virus variant becomes dominant.
 Our approach is based on the idea that the introduction of a novel variant leads to increased infections due primarily to immune escape.
 As such, we allow the parameter in our model reflecting the average immune duration to change over time and consider modeling this time-varying parameter both parametrically using genetic data, and non-parametrically.
 We applied our model to simulated data sets as well as real data from the Omicron wave in Orange County and the state of California, with a particular focus on forecasting hospital occupancy.
