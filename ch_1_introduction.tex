@@ -12,16 +12,16 @@ The importance of this pursuit is apparent when reflecting on the recent COVID-1
 Infectious disease data differs from data used in traditional statistical applications because they are highly dependent in time and space, and are almost always partially observed \citep{held2019handbook}.
 People without healthcare access or who do not exhibit disease symptoms may not seek diagnosis, leading to systematic bias and under-reporting in case counts.
 Among those who seek diagnosis, their disease status may not be correctly identified, and their results may not be reported to a centralized database.
-Even among those who receive correct diagnosis and whose results are reported, the precise timing of infection, transmission, and recovery are generally unknown.
+Even among those who receive a correct diagnosis and whose diagnostic test results are reported, the precise timing of infection, transmission, and recovery are generally unknown.
 These factors make inference and forecasting challenging.
 For instance, a small outbreak with a high reporting rate may produce similar observed case counts as a large outbreak with a low reporting rate.
-The situation is even more opaque for endemic diseases, where these unreported cases contribute to differing levels of immunity throughout a population.
+% The situation is even more opaque for endemic diseases, where these unreported cases contribute to differing levels of immunity throughout a population.
 
 Infectious disease surveillance data can be reported at a variety of resolutions and used for a variety of tasks.
 Some methods are designed to work with detailed data from a specific, relatively small, outbreak, while others are more suitable for widespread diseases observed with less detail.
 This work is primarily concerned with the latter scenario and uses both passively and actively collected surveillance data.
 These data sources traditionally take the form of aggregated counts of incidence data (e.g., new tests, new cases, and new deaths), counts of prevalence data (e.g., the number of hospitalized patients with a disease or the number of people with seropositive tests from a sampled population) at some coarse demographic, spatial, and temporal resolution (e.g., stratified by age and county and documented weekly).
-Our work and other recent advances seek to integrate other forms of data into this framework \citep{Tang2022, Rasmussen2011}.
+Our work and other recent advances seek to integrate other forms of data into this framework \citep{Rasmussen2011, Tang2022}.
 
 These data and models are vital tools for both inference and forecasting tasks.
 One major goal in the inference context is nowcasting, which typically involves estimating the effective reproduction number, \( R_t \), in real time \citep{10.1093/aje/kwt133}.
@@ -34,8 +34,9 @@ When \( R_t < 1 \), the average primary case produces fewer than one secondary c
 If this is sustained, prevalence will decrease.
 When \( R_t > 1 \), the average primary case produces more than one secondary case, leading to an exponential increase in cases.
 Other inference tasks involve quantifying the effects of interventions, whether they be pharmaceutical (e.g., vaccination campaigns) or non-pharmaceutical (e.g., mask mandates).
-At the most basic level, an infectious disease modeler may simply want to infer the true proportion of the population that has been infected with a disease.
-Forecasting is concerned with anticipating future disease burden, with special attention to severe outcomes like hospitalizations and deaths \citep{10.1371/journal.pmed.1003793}.
+Other inference tasks may be basic.
+For an example, an infectious disease modeler may simply want to infer the true proportion of the population that has been infected with a disease.
+Beyond inference, modelers may also be interested in forecasting future disease burden, often with special attention to severe outcomes like hospitalizations and deaths \citep{10.1371/journal.pmed.1003793}.
 Relatedly, modelers may consider potential future scenarios to drive public policy by  by answering questions like ``in the presence of a more transmissible variant, how many people do we need to vaccinate to prevent the healthcare system from being overwhelmed?"
 
 In the next section, we provide an overview of surveillance data available to infectious disease modelers to motivate our methodological contributions.
@@ -44,7 +45,7 @@ In the next section, we provide an overview of surveillance data available to in
 \label{ch_1:sec:motivating_examples}
 
 In Chapter~\ref{ch:content_1}, we work with data originally analyzed by \citet{Kali:2021}.
-This data set was collected to estimate seroprevalence of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020.
+This data set was collected to estimate the cumulative incidence of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020.
 The data consists of 304 seropositive samples among the 8058 total antibody tests.
 The samples are weighted based on a variety of socioeconomic factors. 
  The assay used is estimated to have perfect sensitivity, based on 56 tests on individuals with confirmed SARS-CoV-2 and perfect specificity based on 300 tests on individuals confirmed to not have SARS-CoV-2.
@@ -70,7 +71,7 @@ To achieve this goal, we also use data from \citet{Bruckner2021}, a study conduc
     \label{ch_1:fig:binned_data_plot}
 \end{figure}
 
-In Chapter~\ref{ch:content_3}, we again analyze data from Orange County, as well as statewide data from California, with a focus on forecasting during the Omicron wave of winter 2022. 
+In Chapter~\ref{ch:content_3}, we again analyze data from Orange County, as well as statewide data from California, with a focus on forecasting healthcare demand during the Omicron (BA.1) wave of winter 2022. 
 Counts of cases, hospital occupancy, ICU occupancy, and deaths are provided to us by the California Department of Public Health.
 The counts of virus sequence by variant are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} via Outbreak.info \citep{Gangavarapu2023}.
 The aggregated counts of cases, hospital occupancy, ICU occupancy, deaths, and sequence counts of the BA.1 and non-BA.1 variants are presented in Figure~\ref{ch_1:fig:orange_county_binned_data_plot} for Orange County and Figure~\ref{ch_1:fig:california_binned_data_plot} at the statewide level.
@@ -82,8 +83,8 @@ The objective of this chapter is to develop a model that uses the proportion of 
     \includegraphics[width=1.0\columnwidth]{figures/ch_5/california_binned_data_plot.pdf}
     \caption[COVID-19 surveillance data from California.]{
 COVID-19 surveillance data from California.
-The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-19, reported deaths due to COVID-19, as well as genetic virus sequences for BA.1 and non-BA.1 lineages.
-The gray highlighted regions indicate the times for which we create forecasts.}
+The plots show weekly counts of cases, hospital and ICU occupancy of patients with COVID-19, reported deaths due to COVID-19, as well as counts of virus sequences for Omicron BA.1 and all lineages, and the proportion of BA.1 lineages.
+The gray highlighted regions indicate the times for which we produce forecasts.}
     \label{ch_1:fig:california_binned_data_plot}
 \end{figure}
 
@@ -92,8 +93,8 @@ The gray highlighted regions indicate the times for which we create forecasts.}
     \includegraphics[width=1.0\columnwidth]{figures/ch_5/orange_county_binned_data_plot.pdf}
     \caption[COVID-19 surveillance data from Orange County, California.]{
 COVID-19 surveillance data from Orange County, CA.
-The figure shows weekly counts of cases, hospital and ICU occupancy with OCIVD-19, reported deaths due to COVID-19, as well as genetic virus sequences for BA.1 and non-BA.1 lineages.
-The gray highlighted regions indicate the times for which we create forecasts.}
+The plots show weekly counts of cases, hospital and ICU occupancy of patients with COVID-19, reported deaths due to COVID-19, as well as counts of virus sequences for Omicron BA.1 and all lineages, and the proportion of BA.1 lineages.
+The gray highlighted regions indicate the times for which we produce forecasts.}
     \label{ch_1:fig:orange_county_binned_data_plot}
 \end{figure}
 
@@ -102,7 +103,7 @@ Chapter~\ref{ch:background} provides background information on areas of statisti
 The topics covered include mathematical models for the spread of infectious diseases, Bayesian inference and Markov chain Monte Carlo, forecast assessment, and fiducial inference.
 
 In Chapter~\ref{ch:content_1}, we eschew the temporal complications of analyzing infectious disease data and focus on issues of sampling schemes and diagnostic test accuracy.
-While there are established methods for estimating disease prevalence with associated confidence intervals for complex surveys with perfect assays and simple random sample surveys with imperfect assays, the complicated case of complex surveys with imperfect assays remains relatively unexplored.
+While there are established methods for estimating disease prevalence with associated confidence intervals for complex surveys with perfect assays and simple random sample surveys with imperfect assays, the case of complex surveys with imperfect assays remains relatively unexplored.
 We develop and study new methods for this setting.
 The new methods use the melding method to combine gamma intervals for directly standardized rates and established adjustments for imperfect assays by estimating sensitivity and specificity.
 One of the new methods appears to have at least nominal coverage in all simulated scenarios.
@@ -123,13 +124,13 @@ Despite this high number of infections, our results suggest that the abrupt end 
 
 In Chapter~\ref{ch:content_3}, we work in a similar setting as Chapter~\ref{ch:content_2}, but where the changing disease dynamics are due to novel disease variants, rather than changing policy and behavior.
 In this chapter, we are primarily concerned with forecasting, rather than inference.
-Accurate forecasting of epidemic surges is an important tool for public health organizations to make informed decisions about interventions and resource allocation.
+Accurate forecasting of epidemic surges is an important tool for public health agencies to make informed decisions about interventions and resource allocation.
 Forecasting is particularly challenging when a new variant arises, which may result in increased transmissibility, severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
 To improve forecasting in these scenarios, we propose a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
 We assume that the observed count of sequences of a novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and the proportion of the infectious population with the novel variant.
 We then model the average duration of immunity as a flexible function of this proportion.
 We evaluate our method in a simulation study wherein novel variants become dominant at varying rates and to data from the Omicron wave in Orange County, California and the state of California as a whole.
-In these assessments, our model is shown to have superior forecasting performance and is especially better at forecasting the timing and magnitude of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
+In these assessments, our model is shown to have superior forecasting performance and is especially better at forecasting the timing and magnitude of the peak hospital occupancy, a metric crucial for public health officers and hospital managers making staffing decisions.
 
 We conclude with a summary of our work in Chapter~\ref{ch:discussion} and discuss opportunities for future research in inference and forecasting using infectious disease surveillance data.
 
