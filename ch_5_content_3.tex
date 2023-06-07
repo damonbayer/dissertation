@@ -481,7 +481,7 @@ When the models are fit to the medium and fast takeover data, the model where \(
 
 Beyond the forecasting advantages, the model that uses genetic data is more computationally efficient and uses the same number of parameters, regardless of the number of observation times.
 In contrast, the number of parameters in the models with GMRFs scales with the number of observation times.
-A summary of the computation time required to fit models in the simulation study is presented in Table~\ref{ch_5:table:simmulation_study_cpu_time}
+A summary of the computation time required to fit models in the simulation study is presented in Table~\ref{ch_5:table:simmulation_study_cpu_time}.
 
 \begin{table}
 \caption[Computation time for models in simulation study.]{Computation time summary for all models in our simulation study.
@@ -514,9 +514,9 @@ Figure~\ref{ch_5:fig:california_binned_data_plot} shows the binned data at the s
 The gray highlighted regions indicate the times for which we produce forecasts.
 We note that, while the peak weekly case count in the BA.1 wave is about six times higher than the first wave depicted in the figure, the peak hospitalizations are only twice as high in the second wave, and the peak ICU occupancy is only about 20\% higher in the second wave.
 This is a clear departure from the models we fit in our simulation study, where the second peak's height compared to the first peak is the same for all data streams.
-Because of this, we chose to fit the same models as in the simulation study, but modified them to also include modeling the case detection rate, \( \rho^W(t) \), with a Gaussian Markov random field.
+Because of this, we chose to fit the same models as in the simulation study, but modified them to also include modeling the case detection rate, \( \rho^W(t) \), with a GMRF.
 In reality, the reasoning for the changing relationship between the peaks is complex and difficult to untangle, even in retrospect.
-It is likely that some combination of partial protection from previous infections or vaccinations and possible less inherent propensity for severe outcomes in the Omicron variant is at play.
+It is likely that some combination of partial protection from previous infections or vaccinations and possible less inherent propensity for severe outcomes in the Omicron variant are at play.
 Anticipating and modeling this scenario in a real forecasting scenario with a novel variant would be extremely difficult, so we chose to incorporate some additional flexibility into the model in a place that could be realistic and useful.
 
 \begin{figure}
@@ -547,14 +547,14 @@ In general, these results exhibit the similar patterns as observed in the hospit
 Figures~\ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot} and \ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot} show the 1, 2, and 4-week ahead forecasts for hospital occupancy in Orange County and California, respectively.
 For both data sets, we note that one-week ahead forecasts match the data quite closely for the models that do not use the genetic data, but the model where \( 1 / \kappa(t) \) is informed by the genetic data exhibits comparatively wider credible intervals.
 As the forecast horizon increases, the two models where \( 1 / \kappa(t) \) varies in time can correctly identify the peak of the hospital occupancy, while the model where \( 1 / \kappa(t) \) is constant greatly overestimates the peak.
-These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}, where we observe that the models where \( 1 / \kappa(t) \) varies in time achieve lower average CRPS values at forecast horizons greater than one week, compared to the model where \( 1 / \kappa(t) \) is constant.
+These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}, where we observe that the model where \( 1 / \kappa(t) \) is informed by genetic data achieves the lowest average CRPS values at forecast horizons greater than one week, and the model where \( 1 / \kappa(t) \) is constant achieves the highest CRPS values.
 Analogous figures for the other data streams are presented in Figures~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_new_deaths_plot}.
 We show the individual scores for each forecast in Figures~\ref{ch_5:fig:real_data_crps_comparison_data_new_cases_plot}--\ref{ch_5:fig:real_data_crps_comparison_data_new_deaths_plot}.
 In Figures~\ref{ch_5:fig:real_data_peak_assessment_time_plot} and \ref{ch_5:fig:real_data_peak_assessment_value_plot}, we present posterior predictive intervals for the peak timing and peak value for hospital occupancy.
 One again, the models where \( 1 / \kappa(t) \) varies in time are shown to be superior, with narrower credible intervals near the observed value in the data.
 In particular, the model where \( 1 / \kappa(t) \) is informed by genetic data appears to be best at forecasting the time of the hospital occupancy peak.
-This is demonstrated in Figure~\ref{ch_5:fig:real_data_peak_crps_dotplot_plot}, which shows a summary of the average CRPS for forecasts of peak hospital occupancy time and amount.
-Individual CRPS for each forecast of a peak hospital occupancy time and amount are presented in Figure~\ref{ch_5:fig:real_data_peak_crps_plot}.
+This is demonstrated in Figure~\ref{ch_5:fig:real_data_peak_crps_dotplot_plot}, which shows a summary of the average CRPS values for forecasts of peak hospital occupancy time and amount.
+Individual CRPS values for each forecast of a peak hospital occupancy time and amount are presented in Figure~\ref{ch_5:fig:real_data_peak_crps_plot}.
 
 \begin{figure}
     \centering
