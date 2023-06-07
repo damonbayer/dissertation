@@ -30,21 +30,21 @@ The proposed value \( \btheta^\prime \), is accepted with probability
 =&  \min \left\{ 1, \frac{\pi \left( \bX \mid \btheta^\prime  \right)}{\pi \left( \bX \mid \btheta \right)} \frac{\pi \left( \btheta^\prime \right)}{\pi \left( \btheta \right)} \frac{q \left( \btheta \mid \btheta^\prime \right)}{q \left( \btheta^\prime \mid \btheta  \right)} \right\}.
 \end{align}
 
-Efficiently sampling using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so widely distributed that they have a very low probability of acceptance.
+Efficiently exploring the posterior distribution using Metropolis-Hastings requires selecting a proposal distribution that produces proposals that are far enough away from the current parameters to explore the parameter space quickly, but not so widely distributed that they have a very low probability of acceptance.
 As \( \btheta \) increases in dimensionality, striking this balance becomes more difficult, and Markov chains constructed with relatively simple algorithms tend to become ``stuck" in a small region, unable to explore the full posterior.
 Sophisticated methods, such as the Metropolis-adjusted Langevin algorithm \citep{Besag1994Comments}, elliptical slice sampling \citep{Murray202Elliptical}, and Hamiltonian Monte Carlo \citep{Duane1987Hybrid} have been developed to improve this efficiency in high dimensional settings.
 
 Throughout this dissertation, we rely on the Hamiltonian Monte Carlo.
 Briefly, Hamiltonian Monte Carlo is a form of the Metropolis–Hastings algorithm which uses Hamiltonian dynamics to generate proposals.
 To accomplish this, the parameter space is augmented with ``momentum" variables which guide the proposals through regions of high probability.
-For a detailed overview, see \citet{betancourt2018conceptual} and \citet{neal2011mcmc}.
+For a detailed overview, see \citep{neal2011mcmc} and \citep{betancourt2018conceptual}.
 
 \section{Confidence Distributions}
 \label{ch_2:sec:confidence_distributions}
 Confidence distributions are a frequentist estimators of a parameter, although they are historically associated with the fiducial distribution from fiducial statistics \citep{Xie2013}.
 They are ``distribution estimators," similar in spirit to the bootstrap and the posterior distribution from Bayesian inference (see section \ref{ch_2:sec:bayesian-mcmc}).
 A modern definition and short history of confidence distributions is available in \citep{Xie2013}.
-For clarity with respect to discrete data, which is the focus of our use of confidence distributions in Chapter~\ref{ch:content_1}, we present a more classical derivation, which relies on previously derived confidence interval procedures.
+For clarity, we present a more classical derivation, which relies on previously derived confidence interval procedures.
 
 Under the classical derivation, we can create random variables associated with the lower and upper confidence distributions from two one-sided, nested, confidence interval procedures.
 For a nested confidence interval procedure, the $(1-\alpha_1)$ interval is a subset of the $(1-\alpha_2)$ interval whenever $(1-\alpha_1) \leq (1-\alpha_2)$.
@@ -60,14 +60,14 @@ With \( \sigma^2 \) known, a \( (1 - \alpha) \)\% confidence interval for \( \mu
 \end{equation}
 where \( \bar{x} \) is the sample mean and \( z_{\alpha / 2} \) satisfies \( P(Z \geq z_{\alpha / 2}) = \alpha / 2 \) and \( Z \sim \textrm{Normal}(0,1) \).
 
-Letting \( L_\mu (\bx, q) = U_\mu (\bx, q) = \bar{x} - \frac{\sigma}{\sqrt{n}} \Phi^{-1}(q) \), we have \( L_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \) and \( U_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \)
+Letting \( L_\mu (\bx, q) = U_\mu (\bx, q) = \bar{x} - \frac{\sigma}{\sqrt{n}} \Phi^{-1}(q) \), we have \( L_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \) and \( U_\mu(\bx, A) \sim \textrm{Normal} \left( \bar{x}, \frac{\sigma^2}{n} \right) \).
 
 We now note that \eqref{ch_2:eqn:CI_normal_1} is equivalent to
 \begin{equation}
     \left[ F_{L_{\mu}}^{-1}(\alpha / 2), F_{U_{\mu}}^{-1}(1- \alpha / 2) \right],
 \end{equation}
 where \( F_Y^{-1} \) indicates the inverse of the cumulative distribution function of a random variable \( Y \).
-Thus, we say \( L_\mu \) and \( U_\mu \) are the lower and upper confidence distribution random variables for \( \mu \).
+Thus, by definition, \( L_\mu \) and \( U_\mu \) are lower and upper confidence distribution random variables for \( \mu \).
 
 While the focus of our work is on combining confidence distributions of different variables to produce confidence intervals, the distributions have additional uses.
 For instance, we can create point estimators by considering the mean, median, or mode of a confidence distribution.
@@ -80,13 +80,13 @@ For a one-sided hypotheses test at the level \( \alpha \) of \( H_0: \theta \in 
 
 \subsection{Compartmental Models}
 \label{ch_2:sec:compartmental_models}
-The compartmental model is a popular tool used to describe the spread of infectious disease.
-The most basic and prominent of these is the Susceptible-Infected-Removed (SIR) model, which we use as an example in this section.
+The compartmental model is a popular tool used to describe the spread of an infectious disease agent.
+The most basic and prominent of these models is the Susceptible-Infected-Removed (SIR) model, which we use as an example in this section.
 In these models, the population of interest is divided into compartments that indicate a disease status (e.g., susceptible, infectious, and recovered), and individuals transition between compartments at a specified rate
 (e.g., transitions from infectious compartment to recovered compartment happen at a rate proportional to the number of infectious individuals).
 Overviews of mechanistic compartmental models for disease dynamics can be found in \citep{anderson1992infectious, Brauer2008, keeling2011modeling, 10.1093/aje/kww021}.
 
-These models can be represented deterministically or stochastically.
+Compartmental models can be represented deterministically or stochastically.
 In the stochastic treatment, the model is formulated as a continuous-time Markov chain (CTMC).
 A CTMC is a stochastic process \( \left\{ X_t \right\}, t \geq 0 \), on a state space \( \Omega \) such that
 \begin{equation}
@@ -127,9 +127,9 @@ The diagram in Figure~\ref{ch_2:fig:stocastic_SIR} represents the system's evolu
 	\arrow["{\text{Infection}}", draw=none, from=1-3, to=2-1]
 	\arrow["{\text{Recovery}}"', draw=none, from=3-3, to=2-1]
 \end{tikzcd}
-    \caption[State transition diagram for SIR model.]{State transition diagram for SIR model with current state \( (S \), \( I \),  \( R) \).
+    \caption[State transition graph for SIR model.]{State transition graph for SIR model with current state \( (S \), \( I \),  \( R) \).
     The population experiences an infection and transitions to the state \( (S-1, I+1, R) \) at the rate \( \frac{\beta}{N}SI \).
-    The population experiences a recovery and transitions to the state \( (S, I-11, R+1) \) at the rate \( \gamma I \).
+    The population experiences a recovery and transitions to the state \( (S, I-1, R+1) \) at the rate \( \gamma I \).
     }
     \label{ch_2:fig:stocastic_SIR}
 \end{figure}
@@ -180,19 +180,19 @@ Time-varying parameters can also model changes in behavior or policy (e.g., stay
     \label{ch_2:fig:SEIRDS_diagram}
 \end{figure}
 
-Figure~\ref{ch_2:fig:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are infected, but not infections (\( E \)) and those who are deceased (\( D \)), as well as reinfections after recovery.
+Figure~\ref{ch_2:fig:SEIRDS_diagram} presents a model demonstrating some of these features, including additional compartments for individuals who are infected, but not infections (\( E \)) and those who are deceased (\( D \)), as well as loss of immunity and possibility of reinfections after recovery.
 
 \subsection{Data Integration}
 \label{ch_2:sec:data_integration}
 We are interested in estimating parameters of SIR-like models from surveillance data.
 Broadly, we can categorize data used for this modeling as either actively or passively collected surveillance data.
-Common examples of passively collected incidence data include daily counts of diagnostic tests, confirmed cases, and deaths, as well as genetic sequences of viruses or bacteria that cause diseases.
+Common examples of passively collected incidence data include daily counts of new diagnostic tests, confirmed cases, and deaths, as well as genetic sequences of viruses or bacteria that cause diseases.
 We refer to this as incidence data because each count is assumed to correspond to a new event during that time.
 In contrast, we can work with prevalence data, which is reflective of the frequency of a condition at a given time.
-Examples of prevalence data include counts of current hospital or intensive care unit (ICU) occupants with a certain disease or the number of seropositive tests from a carefully sampled population.
+Examples of prevalence data include counts of current hospital or intensive care unit (ICU) occupants with a certain disease or the number of seropositive tests from a carefully constructed population sample.
 We also loosely differentiate between data that is passively or actively collected.
 Passively collected data like case counts and hospital occupancy is reported routinely by health care agencies and is generally more affordable to collect because it doesn't require a formal study to be conducted.
-Actively collected data is often the result of a survey that has been deliberately designed and conducted to measure some aspect of a population, like the current number of people infected with a disease or the contact rates between different subpopulations.
+Actively collected data is often the result of a survey that has been deliberately designed and conducted to measure some aspect of a population, like the number of people previously infected with a disease or the contact rates between different subpopulations.
 This data is more expensive to collect, but can provide information that is difficult to gather through passive surveillance.
 % could mention mobility data somewhere here
 
@@ -202,14 +202,14 @@ Broadly, a model uses a compartmental model and basic parameters, like the repro
 These compartment sizes can be mapped to prevalence data with some emission distribution or loss function.
 To integrate incidence data, we can keep track of the cumulative incidence (e.g., by counting the cumulative number of \( S \to I \) transitions) at each time point and compute the difference between successive times.
 Then these differences can be mapped to incidence data with an emission distribution or loss function.
-For example, let \( N_{S I}(t_l) \) be the cumulative number of \( S \to I \) transitions by time \( t = l \), as reported by the compartmental model.
+For example, let \( N_{S I}(t_l) \) be the cumulative number of \( S \to I \) transitions by time \( t = l \), as tracked by the compartmental model.
 Then \( \Delta N_{S I}(t_l) = N_{S I}(t_l) - N_{S I}(t_{l-1}) \) is the number new \( S \to I \) transitions between time \( t = l \) and time \( t = l - 1 \).
 We can link this to \( C_l \), the number of observed cases between time \( t = l \) and time \( t = l - 1 \) by the following distributional assumption:
 \begin{equation}
 C_l \sim \text{Negative binomial}\left (\mu_l =  \rho \times \Delta N_{S I}(t_l),\ {\sigma^2_l} = \mu_l (1 + \mu_l / \phi )\right ),
 \label{ch_2:eqn:example_case_emission}
 \end{equation}
-where \( \mu_l \) and \( \sigma^2_l \) are the mean and variance of this negative binomial distribution, \( \rho \) is a case reporting rate, reflecting that not all people who become infected with a disease are tested, and \( \phi \) is some over-dispersion parameter.
+where \( \mu_l \) and \( \sigma^2_l \) are the mean and variance of this negative binomial distribution, \( \rho \) is a case reporting rate, reflecting that not all people who become infected with a disease are tested, and \( \phi \) is an over-dispersion parameter.
 
 The specifics of the data and compartmental model used can make the mapping from the latent compartments and the observed data challenging.
 In some cases, the distinction between incidence and prevalence data is not clear.
@@ -243,7 +243,7 @@ In addition, the authors cite issues related to computational complexity when co
 While compartmental models are a common framework for forecasting infectious disease outbreaks, other methods are available for the task.
 A sample of these methods are gathered in the COVID-19 Forecast Hub, which collected and synthesized forecasts from a variety of modelers with diverse approaches throughout the COVID-19 pandemic \citep{Cramer2022Evaluation}.
 Among the methods presented are those using compartmental models, along with approaches common to other areas of statistics, such as time series and machine learning methods.
-In addition, \citet{Cramer2022Evaluation} evaluates an ensemble forecast, which combines the models into a single forecast, which is generally shown to have superior performance to any of the individual models.
+In addition, \citet{Cramer2022Evaluation} evaluate an ensemble forecast, which combines the models into a single forecast, which is generally shown to have superior performance to any of the individual models.
 These methods typically use the data described in Section~\ref{ch_2:sec:data_integration}, but some incorporate additional data sources, such as mobility data collected from mobile phones.
 
 \subsection{Forecast Assessment}
@@ -287,7 +287,7 @@ For continuous variables, the continuous ranked probability score is a popular s
 \end{equation}
 In contrast to other scoring rules, it is based on the cumulative distribution function of the predictive distribution, rather than the density function, which may not exist in some contexts.
 Additionally, the CRPS is sensitive to distance, meaning that it gives credit to forecasts which assign high probability to values near \( x \), even if they do not assign high probability to \( x \) itself.
-For a discussion of scoring rules, see \citet{gneiting2007strictly}.
+For a discussion of scoring rules, see \citep{gneiting2007strictly}.
 
 Predictive distributions arise naturally from the posterior predictive distribution in the Bayesian setting.
 The posterior predictive distribution is the distribution of possible unobserved values, \( \bX^* \), conditional on the observed values, \( \bX \).
