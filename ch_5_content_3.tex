@@ -398,14 +398,14 @@ Additionally, the genetic data is only reported beginning one week before the no
 \end{figure}
 
 
-We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
+We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
 The first model is reflective of typical practice in infectious disease modeling (see, e.g., \citep{Gibson2020real, ODea2021semi}).
 The second is a slight variation on the first, where we make the immunity duration, rather than the basic reproductive number, vary over time.
 The third model is our main innovation, which models the mean immune duration based on genetic data.
 The priors used in these models are presented in Table~tk.
 For each simulated data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 
-While these models forecast several data streams, we present only those related to hospitalization in the main text, as this is the most relevant for consumers of these forecasts.
+While these models forecast several data streams, we present only forecasts related to hospitalization in the main text, as they are the most relevant for public health policymakers.
 We present additional results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
 In general, these results exhibit the same patterns as observed in the hospitalization results.
 Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
@@ -416,7 +416,7 @@ Analogous plots for the slow and fast takeover data are presented in Figures~\re
 
 From these figures, we note that, for all models and all data sets, one-week ahead forecasts match the data quite closely.
 As may be expected, performance degrades as the forecast horizon increases.
-For the slow data, the forecasts where \( 1 / \kappa(t) \) is informed by the genetic data closely match the data up to the four-week ahead forecasts.
+For the slow takeover data, the forecasts where \( 1 / \kappa(t) \) is informed by the genetic data closely match the data up to the four-week ahead forecasts.
 The forecasts where \( 1 / \kappa(t) \) is a priori modeled as a GMRF also match the data quite well, while the model where \( R_0(t) \) is a priori modeled as a GMRF is much less sharp than the other models.
 For the medium data, the forecasts with \( 1 / \kappa(t) \) informed by the genetic data again predict the data well up to the four-week forecast horizon.
 The \( 1 / \kappa(t) \) GMRF model misjudges the height and the timing of the peak, and the forecasts from the \( R_0(t) \) GMRF model are again much wider than the other models.
