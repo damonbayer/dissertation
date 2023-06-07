@@ -39,7 +39,7 @@ We evaluate our method in a simulation study wherein novel variants become domin
 We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by the continuous ranked probability score -- a popular proper scoring rule for probabilistic forecasts \citep{gneiting2007strictly}.
 We also apply our model to real data from the Omicron wave in Orange County, California, and the state of California as a whole.
 % We show superior performance of forecasting these data streams at long forecast horizons.
-In particular, our proposed model is much better at forecasting the timing and magnitude of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
+In particular, our proposed model is much better at forecasting the timing and size of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
 
 
 \section{Methods}
@@ -544,7 +544,7 @@ For each data set, we used four Markov chains run in parallel to draw a total of
 As in the simulation study, in the main text, we focus on results related to hospital occupancy, but present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:real_cases_icu_death}.
 In general, these results exhibit the similar patterns as observed in the hospitalization results.
 
-Figures~\ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot} and \ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot} show the 1, 2, and 4-week ahead forecasts for hospital occupancy in Orange County and California, respectively.
+Figures~\ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot} and \ref{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot} show the 1, 2, and 4-week ahead forecasts for hospital occupancy in Orange County and California, respectively.
 For both data sets, we note that one-week ahead forecasts match the data quite closely for the models that do not use the genetic data, but the model where \( 1 / \kappa(t) \) is informed by the genetic data exhibits comparatively wider credible intervals.
 As the forecast horizon increases, the two models where \( 1 / \kappa(t) \) varies in time can correctly identify the peak of the hospital occupancy, while the model where \( 1 / \kappa(t) \) is constant greatly overestimates the peak.
 These observations are reflected in Figure~\ref{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}, where we observe that the model where \( 1 / \kappa(t) \) is informed by genetic data achieves the lowest average CRPS values at forecast horizons greater than one week, and the model where \( 1 / \kappa(t) \) is constant achieves the highest CRPS values.
@@ -558,13 +558,6 @@ Individual CRPS values for each forecast of a peak hospital occupancy time and a
 
 \begin{figure}
     \centering
-    \includegraphics[width=1.0\columnwidth]{real_data_forecast_comparison_data_hospitalizations_Orange_plot}
-    \caption[Hospital occupancy forecasts for Orange County data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the Orange County data.}
-    \label{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot}
-\end{figure}
-
-\begin{figure}
-    \centering
     \includegraphics[width=1.0\columnwidth]{real_data_forecast_comparison_data_hospitalizations_California_plot}
     \caption[Hospital occupancy forecasts for California data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the California data.}
     \label{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_California_plot}
@@ -572,15 +565,22 @@ Individual CRPS values for each forecast of a peak hospital occupancy time and a
 
 \begin{figure}
     \centering
+    \includegraphics[width=1.0\columnwidth]{real_data_forecast_comparison_data_hospitalizations_Orange_plot}
+    \caption[Hospital occupancy forecasts for Orange County data.]{Hospital occupancy forecasts from three models at 1, 2, and 4-week forecast horizons for the Orange County data.}
+    \label{ch_5:fig:real_data_forecast_comparison_data_hospitalizations_Orange_plot}
+\end{figure}
+
+\begin{figure}
+    \centering
     \includegraphics[width=1.0\columnwidth]{real_data_crps_comparison_dotplot_data_hospitalizations_plot}
-    \caption[CRPS summaries for hospital occupancy forecasts for real data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for Orange County and California data sets. Lower CRPS is better.}
+    \caption[CRPS summaries for hospital occupancy forecasts for real data sets.]{CRPS summaries for hospital occupancy forecasts at 1, 2, and 4-week horizons for California and Orange County data sets. Lower CRPS is better.}
     \label{ch_5:fig:real_data_crps_comparison_dotplot_data_hospitalizations_plot}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_time_plot}
-    \caption[Posterior predictive intervals for peak hospital occupancy timing for real data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in Orange County and California data sets.
+    \caption[Posterior predictive intervals for peak hospital occupancy timing for real data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in California and Orange County data sets.
     Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:real_data_peak_assessment_time_plot}
 \end{figure}
@@ -596,7 +596,7 @@ Individual CRPS values for each forecast of a peak hospital occupancy time and a
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_crps_dotplot_plot}
-    \caption[CRPS summaries for peak hospital occupancy in real data sets.]{CRPS summaries for peak hospital occupancy timing and size in Orange County and California data sets. Lower CRPS is better.}
+    \caption[CRPS summaries for peak hospital occupancy in real data sets.]{CRPS summaries for peak hospital occupancy timing and size in California and Orange County data sets. Lower CRPS is better.}
     \label{ch_5:fig:real_data_peak_crps_dotplot_plot}
 \end{figure}
 
@@ -627,7 +627,7 @@ We applied our model to simulated data sets as well as real data from the Omicro
 We compare our models with time-varying immune duration to a standard model where the basic reproduction number varies in time and is modeled non-parametrically.
 In simulated data sets, the model where the time-varying immune duration is informed by genetic data produces superior forecasts when the new variant becomes dominant at a ``slow" or ``medium" pace (24 or 13 weeks to go from 1\% to 99\% of sequences, respectively).
 When the new variant becomes dominant quickly (6 weeks), this model is competitive with the model where the basic reproduction number is modeled non-parametrically, which performs the best.
-In the real data scenarios, the model where the time-varying immune duration is informed by genetic data is shown to be especially useful for forecasting the timing and magnitude of peak hospital occupancy, a metric that is of great interest to public health agencies.
+In the real data scenarios, the model where the time-varying immune duration is informed by genetic data is shown to be especially useful for forecasting the timing and size of peak hospital occupancy, a metric that is of great interest to public health agencies.
 
 Despite these advancements, some potential issues remain unaddressed by our model.
 First, our model asserts that a novel variant must lead to reduced immunity in the population, and therefore cause a second wave.
