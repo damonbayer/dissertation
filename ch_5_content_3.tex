@@ -397,7 +397,6 @@ Additionally, the genetic data is only reported beginning one week before the no
     \label{ch_5:fig:simulated_binned_data_medium_plot}
 \end{figure}
 
-
 We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
 The first model is reflective of typical practice in infectious disease modeling (see, e.g., \citep{Gibson2020real, ODea2021semi}).
 The second is a slight variation on the first, where we make the immunity duration, rather than the basic reproductive number, vary over time.
@@ -455,6 +454,7 @@ The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_time_plot}
     \caption[Posterior predictive intervals for peak hospital occupancy timing for simulated data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in three simulated data sets.
+    Dots indicate the median of the predictive distribution, while the thick and thin lines represent central 80\% and 95\% intervals, respectively.
     Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:simulated_peak_assessment_time_plot}
 \end{figure}
@@ -463,6 +463,7 @@ The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle
     \centering
     \includegraphics[width=1.0\columnwidth]{simulated_peak_assessment_value_plot}
     \caption[Posterior predictive intervals for peak hospital occupancy for simulated data sets.]{Posterior predictive intervals for the maximum hospital occupancy in three simulated data sets.
+    Dots indicate the median of the predictive distribution, while the thick and thin lines represent central 80\% and 95\% intervals, respectively.
     Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:simulated_peak_assessment_value_plot}
 \end{figure}
@@ -581,6 +582,7 @@ Individual CRPS values for each forecast of a peak hospital occupancy time and a
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_time_plot}
     \caption[Posterior predictive intervals for peak hospital occupancy timing for real data sets.]{Posterior predictive intervals for the time at which hospital occupancy reaches its maximum in California and Orange County data sets.
+    Dots indicate the median of the predictive distribution, while the thick and thin lines represent central 80\% and 95\% intervals, respectively.
     Horizontal and vertical dashed lines indicate the true peak hospitalization time.}
     \label{ch_5:fig:real_data_peak_assessment_time_plot}
 \end{figure}
@@ -589,6 +591,7 @@ Individual CRPS values for each forecast of a peak hospital occupancy time and a
     \centering
     \includegraphics[width=1.0\columnwidth]{real_data_peak_assessment_value_plot}
     \caption[Posterior predictive intervals for peak hospital occupancy for real data sets.]{Posterior predictive intervals for the maximum hospital occupancy in Orange County and California  data sets.
+    Dots indicate the median of the predictive distribution, while the thick and thin lines represent central 80\% and 95\% intervals, respectively.
     Horizontal dashed lines indicate the true peak hospital occupancy, while the vertical dashed lines indicate the true peak hospital occupancy time.}
     \label{ch_5:fig:real_data_peak_assessment_value_plot}
 \end{figure}
