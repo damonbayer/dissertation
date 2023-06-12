@@ -506,7 +506,7 @@ This wave lasted from roughly December 2021 to March 2022, but we use data begin
 We fit models to both Orange County data and statewide California data.
 The time series of daily counts of cases, hospital occupancy, ICU occupancy, and deaths due to COVID-19 are provided by the California Department of Public of Health, and published on the California Open Data Portal (\url{https://data.ca.gov}).
 Additionally, the daily counts of sequenced viruses, aggregated by pango lineage \citep{pango}, are provided by the Global Initiative on Sharing All Influenza Data (GISAID) \citep{shu2017gisaid} and made available via Outbreak.info \citep{Gangavarapu2023}.
-To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g. BA.1, BA.1.1, BA.1.17.2) and those that do not.
+To match the format described in Section~\ref{ch_5:sec:methods}, the lineages are further aggregated into those that begin with ``BA.1" (e.g., BA.1, BA.1.1, BA.1.17.2) and those that do not.
 The BA.1 sequences are the ``novel" variant, and the BA.1 and non-BA.1 sequences are summed together as ``all" variants.
 The non-genetic time series are aggregated at a weekly level, while the genetic data is used at a daily resolution, beginning about one week before the first novel variant is observed.
 Because the BA.1 variant becomes dominant so quickly, the daily observation of the genetic data is crucial to capture this change, while the weekly observation of other data streams prevents us from needing to account for data inconsistencies, like the ``weekend effect" where fewer cases are reported on weekends.
@@ -644,7 +644,7 @@ In practice, genetic sequences reporting is likely to be biased.
 For example, samples for sequencing may come disproportionately from an outbreak in a certain location or for patients who have severe symptoms.
 Certain lineages may also be able to be identified more easily than others (e.g., the Alpha variant of SARS-CoV-2 \citep{McMillen2022-ls}).
 Some effort could be made to correct for this in either the model or the data collection.
-Finally, it should be possible to use the estimated proportion of the infectious population infected with the novel variant to inform model parameters which might differ between variants (e.g. the infection hospitalization ratio or duration of infectiousness).
+Finally, it should be possible to use the estimated proportion of the infectious population infected with the novel variant to inform model parameters which might differ between variants (e.g., the infection hospitalization ratio or duration of infectiousness).
 However, ascertaining which of these parameters may differ between variants may be difficult to do in real-time.
 
 % \begin{itemize}
