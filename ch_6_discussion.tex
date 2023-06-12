@@ -1,2 +1,49 @@
 \chapter{Discussion and Future Directions}
 \label{ch:discussion}
+
+In this thesis, we developed novel statistical methods to combine varied data sources to improve both inference and forecasting using infectious disease surveillance data.
+
+In Chapter~\ref{ch:content_1}, we focused on issues of sampling schemes and diagnostic test accuracy when estimating disease prevalence.
+While there are established methods for estimating disease prevalence with associated confidence intervals for complex surveys with perfect assays and simple random sample surveys with imperfect assays, the case of complex surveys with imperfect assays was relatively unexplored before the development of our methods.
+% Our new methods use the melding method to combine gamma intervals for directly standardized rates and established adjustments for imperfect assays by estimating sensitivity and specificity.
+% We compared our new methods to established methods in special cases (complex surveys with perfect
+% assays or simple surveys with imperfect assays).
+% In some simulations, our methods appear to guarantee coverage, while competing methods have much lower than nominal coverage, especially when overall prevalence is very low.
+% In other settings, our methods are shown to have higher than nominal coverage.
+% We applied our method to a seroprevalence survey of SARS-CoV-2 in undiagnosed adults in the United States between May and July 2020 and find that our methods estimate less overall prevalence than a method which does not account for imperfections in the assay.
+Opportunities for future scholarship related to this work could focus on assessment of our methods in settings beyond those considered here.
+In particular, we would be interested to understand how our methods perform in situations with high prevalence.
+In addition, our work relied on having fixed weights for our survey response.
+Extending our methodology to scenarios where weights are estimated and accounting for this uncertainty could be useful.
+Finally, our methods are shown to be overly conservative in some scenarios.
+Future work could attempt to address this by replacing our lower or upper confidence distributions with a mixture of the two (as in \citep{veronese2015}), or using a mid-p version of the gamma intervals (as in \citep{FayK:2017}).
+
+In Chapter~\ref{ch:content_2}, we turned our attention to the temporal dynamics of infectious diseases in the presence of changing policy and behavior.
+We devised a modeling framework for integrating SARS-CoV-2 diagnostics test and mortality time series data, as well as seroprevalence data from cross-sectional studies, and tested the importance of individual data streams for both inference and forecasting.
+Importantly, our model for incidence data accounts for changes in the total number of tests performed.
+This chapter largely functions as an extensive case study, with some efforts to produce generalizable results via various sensitivity analyses and model comparisons.
+Extensions to this work could focus on establishing further evidence for some of the observations made in our work.
+For example, we noted that conditioning our case observation model on the number of performed diagnostic tests appeared to be more useful at some points in the outbreak than others.
+This observation could be more formally assessed in an extensive simulation study or by applying our methodology to similar data from other locations.
+
+In Chapter~\ref{ch:content_3}, we worked in a similar setting as Chapter~\ref{ch:content_2}, but where the changing disease dynamics were due to novel disease variants, rather than changing policy and behavior.
+To improve forecasting in these scenarios, we proposed a way to integrate raw counts of variant sequences into a Bayesian compartmental model.
+We then modeled the average duration of immunity as a flexible function of the proportion of the infectious population infected with the novel variant.
+A major drawback of our approach is that our model asserts that the dominance of a novel variant must lead to reduced immunity in the population, and therefore cause a new wave of infections.
+In reality, a variant may become dominant simply due to genetic drift and not be accompanied by an increase in cases, hospitalizations or deaths.
+Future work could develop a model which allows for this flexibility.
+Our model also assumes that genetic sequences from each variant are reported at the same rate.
+In practice, genetic sequences reporting is likely to be biased.
+Extensions to our work could correct for this in the model.
+Finally, it should be possible to use the estimated proportion of the infectious population infected with the novel variant to inform model parameters that might differ between variants (e.g., the infection hospitalization ratio or duration of infectiousness).
+However, ascertaining which of these parameters may differ between variants may be difficult to do in real-time.
+
+Considering Chapters~\ref{ch:content_2} and \ref{ch:content_3} together, there are common opportunities for extensions.
+First, the forecasting assessment for these models was performed using retrospective data, not real-time data.
+This enabled us to sidestep the issue of modeling reporting delays, which could negatively affect the models' forecasting  capabilities.
+The models proposed in these chapters both included a term in their likelihood which was conditioned on some observed data (diagnostic test counts in Chapter~\ref{ch:content_2} and total counts of genetic sequences in Chapter~\ref{ch:content_3}).
+Future work could consider modeling these data streams as well, rather than conditioning on them.
+Beyond considering alternative ways to model data already used in our work, additional data sources, such as wastewater, mobility, or survey data, could be integrated in these models.
+The model dynamics could also be expanded to stratify compartments by age or geographical location.
+Chapter~\ref{ch:content_2} developed a model suitable for forecasting the COVID-19 pandemic from its onset until vaccination and reinfection became common, and Chapter~\ref{ch:content_3} proposed a model for forecasting in the period of novel variants capable of immune escape.
+The timespan in between, where the majority of vaccines were administered, remains unaddressed and presents opportunities to future infectious disease modelers.
