@@ -134,7 +134,7 @@ We proceed to make this connection in the next subsection.
 	\arrow[from=2-3, to=2-5]
 	\arrow[from=2-5, to=3-6]
 \end{tikzcd}
-\caption{Model diagram depicting possible progressions between infection states. The model compartments are as follows: susceptible $ (S) $, infected, but not yet infectious ($ E $), infectious ($I$), recovered ($ R $), and deceased ($ D $). }
+\caption[SEIRD model.]{Model diagram depicting possible progressions between infection states. The model compartments are as follows: susceptible $ (S) $, infected, but not yet infectious ($ E $), infectious ($I$), recovered ($ R $), and deceased ($ D $). }
 	\label{ch_4:fig:seiird}
 \end{figure}
 
@@ -330,7 +330,7 @@ Our main conclusion is our results are not sensitive to reasonable prior perturb
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\columnwidth]{main_posterior_results_plot.pdf}
-    \caption{Posterior distributions of the time-varying basic reproductive number $R_0$, effective reproductive number $R_e$, infection-to-fatality ratio (IFR), proportion in the proportional log-odds model of the beta-binomial observational model for cases $\alpha$, weekly latent:case ratio, and cumulative latent:case ratio.
+    \caption[Posterior results for time-varying parameters.]{Posterior distributions of the time-varying basic reproductive number $R_0$, effective reproductive number $R_e$, infection-to-fatality ratio (IFR), proportion in the proportional log-odds model of the beta-binomial observational model for cases $\alpha$, weekly latent:case ratio, and cumulative latent:case ratio.
     Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.}
     \label{ch_4:fig:main_posterior_results_plot}
 \end{figure}
@@ -348,7 +348,7 @@ Additionally, the full model produces a smoother posterior than the \texttt{epid
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\columnwidth]{rt_comparison_oc_data_plot}
-    \caption{Posterior inference for the effective reproduction number from the full model and \texttt{epidemia} fit to the Orange County data.}
+    \caption[Comparison of posterior inference for full model and \texttt{epidemia} fit to the Orange County data.]{Posterior inference for the effective reproduction number from the full model and \texttt{epidemia} fit to the Orange County data.}
     \label{ch_4:fig:rt_comparison_oc_data_plot}
 \end{figure}
 \par
@@ -365,7 +365,7 @@ The cumulative latent:case ratio also drifts lower over time, eventually arrivin
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\columnwidth]{dip_plot.pdf}
-    \caption{Latent and observed cumulative death (left) and incidence (center) trajectories and latent prevalence trajectories (right) in Orange County, CA (population 3.2 million).
+    \caption[Latent and observed cumulative death and incidence trajectories and latent prevalence trajectories in Orange County, CA.]{Latent and observed cumulative death (left) and incidence (center) trajectories and latent prevalence trajectories (right) in Orange County, CA (population 3.2 million).
     Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.
     Black circles denote observed data.
     Note that the posterior predictive distributions are of latent deaths and cases are not forecasts of their observed counterparts.
@@ -387,7 +387,7 @@ At the peak of the winter wave, we estimate that 7.8\% -- 14.9\% of Orange Count
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=1.0\columnwidth]{combined_forecast_plot}
-    \caption{Forecast distributions for observed deaths (left column) and testing positivity (right column).
+    \caption[Forecast distributions for observed deaths and testing positivity.]{Forecast distributions for observed deaths (left column) and testing positivity (right column).
     Solid blue lines show point-wise posterior medians, while shaded areas denote 50\%, 80\%, and 95\% Bayesian credible intervals.
     Observed values are presented as black circles.}
     \label{ch_4:fig:combined_forecast_plot}
@@ -421,7 +421,7 @@ We only show scores based on deaths because comparisons based on cases would req
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.75\columnwidth]{forecast_crps_plot}
-    \caption{Comparison of Continuous Rank Probability Score for models fit to the Orange County data.
+    \caption[Comparison of Continuous Rank Probability Score for models fit to the Orange County data.]{Comparison of Continuous Rank Probability Score for models fit to the Orange County data.
     Lower is better.}
     \label{ch_4:fig:forecast_crps_plot}
 \end{figure}
