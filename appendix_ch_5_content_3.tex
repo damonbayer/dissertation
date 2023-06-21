@@ -2,9 +2,132 @@
 \graphicspath{{figures/ch_5/}}
 \addtocontents{toc}{\protect\setcounter{tocdepth}{0}}
 
-\section{Simulation model}
+\section{Simulation Model}
 \label{ch_5:sec:full_simulation_model_explanation}
-\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+Data for the simulation study in Section~\ref{ch_5:subsec:simulation} are generated from a two strain model, which is described in the main text.
+Here, we present the mathematical details of the model presented in Figure~\ref{ch_5:fig:full_model_diagram_compact}.
+We first present the rates of transitions between compartments in the model in \eqref{ch_5:eqn:transition_rates_simulation_model}, where the interpretation and values of the parameters used in the simulation are given in Table~\ref{ch_5:tbl:simulation_parameters_and_interpretations}.
+Using the transition rates in \eqref{ch_5:eqn:transition_rates_simulation_model}, we define the ODEs in the model in \eqref{ch_5:eqn:ODEs_simulation_model}, subject to the initial conditions given in Table~\ref{ch_5:tbl:simulation_parameters_and_interpretations}.
+
+We use the solutions to the system of differential equations to simulate the six time series referenced in Section~\ref{ch_5:subsec:surveillance}  according to \eqref{ch_5:eqn:case_emission_simulation}--\eqref{ch_5:eqn:new_variant_emission_simulation}.
+The time series of counts of new sequences from the old variant \( \left( \bV^O \right) \) and the novel variant \( \left( \bV^N \right) \) are summed to create the time series of counts of all variants \( \left( \bV^A \right) \).
+
+\begin{equation}
+\begin{aligned}
+\lambda_{S_A E_O}(S_A, I_O)  =&  \frac{\beta_O}{N} S_A I_O,   \\
+\lambda_{S_A E_N}(S_A, I_N)  =&  \frac{\beta_N}{N} S_A I_N,   \\
+\lambda_{E_O I_O}(E_0)  =& \gamma E_O,    \\
+\lambda_{I_O H_O}(I_O)  =& \nu \tau I_O,   \\
+\lambda_{I_O R_O}(I_O)  =& \nu \left( 1 - \tau \right) I_O,   \\
+\lambda_{H_O U_O}(H_O)  =& \eta  \upsilon H_O,   \\
+\lambda_{H_O R_O}(H_O)  =& \eta  \left( 1 - \upsilon \right) H_O,   \\
+\lambda_{U_O D_A}(U_O)  =& \omega \chi U_O, \\
+\lambda_{U_O R_O}(U_O)  =& \omega \left( 1 - \chi \right) U_O, \\
+\lambda_{R_O S_A}(R_O)  =& \kappa R_O, \\
+\end{aligned}
+\qquad \quad \quad
+\begin{aligned}
+\lambda_{R_O E_N}(R_O, I_N)  =& \epsilon \frac{\beta_N}{N} R_O I_N, \\
+\lambda_{S_N E_N}(S_N, I_N)  =&  \frac{\beta}{N} S_N I_N,   \\
+\lambda_{E_N I_N}(E_N)  =& \gamma E_N,    \\
+\lambda_{I_N H_N}(I_N)  =& \nu \tau I_N,   \\
+\lambda_{I_N R_N}(I_N)  =& \nu \left( 1 - \tau \right) I_N,   \\
+\lambda_{H_N U_N}(H_N)  =& \eta  \upsilon H_N,   \\
+\lambda_{H_N R_N}(H_N)  =& \eta  \left( 1 - \upsilon \right) H_N,   \\
+\lambda_{U_N D_A}(U_N)  =& \omega \chi U_N, \\
+\lambda_{U_N R_N}(U_N)  =& \omega \left( 1 - \chi \right) U_N, \\
+\lambda_{R_N S_N}(R_N)  =& \kappa R_N, \\
+\end{aligned}
+\label{ch_5:eqn:transition_rates_simulation_model}
+\end{equation}
+
+\begin{tabularx}{\columnwidth}{cXr}
+\thead{Parameter} & \thead{Interpretation} & \thead{Value} \\ \hline
+\( \beta_{O} \)  & Contact rate for old variant & 1.5 \\
+\( \beta_{N} \)  & Contact rate for novel variant &  see Table~\ref{ch_5:table:scenario_differing_parameters} \\
+\( \epsilon \) & Parital immunity to novel variant conferred by old variant & see Table~\ref{ch_5:table:scenario_differing_parameters} \\
+\( 1 / \nu \) & Mean infectious period duration (weeks) & 5 / 7 \\
+\( 1 / \gamma \) & Mean latent period duration (weeks) & 2 / 7 \\
+\( 1 / \eta \) & Mean hospitalization duration (weeks) & 3 / 7 \\
+\( 1 / \omega \) & Mean ICU stay duration (weeks) & 5 / 7 \\
+\( 1 / \kappa \) & Mean immunity duration (weeks) & 20 \\
+\( \tau \) & Infection-hospitalization ratio & 0.02 \\
+\( \upsilon \) & Hospitalization-ICU admission ratio & 0.15 \\
+\( \chi \) & ICU-fatality ratio & 0.15 \\
+\( \rho^W \) & Case detection rate & 0.2 \\
+\( \rho^Z \) & Death detection rate & 0.9 \\
+\( \rho^V \) & Sequence detection rate (relative to cases) & 0.1 \\
+\( \phi_W \) & Over-dispersion for observed new cases & 100 \\
+\( \phi_X \) & Over-dispersion for observed hospitalizations & 100 \\
+\( \phi_Y \) & Over-dispersion for observed ICU & 100 \\
+\( \phi_Z \) & Over-dispersion for observed new deaths & 100 \\
+\( \phi_V \) & Over-dispersion for observed new sequences & 100 \\
+\( S_{A,0} \) & Initial size of population susceptible to all variants & 1,899,600 \\
+\( E_{O,0} \) & Initial size of population infected, but not yet infectious with the old variant & 100 \\
+\( I_{O,0} \) & Initial size of population infectious with the old variant & 300 \\
+\( R_{O,0} \) & Initial size of population recovered from the old variant & 300 \\
+\( S_{N,0} \) & Initial size of population susceptible to only the novel variant & 0 \\
+\( E_{N,0} \) & Initial size of population infected, but not yet infectious with the novel variant & 0 \\
+\( I_{N,0} \) & Initial size of population infectious with the novel variant & 0 \\
+\( R_{N,0} \) & Initial size of population recovered from the novel variant & 0 \\
+\( H_{O,0} \) & Initial size of population hospitalized with the old variant & 0 \\
+\( H_{N,0} \) & Initial size of population hospitalized with the novel variant & 0 \\
+\( U_{O,0} \) & Initial size of population in the ICU with the old variant & 0 \\
+\( U_{N,0} \) & Initial size of population in the ICU with the novel variant & 0 \\
+\( D_{A,0} \) & Initial size of population deceased due to infection from all variants & 0
+\label{ch_5:tbl:simulation_parameters_and_interpretations}
+\end{tabularx}
+
+\begin{equation}
+\begin{aligned}
+\deriv{S_A}{t}    =&  \lambda_{R_O S_A}(R_O) - \left( \lambda_{S_A E_O}(S_A, I_O) + \lambda_{S_A E_N}(S_A, I_N) \right), \\
+\deriv{E_O}{t}    =&  \lambda_{S_A E_O}(S_A, I_O) - \lambda_{E_O I_O}(E_0),    \\
+\deriv{I_O}{t}    =&  \lambda_{E_O I_O}(E_0) - \left( \lambda_{I_O H_O}(I_O)  + \lambda_{I_O R_O}(I_O) \right),\\
+\deriv{H_O}{t}    =&  \lambda_{I_O H_O}(I_O) - \left( \lambda_{H_O U_O}(H_O)  +  \lambda_{H_O R_O}(H_O) \right),\\
+\deriv{U_O}{t}    =&  \lambda_{H_O U_O}(H_O) - \left( \lambda_{U_O D_A}(U_O)  + \lambda_{U_O R_O}(U_O) \right),\\
+\deriv{R_O}{t}    =&  \lambda_{I_O R_O}(I_O) + \lambda_{H_O R_O}(H_O) + \lambda_{U_O R_O}(U_O) - \left( \lambda_{R_O S_A}(R_O) + \lambda_{R_O E_N}(R_O, I_N) \right),    \\
+\deriv{S_N}{t}    =&  \lambda_{R_N S_N}(R_N) - \lambda_{S_N E_N}(S_N, I_N), \\
+\deriv{E_N}{t}    =&  \lambda_{S_N E_N}(S_N, I_N) + \lambda_{R_O E_N}(R_O, I_N) + \lambda_{S_N E_N}(S_N, I_N) - \lambda_{E_N I_N}(E_N)\,    \\
+\deriv{I_N}{t}    =&  \lambda_{E_N I_N}(E_0) - \left( \lambda_{I_N H_N}(I_N)  + \lambda_{I_N R_N}(I_N) \right),\\
+\deriv{H_N}{t}    =&  \lambda_{I_N H_N}(I_N) - \left( \lambda_{H_N U_N}(H_N)  +  \lambda_{H_N R_N}(H_N) \right),\\
+\deriv{U_N}{t}    =&  \lambda_{H_N U_N}(H_N) - \left( \lambda_{U_N D_A}(U_N)  + \lambda_{U_N R_N}(U_N) \right),\\
+\deriv{R_N}{t}    =&  \lambda_{I_N R_N}(I_N) + \lambda_{H_N R_N}(H_N) + \lambda_{U_N R_N}(U_N) - \lambda_{R_N S_N}(R_N),    \\
+\deriv{D_A}{t}    =&  \lambda_{U_O D_A}(U_O) + \lambda_{U_N D_A}(U_N) \\
+\label{ch_5:eqn:ODEs_simulation_model}
+\end{aligned}
+\end{equation}
+
+\begin{equation}
+\begin{aligned}
+W_l \sim \operatorname{Negative Binomial} & \left( \mu^{W}_l = \rho^W \cdot N \cdot \left( \Delta N_{E_O I_O} \left( t_l \right) + \Delta N_{E_N I_N} \left( t_l \right) \right) \right.,\\
+& \left. \left(\sigma^W_l\right)^{2} = \mu^{W}_l \left( 1 + \mu^{W}_l / \phi_W \right) \right)
+\end{aligned}
+\label{ch_5:eqn:case_emission_simulation}
+\end{equation}
+\begin{equation}
+X_l \sim \operatorname{Negative Binomial} \left( \mu^{X}_l = N \cdot \left( H_O \left( t_l \right) + H_N \left( t_l \right) \right), \left(\sigma^X_l\right)^{2} = \mu^{X}_l \left( 1 + \mu^{X}_l / \phi_X \right) \right)
+\label{ch_5:eqn:hosp_emission_simulation}
+\end{equation}
+\begin{equation}
+Y_l \sim \operatorname{Negative Binomial} \left( \mu^{Y}_l = N \cdot \left( U_O \left( t_l \right) + U_N \left( t_l \right) \right), \left(\sigma^Y_l\right)^{2} = \mu^{Y}_l \left( 1 + \mu^{Y}_l / \phi_Y \right) \right)
+\label{ch_5:eqn:icu_emission_simulation}
+\end{equation}
+\begin{equation}
+\begin{aligned}
+Z_l \sim \operatorname{Negative Binomial} & \left( \mu^{Z}_l = \rho^Z \cdot N \cdot \left(\Delta N_{U_O D_O} \left( t_l \right) + \Delta N_{U_N D_N} \left( t_l \right) \right),\right. \\
+& \left. \left(\sigma^Z_l\right)^{2} = \mu^{Z}_l \left( 1 + \mu^{Z}_l / \phi_Z \right) \right)
+\label{ch_5:eqn:death_emission_simulation}
+\end{aligned}
+\end{equation}
+\begin{equation}
+    V^O_l \sim \operatorname{Negative Binomial} \left( \mu^{V^O}_l = \mu^{W}_l \cdot \left( 1 - \delta\left(t_l\right)\right) \cdot \rho^V , \left(\sigma^Z_l\right)^{2} = \mu^{V^O}_l \left( 1 + \mu^{V^O}_l / \phi_V \right) \right)
+\label{ch_5:eqn:old_variant_emission_simulation}
+\end{equation}
+\begin{equation}
+    V^N_l \sim \operatorname{Negative Binomial} \left( \mu^{V^N}_l = \mu^{W}_l \cdot \delta\left(t_l\right) \cdot \rho^V , \left(\sigma^Z_l\right)^{2} = \mu^{V^O}_l \left( 1 + \mu^{V^N}_l / \phi_V \right) \right)
+\label{ch_5:eqn:new_variant_emission_simulation}
+\end{equation}
 
 \section{Additional Figures}
 
@@ -192,3 +315,5 @@
 \end{figure}
 
 \label{ch_5:sec:real_cases_icu_death}
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}

@@ -156,7 +156,7 @@ We model the observed cases, \( W_l \), in the interval \( \left( t_{l - 1}, t_l
 W_l \sim \operatorname{Negative Binomial} \left( \mu^{W}_l = \rho^W \cdot N \cdot \Delta N_{EI} \left( t_l \right), \left(\sigma^W_l\right)^{2} = \mu^{W}_l \left( 1 + \mu^{W}_l / \phi_W \right) \right),
 \label{ch_5:eqn:case_emission}
 \end{equation}
-where \( \rho^W \in [0,1]\) is the overall case detection rate, meaning that the number of observed cases is assumed to be some noisy realization of the fraction of the true new cases in the population, as estimated by the ODE model.
+where \( \rho^W \in [0,1]\) is the overall case detection rate and \( \Delta N_{EI}(t_l) = N_{EI}(t_l) - N_{EI}(t_{l-1}) \), meaning that the number of observed cases is assumed to be some noisy realization of the fraction of the true new cases in the population, as estimated by the ODE model.
 In some models, we allow the case detection rate to vary over time, in which case we replace \( \rho^W \) with \( \rho^W \left( t_l \right) \) in \eqref{ch_5:eqn:case_emission}.
 We discuss modeling choices for this and \( \delta \left( t_l \right) \) in the next section.
 
@@ -182,7 +182,7 @@ The observed deaths due to the infection are modeled by
 Z_l \sim \operatorname{Negative Binomial} \left( \mu^{Z}_l = \rho^Z \cdot N \cdot \Delta N_{UD} \left( t_l \right), \left(\sigma^Z_l\right)^{2} = \mu^{Z}_l \left( 1 + \mu^{Z}_l / \phi_Z \right) \right),
 \label{ch_5:eqn:death_emission}
 \end{equation}
-where \( \rho^Z \in [0,1]\) is the overall death detection rate, meaning that the number of observed deaths is assumed to be some noisy realization of the fraction of the true new deaths in the population, as estimated by the ODE model.
+where \( \rho^Z \in [0,1]\) is the overall death detection rate and \( \Delta N_{UD}(t_l) = N_{UD}(t_l) - N_{UD}(t_{l-1}) \), meaning that the number of observed deaths is assumed to be some noisy realization of the fraction of the true new deaths in the population, as estimated by the ODE model.
 
 We model the observed counts of genetic sequences of the novel variant, conditional on the observed number of all genetic sequences by
 \begin{equation}
@@ -307,7 +307,7 @@ These otherwise independent models are linked by allowing transitions from \( S_
 That is, people who are susceptible to all variant types (\( S_A \)) and those who are only recovered from other variants (\( R_O \)) can become infected with the novel variant (\( E_N \)).
 The rates for these transitions are given by
 \begin{equation}
-   \lambda_{{S_A}{E_N}}\left( S_A, I_N \right) = \frac{\beta}{N} S_A I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta}{N} R_O I_N,
+   \lambda_{{S_A}{E_N}}\left( S_A, I_N \right) = \frac{\beta_0}{N} S_A I_N \quad \textrm{and} \quad \lambda_{{R_O}{E_N}}\left( R_O, I_N \right) = \epsilon \frac{\beta_N}{N} R_O I_N,
 \end{equation}
 where \( \beta \) and \( N \) are defined as in \eqref{ch_5:eqn:transition_rates}, and \( \epsilon \in [0, 1] \) is a factor that represents the effect of partial immunity to the novel variant conferred by a recent infection from  another variant.
 After some time, all the individuals in the \( O \) subscript compartments will have transitioned to the \( N \) subscript compartments, and the model again behaves like the one in Figure~\ref{ch_5:fig:model_diagram}.
@@ -318,7 +318,7 @@ After some time, all the individuals in the \( O \) subscript compartments will 
 \centering
 \label{table}
 \begin{tabular}{lrr}
-Scenario & \( \beta \) & \( \epsilon \) \\ \hline
+Scenario & \( \beta_N \) & \( \epsilon \) \\ \hline
 Slow     & 2.1         & 0.75           \\
 Medium   & 2.1         & 1.0            \\
 Fast     & 3.5         & 1.0            \\
