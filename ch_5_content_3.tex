@@ -211,7 +211,7 @@ which follow the Gaussian Markov random field priors
 \begin{aligned}
 	\tilde{R}_{0,l} \sim& N\left(\tilde{R}_{0, l - 1}, \sigma_{R_0}^2\right)\text{, where } l=2,\ldots,L \text{ and } \tilde{R}_{0,1} \sim N\left(\mu_{R_{01}},\sigma^2_{R_{01}}\right),\\
 	\frac{1}{\kappatilde_{l}} \sim& N\left(\frac{1}{\kappatilde_{l - 1}}, \sigma_\kappa^2\right)\text{, where } l=2,\ldots,L \text{ and } \frac{1}{\kappatilde_1} \sim N\left(\mu_{\kappa_1},\sigma^2_{\kappa_1}\right),\\
-	\rhowtilde_{l} \sim& N\left(\rhowtilde_{l - 1}, \sigma_{\rho^Y}^2\right)\text{, where } l=2,\ldots,L \text{ and } \rhowtilde_1 \sim N\left(\mu_{\rho^Y_1}, \sigma^2_{\rho^Y_1}\right),
+	\rhowtilde_{l} \sim& N\left(\rhowtilde_{l - 1}, \sigma_{\rho^Y}^2\right)\text{, where } l=2,\ldots,L \text{ and } \rhowtilde_1 \sim N\left(\mu_{\rho^W_1}, \sigma^2_{\rho^W_1}\right),
  \label{ch_5:eqn:GMRF}
 \end{aligned}
 \end{equation}
@@ -279,7 +279,7 @@ We collect all our model parameters into a vector $\boldsymbol{\theta}$ and writ
 \end{align*}
 where \( \Pr\left(W_l \mid \btheta \right) \), \( \Pr\left(X_l \mid \btheta \right) \), \( \Pr\left(Y_l \mid \btheta \right) \), \( \Pr\left(Z_l \mid \btheta \right) \), and \( \Pr\left(V^N_l \mid \btheta \right) \), are the probability mass functions given by \eqref{ch_5:eqn:case_emission}, \eqref{ch_5:eqn:hosp_emission}, \eqref{ch_5:eqn:icu_emission}, \eqref{ch_5:eqn:death_emission}, and \eqref{ch_5:eqn:novel_variant_emission}, respectively.
 We encode available information about our model parameters in a prior distribution with density $\pi(\btheta)$.
-We assume that all univariate non-GMRF distributed parameters are \textit{a priori} independent and list our prior assumptions for our simulation study in Table~tk and for our application in Table~tk.
+We assume that all univariate non-GMRF distributed parameters are \textit{a priori} independent and list our prior assumptions for our simulation study in Table~\ref{ch_5:tbl:simulation_prior_table} and for our application in Table~\ref{ch_5:tbl:real_data_prior_table}.
 We base all our inferences and predictions on the posterior distribution of all model parameters:
 \begin{equation}
 \Pr\left(\btheta \mid \bW, \bX, \bY, \bZ, \bV^N \right) \propto \Pr\left(\bW, \bX, \bY, \bZ, \bV^N \mid \btheta \right) \pi \left( \btheta \right).
@@ -373,7 +373,7 @@ Forecasting this second wave is the objective of our modeling efforts.
 
 We manipulate the size of this wave and the speed with which the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
 Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
-The other simulation parameters are given in Table~tk.
+The other simulation parameters are given in Table~\ref{ch_5:tbl:simulation_parameters_and_interpretations}.
 Changes of the resulting proportion of individuals infected with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
 The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we produce forecasts.
 Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
@@ -401,13 +401,14 @@ We fit three models to these simulated data sets: (1) a model where \( R_0(t) \)
 The first model is reflective of typical practice in infectious disease modeling (see, e.g., \citep{Gibson2020real, ODea2021semi}).
 The second is a slight variation on the first, where we make the immunity duration, rather than the basic reproductive number, vary over time.
 The third model is our main innovation, which models the mean immune duration based on genetic data.
-The priors used in these models are presented in Table~tk.
+The priors used in these models are presented in Table~\ref{ch_5:tbl:simulation_prior_table}.
 For each simulated data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 
 While these models forecast several data streams, we present only forecasts related to hospitalization in the main text, as they are the most relevant for public health policymakers.
 We present additional results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:sim_cases_icu_death}.
 In general, these results exhibit the same patterns as observed in the hospitalization results.
 Additionally, we conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover and found our model to be robust to these changes.
+These priors are presented in Table~\ref{ch_5:tbl:simulation_prior_sensitivity_table}.
 The results of this analysis are presented in Section~\ref{ch_5:sec:sim_sensitivity}.
 
 We first show 1, 2, and 4-week ahead forecasts for the simulated medium takeover speed data in Figure~\ref{ch_5:fig:simulated_forecast_comparison_data_hospitalizations_medium_plot}.
@@ -540,7 +541,7 @@ The gray highlighted regions indicate the times for which we produce forecasts.}
     \label{ch_5:fig:orange_county_binned_data_plot}
 \end{figure}
 
-The priors used for our models are presented in Table~tk.
+The priors used for our models are presented in Table~\ref{ch_5:tbl:real_data_prior_table}.
 For each data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 As in the simulation study, in the main text, we focus on results related to hospital occupancy, but present results for cases, ICU occupancy, and deaths in Section~\ref{ch_5:sec:real_cases_icu_death}.
 In general, these results exhibit the similar patterns as observed in the hospitalization results.
