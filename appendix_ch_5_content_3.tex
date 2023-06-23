@@ -47,7 +47,7 @@ Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:s
 
 \begin{xltabular}{\columnwidth}{c>{\RaggedRight}Xr}
 \label{ch_5:tbl:simulation_parameters_and_interpretations}\\
-\caption{TKTK}\\[\belowcaptionskip]
+\caption{Parameters used to simulate data in Section~\ref{ch_5:subsec:simulation}.}\\[\belowcaptionskip]
 \thead{Parameter} & \thead{Interpretation} & \thead{Value} \\ \hline
 \( \beta_{O} \)  & Contact rate for old variant & 1.5 \\
 \( \beta_{N} \)  & Contact rate for novel variant &  see Table~\ref{ch_5:table:scenario_differing_parameters} \\
@@ -149,36 +149,19 @@ Z_l \sim \operatorname{Negative Binomial} & \left( \mu^{Z}_l = \rho^Z \cdot N \c
     \label{ch_5:fig:simulated_binned_data_fast_plot}
 \end{figure}
 
+\pagebreak
 
 \section{Additional simulation study results}
 \label{ch_5:sec:sim_cases_icu_death}
 
-
 \begin{xltabular}{\columnwidth}{c>{\RaggedRight}Xllc}
 \label{ch_5:tbl:simulation_prior_table}\\
-\caption{TKTK}\\[\belowcaptionskip]
-% (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant
-% (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and
-% (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.}
+\caption{Priors used in simulation study in Section~\ref{ch_5:subsec:simulation}.
+In model 1, \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant.
+In model 2, \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF.
+In model 3, \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
+}\\[\belowcaptionskip]
 \thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} & Models\\ \hline
-\( \iota_0 \) & proportion of novel variant at \( t^* \) & Logit-Normal(-2.94, 0.25) & \makecell{0.0500 \\ (0.0194, 0.1230)} & 3    \\
-\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(2.56, 0.16) & \makecell{13.00 \\ ( 5.94, 28.50)} & 3\\
-\( 1 / \sqrt{\phi_W} \) & over-dispersion parameter for observed new cases & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
-\( 1 / \sqrt{\phi_X} \) & over-dispersion parameter for observed hospital occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
-\( 1 / \sqrt{\phi_Y} \) & over-dispersion parameter for observed ICU occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
-\( 1 / \sqrt{\phi_Z} \) & over-dispersion parameter for observed new deaths & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
-\( 1 / \sqrt{\phi_V} \) & over-dispersion parameter for observed new sequences of new variant & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 3\\
-\( \zeta \) & time offset (weeks) for relationship between immunity duration \( 1 / \kappa(t) \) and proportion of novel variant \( \delta(t) \) & Log-Normal(0, 0.64) & \makecell{1.000 \\ (0.208, 4.800)} & 3 \\
-\( 1 / \kappa \) & immunity duration & Log-Normal(3, 0.04) & \makecell{20.0 \\ (13.5, 29.6)} & 1 \\
-\( \exp\left(1/\kappatilde_1\right) \) & initial immunity duration & Log-Normal(3, 0.04) & \makecell{20.0 \\ (13.5, 29.6)} & 2 \\
-\( \sigma_\kappa \) & standard deviation for immunity duration GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 2 \\
-\( \exp \left( \alpha_0 \right)\) & maximum immunity duration & Log-Normal(3, 0.0025) & \makecell{20.0 \\ (18.1, 22.1)} & 3 \\
-\( \alpha_2 \) & shape of transition from maximum immunity duration to minimum immunity duration & Log-Normal(0, 0.25) & \makecell{1.000 \\ (0.375, 2.660)} & 3 \\
-\( \alpha_1^*  \) & proportion of maximum immunity duration that is minimum immunity duration & Logit-Normal(-1.1, 0.09) & \makecell{0.250 \\ (0.156, 0.375)} & 3 \\
-\( \rho^W \) &  case detection rate & Logit-Normal(-1.39, 0.04) & \makecell{0.200 \\ (0.145, 0.270)} & 1,2,3 \\
-\( R_0 \) & basic reproduction number & Log-Normal(0.405, 0.04) & \makecell{1.50 \\ (1.01, 2.22)} & 2,3 \\
-\( \exp \left( \tilde{R}_{0,1} \right) \) & initial basic reproduction number & Log-Normal(0.405, 0.04) & \makecell{1.50 \\ (1.01, 2.22)} & 1 \\
-\( \sigma_{R_0} \) & standard deviation for basic reproduction number GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 1\\
 \( 1 / \gamma \) & mean latent period duration (weeks) & Log-Normal(-1.25, 0.04) & \makecell{0.286 \\ (0.193, 0.423)} & 1,2,3 \\
 \( 1 / \nu \) & Mean infectious period duration (weeks) & Log-Normal(-0.336, 0.04) & \makecell{0.714 \\ (0.483, 1.060)} & 1,2,3\\
 \( 1 / \eta \) & mean hospitalization duration (weeks) & Log-Normal(-0.847, 0.04) & \makecell{0.429 \\ (0.290, 0.634)} & 1,2,3\\
@@ -186,10 +169,28 @@ Z_l \sim \operatorname{Negative Binomial} & \left( \mu^{Z}_l = \rho^Z \cdot N \c
 \( \tau \) & Infection-hospitalization ratio & Logit-Normal(-3.89, 0.04) & \makecell{0.0200 \\ (0.0136, 0.0293)} & 1,2,3 \\
 \( \upsilon \) & Hospitalization-ICU admission ratio & Logit-Normal(-1.73, 0.04) & \makecell{0.150 \\ (0.107, 0.207)} & 1,2,3 \\
 \( \chi \) & ICU-fatality ratio & Logit-Normal(-1.73, 0.04) & \makecell{0.150 \\ (0.107, 0.207)} & 1,2,3 \\
+\( 1 / \sqrt{\phi_W} \) & over-dispersion parameter for observed new cases & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_X} \) & over-dispersion parameter for observed hospital occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_Y} \) & over-dispersion parameter for observed ICU occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_Z} \) & over-dispersion parameter for observed new deaths & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( \rho^W \) &  case detection rate & Logit-Normal(-1.39, 0.04) & \makecell{0.200 \\ (0.145, 0.270)} & 1,2,3 \\
 \( \rho^Z \) & death detection rate & Logit-Normal(2.2, 0.04) & \makecell{0.900 \\ (0.859, 0.930)} & 1,2,3 \\
 \( E\left(0\right) \) & Initial proportion of infected, but not yet infectious population & Logit-Normal(-8.52, 0.04) & \makecell{0.000200 \\ (0.000135, 0.000296)} & 1,2,3 \\
 \( I\left(0\right) \) & Initial proportion of infectious population & Logit-Normal(-7.82, 0.04) & \makecell{0.000400 \\ (0.000270, 0.000592)} & 1,2,3 \\
-\( R\left(0\right) \) & Initial proportion of immune population & Logit-Normal(-1.39, 0.16) & \makecell{0.200 \\ (0.102, 0.354)} & 1,2,3
+\( R\left(0\right) \) & Initial proportion of immune population & Logit-Normal(-1.39, 0.16) & \makecell{0.200 \\ (0.102, 0.354)} & 1,2,3 \\
+\( 1 / \kappa \) & immunity duration & Log-Normal(3, 0.04) & \makecell{20.0 \\ (13.5, 29.6)} & 1 \\
+\( \exp \left( \tilde{R}_{0,1} \right) \) & initial basic reproduction number & Log-Normal(0.405, 0.04) & \makecell{1.50 \\ (1.01, 2.22)} & 1 \\
+\( \sigma_{R_0} \) & standard deviation for basic reproduction number GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 1\\
+\( \exp\left(1/\kappatilde_1\right) \) & initial immunity duration & Log-Normal(3, 0.04) & \makecell{20.0 \\ (13.5, 29.6)} & 2 \\
+\( \sigma_\kappa \) & standard deviation for immunity duration GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 2 \\
+\( R_0 \) & basic reproduction number & Log-Normal(0.405, 0.04) & \makecell{1.50 \\ (1.01, 2.22)} & 2,3 \\
+\( \exp \left( \alpha_0 \right)\) & maximum immunity duration & Log-Normal(3, 0.0025) & \makecell{20.0 \\ (18.1, 22.1)} & 3 \\
+\( \alpha_1^*  \) & proportion of maximum immunity duration that is minimum immunity duration & Logit-Normal(-1.1, 0.09) & \makecell{0.250 \\ (0.156, 0.375)} & 3 \\
+\( \alpha_2 \) & shape of transition from maximum immunity duration to minimum immunity duration & Log-Normal(0, 0.25) & \makecell{1.000 \\ (0.375, 2.660)} & 3 \\
+\( \zeta \) & time offset (weeks) for relationship between immunity duration \( 1 / \kappa(t) \) and proportion of novel variant \( \delta(t) \) & Log-Normal(0, 0.64) & \makecell{1.000 \\ (0.208, 4.800)} & 3 \\
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(2.56, 0.16) & \makecell{13.00 \\ ( 5.94, 28.50)} & 3\\
+\( \iota_0 \) & proportion of novel variant at \( t^* \) & Logit-Normal(-2.94, 0.25) & \makecell{0.0500 \\ (0.0194, 0.1230)} & 3 \\
+\( 1 / \sqrt{\phi_V} \) & over-dispersion parameter for observed new sequences of new variant & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 3
 \end{xltabular}
 
 % ONLY REAL DATA double check the values are correct
@@ -268,10 +269,19 @@ Z_l \sim \operatorname{Negative Binomial} & \left( \mu^{Z}_l = \rho^Z \cdot N \c
 \section{Simulation study sensitivity analysis}
 \label{ch_5:sec:sim_sensitivity}
 
-\begin{xltabular}{\columnwidth}{c>{\RaggedRight}Xllc}
-    \label{ch_5:tbl:simulation_prior_sensitivity_table}\\
-\caption{TKTK}\\[\belowcaptionskip]
-	\thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} \\ \hline
+We conducted a sensitivity analysis wherein we modified the prior for the anticipated speed of the novel variant takeover.
+We present the different priors used in Table~\ref{ch_5:tbl:simulation_prior_sensitivity_table}.
+All other priors are those relevant to model 3 in Table~\ref{ch_5:tbl:simulation_prior_table}.
+Based on the figure in this section, we found our model to be robust to these prior modifications.
+
+\begin{xltabular}{\columnwidth}{c>{\RaggedRight}Xlll}
+\label{ch_5:tbl:simulation_prior_sensitivity_table}\\
+\caption{Priors that differ from those in Table~\ref{ch_5:tbl:simulation_prior_table} in simulation study sensitivity analysis.}\\[\belowcaptionskip]
+\thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} & Prior\\ \hline
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(1.95, 0.04) & \makecell{ 7.00 \\ ( 4.73, 10.40)} & Fast\\
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(2.56, 0.04) & \makecell{13.00 \\ ( 8.78, 19.20)} & Medium\\
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(3.18, 0.04) & \makecell{24.0 \\ (16.2, 35.5)} & Slow\\
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(2.56, 0.16) & \makecell{13.00 \\ ( 5.94, 28.50)} & Wide\\
 \end{xltabular}
 
 \begin{figure}
@@ -311,8 +321,45 @@ Z_l \sim \operatorname{Negative Binomial} & \left( \mu^{Z}_l = \rho^Z \cdot N \c
 
 \begin{xltabular}{\columnwidth}{c>{\RaggedRight}Xllc}
     \label{ch_5:tbl:real_data_prior_table}\\
-\caption{TKTK}\\[\belowcaptionskip]
-	\thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} \\ \hline
+\caption{Priors used in real data application in Section~\ref{ch_5:subsec:application}.
+In model 1, \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant.
+In model 2, \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF.
+In model 3, \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
+``CA" indicates the prior is only used when fitting the statewide California data.
+``OC" indicates the prior is only used when fitting the Orange County data.}\\[\belowcaptionskip]
+	\thead{Parameter} & \thead{Interpretation} & \thead{Prior} & \thead{Prior Median\\ (95\% Interval)} & Models \\ \hline
+ \( 1 / \gamma \) & mean latent period duration (weeks) & Log-Normal(-1.25, 0.04) & \makecell{0.286 \\ (0.193, 0.423)} & 1,2,3 \\
+\( 1 / \nu \) & Mean infectious period duration (weeks) & Log-Normal(-0.154, 0.04) & \makecell{0.857 \\ (0.579, 1.270)} & 1,2,3\\
+\( 1 / \eta \) & mean hospitalization duration (weeks) & Log-Normal(-1.03, 0.04) & \makecell{0.357 \\ (0.241, 0.529)} & 1,2,3\\
+\( 1 / \omega \) & mean ICU stay duration (weeks) & Log-Normal(-0.56, 0.04) & \makecell{0.571 \\ (0.386, 0.846)} & 1,2,3\\
+\( \tau \) & Infection-hospitalization ratio & Logit-Normal(-4.6, 0.04) & \makecell{0.01000 \\ (0.00678, 0.01470)} & 1,2,3 \\
+\( \upsilon \) & Hospitalization-ICU admission ratio & Logit-Normal(-1.59, 0.04) & \makecell{0.170 \\ (0.122, 0.233)} & 1,2,3 \\
+\( \chi \) & ICU-fatality ratio & Logit-Normal(-1.73, 0.04) & \makecell{0.150 \\ (0.107, 0.207)} & 1,2,3 \\
+\( 1 / \sqrt{\phi_W} \) & over-dispersion parameter for observed new cases & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_X} \) & over-dispersion parameter for observed hospital occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_Y} \) & over-dispersion parameter for observed ICU occupancy & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( 1 / \sqrt{\phi_Z} \) & over-dispersion parameter for observed new deaths & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 1,2,3\\
+\( \rho^Z \) & death detection rate & Logit-Normal(2.2, 0.04) & \makecell{0.900 \\ (0.859, 0.930)} & 1,2,3 \\
+\( E\left(0\right) \) & Initial proportion of infected, but not yet infectious population & Logit-Normal(-7.91, 0.04) & \makecell{0.000366 \\ (0.000247, 0.000542)} & \makecell{1,2,3\\CA} \\
+\( E\left(0\right) \) & Initial proportion of infected, but not yet infectious population & Logit-Normal(-8.64, 0.04) & \makecell{0.000177 \\ (0.000119, 0.000261)} & \makecell{1,2,3\\OC} \\
+\( I\left(0\right) \) & Initial proportion of infectious population & Logit-Normal(-7.22, 0.04) & \makecell{0.000732 \\ (0.000495, 0.001080)} & \makecell{1,2,3\\CA}\\
+\( I\left(0\right) \) & Initial proportion of infectious population & Logit-Normal(-7.95, 0.04) & \makecell{0.000353 \\ (0.000239, 0.000522)} & \makecell{1,2,3\\OC}\\
+\( R\left(0\right) \) & Initial proportion of immune population & Logit-Normal(1.1, 0.16) & \makecell{0.750 \\ (0.578, 0.868)} & 1,2,3 \\
+\( \operatorname{logistic}\left(\rhowtilde_1\right) \) & initial case detection rate & Logit-Normal(-1.39, 0.04) & \makecell{0.200 \\ (0.145, 0.270)} & 1,2,3\\
+\( \sigma_{\rho^W} \) & standard deviation for case detection rate GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 1,2,3 \\
+\( 1 / \kappa \) & immunity duration & Log-Normal(2.48, 0.04) & \makecell{12.00 \\ ( 8.11, 17.80)} & 1 \\
+\( \exp \left( \tilde{R}_{0,1} \right) \) & initial basic reproduction number & Log-Normal(1.61, 0.04) & \makecell{5.00 \\ (3.38, 7.40)} & 1 \\
+\( \sigma_{R_0} \) & standard deviation for basic reproduction number GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 1\\
+\( \exp\left(1/\kappatilde_1\right) \) & initial immunity duration & Log-Normal(2.48, 0.04) & \makecell{12.00 \\ ( 8.11, 17.80)} & 2 \\
+\( \sigma_\kappa \) & standard deviation for immunity duration GMRF & Log-Normal(-2, 0.01) & \makecell{0.135 \\ (0.111, 0.165)} & 2 \\
+\( R_0 \) & basic reproduction number & Log-Normal(1.61, 0.04) & \makecell{5.00 \\ (3.38, 7.40)} & 2,3 \\
+\( \exp \left( \alpha_0 \right)\) & maximum immunity duration & Log-Normal(2.48, 0.0025) & \makecell{12.0 \\ (10.9, 13.2)} & 3 \\
+\( \alpha_1^*  \) & proportion of maximum immunity duration that is minimum immunity duration & Logit-Normal(-1.1, 0.09) & \makecell{0.250 \\ (0.156, 0.375)} & 3 \\
+\( \alpha_2 \) & shape of transition from maximum immunity duration to minimum immunity duration & Log-Normal(0, 0.25) & \makecell{1.000 \\ (0.375, 2.660)} & 3 \\
+\( \zeta \) & time offset (weeks) for relationship between immunity duration \( 1 / \kappa(t) \) and proportion of novel variant \( \delta(t) \) & Log-Normal(0, 0.64) & \makecell{1.000 \\ (0.208, 4.800)} & 3 \\
+\( \iota_1^* \) & time novel variant takes to grow from 1\% to 99\% of the infectious population (weeks) & Log-Normal(1.95, 0.16) & \makecell{ 7.0 \\ ( 3.2, 15.3)} & 3\\
+\( \iota_0 \) & proportion of novel variant at \( t^* \) & Logit-Normal(-2.94, 0.25) & \makecell{0.0500 \\ (0.0194, 0.1230)} & 3 \\
+\( 1 / \sqrt{\phi_V} \) & over-dispersion parameter for observed new sequences of new variant & Half-Normal(0,1) & \makecell{0.6740 \\ (0.0313, 2.2400)} & 3
 \end{xltabular}
 
 \begin{figure}

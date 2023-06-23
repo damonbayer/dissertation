@@ -227,7 +227,7 @@ Thus, we hypothesize that defining time-varying parameters as a function of \( \
 In principle, we can do this for any of the parameters in the model that might differ by variant, but we only consider this parameterization for the average immune duration, \( 1 / \kappa \), in our simulation study and application.
 We model \( 1 / \kappa(t) \) as dependent on \( \delta(t) \) by
 \begin{equation}
-    1 / \kappa(t) = 1 / \hat{\kappa}\left( \delta (t + \zeta) \right) = \exp \left\{ \alpha_0 + \alpha_1 \left[ \delta(t + \zeta) \left( 1 - \delta(t + \zeta) \right) \right]^{\alpha_2} \right\},
+    1 / \kappa(t) = 1 / \hat{\kappa}\left( \delta (t - \zeta) \right) = \exp \left\{ \alpha_0 + \alpha_1 \left[ \delta(t - \zeta) \left( 1 - \delta(t + \zeta) \right) \right]^{\alpha_2} \right\},
     \label{ch_5:eqn:kappa_delta}
 \end{equation}
 where \( \alpha_2 > 0 \).
