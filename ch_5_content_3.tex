@@ -10,7 +10,7 @@ Forecasting is particularly challenging when conditions in the environment chang
 These changes could be due to a variety of factors including non-pharmaceutical interventions, vaccination campaigns, treatment developments, or phenotypic changes in the pathogen due to evolution.
 These phenotypic changes may result in increased transmissibility, disease severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
 This has been particularly relevant throughout the COVID-19 pandemic, where the emergence of novel virus strains such as the Alpha, Delta, and Omicron variants was repeatedly accompanied by these surges.
-In this work, we focus on developing forecasting methodology for these times when a new variant becomes dominant due to its ability to escape immunity induced by infections from previously circulating variants.
+In this work, we focus on developing forecasting methodology for times when a new variant becomes dominant due to its ability to escape immunity induced by infections from previously circulating variants.
 
 Forecasting epidemic surges in changing environments has previously been addressed by including time-varying parameters in infectious disease dynamics models.
 These time-varying parameters can be treated as fixed inputs or estimated via parametric or non-parametric methods.
@@ -39,7 +39,7 @@ We evaluate our method in a simulation study wherein novel variants become domin
 We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by the continuous ranked probability score --- a popular proper scoring rule for probabilistic forecasts \citep{gneiting2007strictly}.
 We also apply our model to real data from the Omicron wave in Orange County, California, and the state of California as a whole.
 % We show superior performance of forecasting these data streams at long forecast horizons.
-In particular, our proposed model is much better at forecasting the timing and size of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
+In particular, our proposed model is much better than others at forecasting the timing and size of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
 
 
 \section{Methods}
@@ -106,7 +106,7 @@ To describe mathematically how vectors $\bA(t)$ and $\bN(t)$ change through time
 \end{equation}
 
 where \( \beta \) is the transmission rate, \( N \) is the population size, \( 1 / \gamma  \) is the mean latent period duration, \( 1 / \nu \) is the mean infectious period duration, \( 1 / \eta \) is the mean hospitalization duration, \( 1 / \omega \) is the mean ICU stay duration, \( 1 / \kappa \) is the mean immune duration, \( \tau \) is the infection-hospitalization ratio, \( \upsilon \) is the hospitalization-ICU admission ratio, and \( \chi \) is the ICU-fatality ratio.
-In some cases, we allow certain parameters to vary in time to capture changing dynamics without the needing for additional compartments in the model.
+In some cases, we allow certain parameters to vary in time to capture changing dynamics without the need for additional compartments in the model.
 These changing dynamics could be due to policy or behavioral changes, or the presence of a new variant with increased transmissibility or immune escape.
 In particular, in the models we consider in our simulation study and application, we replace \( \beta \) and \( \kappa \) with time-varying versions, \( \beta(t) \), and \( \kappa(t) \).
 We discuss the details of this implementation in Section~\ref{ch_5:subsec:bayesian}.
@@ -447,7 +447,7 @@ With respect to the fast takeover scenario, the model where \( R_0(t) \) is mode
 
 We also specifically assess each model's ability to estimate the timing and size of the peak hospital occupancy.
 Posterior predictive intervals for the peak timing and peak value are presented in Figures~\ref{ch_5:fig:simulated_peak_assessment_time_plot} and \ref{ch_5:fig:simulated_peak_assessment_value_plot}.
-In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest predictive interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when later data is included in the model.
+In general, the model where \( 1 / \kappa(t) \) is informed by the genetic data tends to have the smallest predictive interval widths and is overconfident about peak timing and value early on, but can accurately forecast these quantities when subsequent data is included in the model.
 The model where \( R_0(t) \) follows a GMRF has the widest intervals and is, in general, under-confident about the peak timing and value, even when the peak has already passed.
 The model where \( 1 / \kappa(t) \) follows a GMRF falls somewhere in the middle.
 
