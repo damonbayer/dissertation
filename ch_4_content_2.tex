@@ -11,7 +11,7 @@ We develop models that integrate diagnostics test and mortality time series data
 These models are flexible in the data sources they incorporate.
 By comparing the forecasting capabilities of these models, we aim to investigate which data streams should be used in future modeling efforts.
 \par
-Differences in mitigation strategies, surveillance efforts, and population characteristics across countries and even across different regions within one country prompted development of regional modeling of SARS-CoV-2 transmission \citep{anderson2020, miller2020, morozova2021one, irons2021estimating}.
+Differences in mitigation strategies, surveillance efforts, and population characteristics across countries and even across different regions within one country prompted development of regional modeling of SARS-CoV-2 transmission \citep{anderson2020, Jewell2021complicated, morozova2021one, irons2021estimating}.
 However, neither national nor subnational/regional modelers fully integrate all surveillance data available to them, because inclusion of each additional data source leads to an increase in model complexity, which complicates statistical inference and reduces computational efficiency of this inference.
 In addition, including more data sources necessitates additional modeling assumptions and risks specification in one part of the model influencing inference in other aspects of the model.
 Modelers were faced with many questions about which data to use, which data to ignore, and how to best integrate them into their models.
@@ -454,8 +454,8 @@ Fortunately, compartmental models can be extended to account for these complexit
 For example, we can stratify each model compartment by age, vaccination status, and geographical location, as is commonly done in epidemiological modeling \citep{li2008continuous, van2008spatial}.
 \par
 We have addressed changes in control/mitigation measures and in human behavior by nonparametrically modeling variability of some of the SARS-CoV-2 transmission model parameters across time.
-\citet{anderson2020} and \citet{miller2020} use parametric approaches to model the effects of mitigation measures on $R_0$.
-It would be interesting to try a semi-parametric approach that combines parametric and non-parametric components, which would allow us to include indicators of human behavior (e.g., mobility data as in \citet{miller2020}) into our inference and forecasting.
+\citet{anderson2020} and \citet{Jewell2021complicated} use parametric approaches to model the effects of mitigation measures on $R_0$.
+It would be interesting to try a semi-parametric approach that combines parametric and non-parametric components, which would allow us to include indicators of human behavior (e.g., mobility data as in \citet{Jewell2021complicated}) into our inference and forecasting.
 \par
 In this paper, we have sidestepped the thorny issue of reporting delays by restricting our analyses to time periods in which the data have stabilized.
 Hence, our analyses should be robust to reporting delays so long as we have either ``run out the clock" on the extent of the delays or reporting delays do not differ between positive and negative COVID-19 diagnostic tests. A useful set of extensions that would make our model more useful for real-time surveillance involve estimating the reporting delay distribution \citep{hohle2014bayesian,stoner2019multivariate} and using this distribution in our surveillance model.
