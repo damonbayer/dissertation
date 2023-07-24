@@ -7,7 +7,7 @@
 
 Accurate forecasting of epidemic surges is an important tool for public health agencies to make informed decisions about interventions and resource allocation.
 Forecasting is particularly challenging when conditions in the environment change.
-These changes could be due to a variety of factors including non-pharmaceutical interventions, vaccination campaigns, treatment developments, or phenotypic changes in the pathogen due to evolution.
+These changes could be due to a variety of factors, including non-pharmaceutical interventions, vaccination campaigns, treatment developments, or phenotypic changes in the pathogen due to evolution.
 These phenotypic changes may result in increased transmissibility, disease severity, or immune evasion, leading to surges in cases, hospitalizations, or deaths.
 This has been particularly relevant throughout the COVID-19 pandemic, where the emergence of novel virus strains such as the Alpha, Delta, and Omicron variants was repeatedly accompanied by these surges.
 In this work, we focus on developing forecasting methodology for times when a new variant becomes dominant due to its ability to escape immunity induced by infections from previously circulating variants.
@@ -15,14 +15,14 @@ In this work, we focus on developing forecasting methodology for times when a ne
 Forecasting epidemic surges in changing environments has previously been addressed by including time-varying parameters in infectious disease dynamics models.
 These time-varying parameters can be treated as fixed inputs or estimated via parametric or non-parametric methods.
 Many models focus on a time-varying transmission rate.
-For example, \citet{Zhou2020Semiparametric} modeled the time-varying transmission rate via a Gaussian process.
+For example, \citet{Zhou2020Semiparametric} and \citet {Xiaoguang2018Bayesian} modeled the time-varying transmission rate via a Gaussian process.
 \citet{Iyaniwura2022Mathematical} use survey data to derive separate time-varying contact rates for different subpopulations and incorporate these derived rates into their transmission rate model.
 Other models include additional time-varying parameters.
 In Chapter~\ref{ch:content_2}, we developed a model which included time-varying transmission rate, testing policy, and case detection rate.
 In \citep{ODea2021semi}, time-varying transmission rate, reporting probability, and observation variance are modeled with random walks.
 Similarly, \citet{Gibson2020real} also model time-varying transmission rate and case detection rate with random walks.
 Additionally, \citet{morozova2021one} incorporate time-varying contact rate, transmission rate, recovery rate, severe fraction, hospital discharge rate, and hospital case fatality ratio into a Bayesian model.
-While none of these works allow the average immune duration as varying in time, a topic of interest in this chapter, their methods could be adapted to achieve model this dynamic behavior.
+While none of these works allow the average immunity duration to vary in time, a topic of interest in this chapter, their methods could be adapted to model this dynamic behavior.
 
 Despite the apparent relevance of the novel variants, a recent comprehensive review of 136 infectious disease dynamics models noted that not one of the papers analyzed used variant prevalence data \citep{Nixon2022evaluation}.
 Since that review's publication, we are aware of two papers which have attempted to use this type of data \citep{Du2023Incorporating, Rashed2022Covid}.
@@ -33,13 +33,13 @@ Rather than adapting one of the traditional models for multiple strains (see \ci
 We take inspiration from \citet{Figgins2021variant}, who model variant proportions over time using a Dirichlet-multinomial likelihood to estimate variant-specific effective reproduction numbers.
 Analogously, we assume that the observed count of sequences of a novel variant has a beta-binomial distribution whose mean is a product of the total number of observed genetic sequences and the proportion of the infectious population infected with the novel variant.
 We then model the average duration of immunity as a flexible function of this proportion.
-The form of our function ensures that the immune duration decreases when the new variant is introduced to the population, before increasing again once the new variant becomes dominant.
+The form of our function ensures that the immunity duration decreases when the new variant is introduced to the population, before increasing again once the new variant becomes dominant.
 
 We evaluate our method in a simulation study wherein novel variants become dominant at varying rates and compare our forecasts to those from more conventional Bayesian compartmental models with time-varying parameters.
 We demonstrate competitive or superior ability to forecast cases, hospital occupancy, ICU occupancy, and deaths, as judged by the continuous ranked probability score --- a popular proper scoring rule for probabilistic forecasts \citep{gneiting2007strictly}.
 We also apply our model to real data from the Omicron wave in Orange County, California, and the state of California as a whole.
 % We show superior performance of forecasting these data streams at long forecast horizons.
-In particular, our proposed model is much better than others at forecasting the timing and size of the peak hospital occupancy, a metric crucial for public health officers making staffing decisions.
+In particular, our proposed model is much better than others at forecasting the timing and size of the peak hospital occupancy, a metric crucial for public health officers making resource allocation recommendations to medical providers.
 
 
 \section{Methods}
@@ -105,7 +105,7 @@ To describe mathematically how vectors $\bA(t)$ and $\bN(t)$ change through time
 \label{ch_5:eqn:transition_rates}
 \end{equation}
 
-where \( \beta \) is the transmission rate, \( N \) is the population size, \( 1 / \gamma  \) is the mean latent period duration, \( 1 / \nu \) is the mean infectious period duration, \( 1 / \eta \) is the mean hospitalization duration, \( 1 / \omega \) is the mean ICU stay duration, \( 1 / \kappa \) is the mean immune duration, \( \tau \) is the infection-hospitalization ratio, \( \upsilon \) is the hospitalization-ICU admission ratio, and \( \chi \) is the ICU-fatality ratio.
+where \( \beta \) is the transmission rate, \( N \) is the population size, \( 1 / \gamma  \) is the mean latent period duration, \( 1 / \nu \) is the mean infectious period duration, \( 1 / \eta \) is the mean hospitalization duration, \( 1 / \omega \) is the mean ICU stay duration, \( 1 / \kappa \) is the mean immunity duration, \( \tau \) is the infection-hospitalization ratio, \( \upsilon \) is the hospitalization-ICU admission ratio, and \( \chi \) is the ICU-fatality ratio.
 In some cases, we allow certain parameters to vary in time to capture changing dynamics without the need for additional compartments in the model.
 These changing dynamics could be due to policy or behavioral changes, or the presence of a new variant with increased transmissibility or immune escape.
 In particular, in the models we consider in our simulation study and application, we replace \( \beta \) and \( \kappa \) with time-varying versions, \( \beta(t) \), and \( \kappa(t) \).
@@ -197,14 +197,14 @@ Thus, the observed proportion of genetic sequences of the novel variant is a noi
 
 In Sections~\ref{ch_5:subsec:transmission} and \ref{ch_5:subsec:surveillance}, we noted that, for some models considered in this work, \( \beta \), \( \kappa \), and \( \rho^W \) could be substituted for time-varying counterparts, \( \beta(t) \), \( \kappa(t) \), and \( \rho^W(t) \).
 We now present some options for modeling how these parameters may change over time.
-We proceed by reparameterizing \( \beta(t) \) as  basic reproduction number, \( R_0(t) = \beta(t) / \nu \), and \( \kappa(t) \) as the average immune duration, \( 1 / \kappa(t) \).
+We proceed by reparameterizing \( \beta(t) \) as  basic reproduction number, \( R_0(t) = \beta(t) / \nu \), and \( \kappa(t) \) as the average immunity duration, \( 1 / \kappa(t) \).
 
-In some models, we parameterize \( R_0(t) \), \( 1 / \kappa(t) \), or \( \rho^2(t) \) as piecewise constant functions, where each vector defining the constants a prior follows a Gaussian Markov random field (GMRF).
+In some models, we parameterize \( R_0(t) \), \( 1 / \kappa(t) \), or \( \rho(t) \) as piecewise constant functions, where each vector defining the constants a prior follows a Gaussian Markov random field (GMRF).
 More precisely, we define the auxiliary vectors:
 \begin{gather*}
 \brtilde = (\tilde{R}_{0,1}, \tilde{R}_{0,2}, \ldots, \tilde{R}_{0,L}) \text{, }
 \bkappatilde = (\kappatilde_1, \kappatilde_2, \ldots, \kappatilde_L)  \text{, and }
-\brhowtilde = (\brhowtilde_1, \brhowtilde_2, \ldots, \brhowtilde_L),
+\brhowtilde = (\rhowtilde_1, \rhowtilde_2, \ldots, \rhowtilde_L),
 \end{gather*}
 which follow the Gaussian Markov random field priors
 \begin{equation}
@@ -224,34 +224,34 @@ and define the piecewise constant functions:
 
 In our simulation study and application, we assume that these time-varying dynamics are due to the emergence of a novel variant to which the population has reduced immunity.
 Thus, we hypothesize that defining time-varying parameters as a function of \( \delta(t) \), the proportion of currently infectious individuals who are infected with the novel variant, may lead to improvements in forecasting capabilities.
-In principle, we can do this for any of the parameters in the model that might differ by variant, but we only consider this parameterization for the average immune duration, \( 1 / \kappa \), in our simulation study and application.
+In principle, we can do this for any of the parameters in the model that might differ by variant, but we only consider this parameterization for the average immunity duration, \( 1 / \kappa \), in our simulation study and application.
 We model \( 1 / \kappa(t) \) as dependent on \( \delta(t) \) by
 \begin{equation}
     1 / \kappa(t) = 1 / \hat{\kappa}\left( \delta (t - \zeta) \right) = \exp \left\{ \alpha_0 + \alpha_1 \left[ \delta(t - \zeta) \left( 1 - \delta(t + \zeta) \right) \right]^{\alpha_2} \right\},
     \label{ch_5:eqn:kappa_delta}
 \end{equation}
 where \( \alpha_2 > 0 \).
-This functional form ensures that the average immune duration is maximized when the entire infectious population is infected with the same variant (i.e., \( \delta = 0 \) or \( \delta = 1 \)) and minimized when \( \delta = 0.5 \).
-Thus, when a new variant is introduced, but only constitutes a small proportion of the infectious population, the average immune duration begins to decrease, moving more of the population to the susceptible compartments.
-The immune duration continues to decrease until the new variant is half of the infectious population, at which point there is a large infectious population carrying the new variant and a large proportion of the population with reduced immunity to the new variant.
-As the new variant reaches dominance, the immune duration returns to its original level.
+This functional form ensures that the average immunity duration is maximized when the entire infectious population is infected with the same variant (i.e., \( \delta = 0 \) or \( \delta = 1 \)) and minimized when \( \delta = 0.5 \).
+Thus, when a new variant is introduced, but only constitutes a small proportion of the infectious population, the average immunity duration begins to decrease, moving more of the population to the susceptible compartments.
+The immunity duration continues to decrease until the new variant is half of the infectious population, at which point there is a large infectious population carrying the new variant and a large proportion of the population with reduced immunity to the new variant.
+As the new variant reaches dominance, the immunity duration returns to its original level.
 We allow this relationship to be flexible by including an offset in time, \( \zeta \).
 
-We note that the maximum immune duration is \( \exp \left( \alpha_0 \right)\), and the minimum immune duration is \(\exp \left\{ \alpha_0 + \alpha_1 \left( 1/4  \right)^{\alpha_2} \right\} \).
+We note that the maximum immunity duration is \( \exp \left( \alpha_0 \right)\), and the minimum immunity duration is \(\exp \left\{ \alpha_0 + \alpha_1 \left( 1/4  \right)^{\alpha_2} \right\} \).
 To use a more interpretable prior, we reparameterize \( \alpha_1 \) in terms of \( \alpha_1^* \):
 \begin{equation}
     \alpha_1 = 4^{\alpha_2} \ln \left( \alpha_1^* \right).
     \label{ch_5:eqn:alpha_1}
 \end{equation}
-Then the minimum immune duration is 
+Then the minimum immunity duration is 
 \( \exp \left\{ \alpha_0 + 4^{\alpha_2} \ln \left( \alpha_1^* \right) \left( 1/4  \right)^{\alpha_2} \right\} = \alpha_1^* \exp \left\{ \alpha_0 \right\} \).
-Recalling that \( \exp \left\{ \alpha_0 \right\} \) is the maximum immune duration, we see that  \( \alpha_1^* \in [0,1] \) is simply a scaling factor, which determines the minimum duration, based on the maximum duration.
+Recalling that \( \exp \left\{ \alpha_0 \right\} \) is the maximum immunity duration, we see that  \( \alpha_1^* \in [0,1] \) is simply a scaling factor, which determines the minimum duration, based on the maximum duration.
 We show several example curves for \eqref{ch_5:eqn:kappa_delta} in Figure~\ref{ch_5:fig:example_immune_durration_plot}.
 
 \begin{figure}
     \centering
     \includegraphics[width=1.0\columnwidth]{example_immune_durration_plot.pdf}
-    \caption[Example immune duration curves.]{Example immune duration curves for several values of \( \alpha_2 \), with \( \alpha_0 = \ln\left(100\right), \alpha_1^* = 0.5 \).
+    \caption[Example immunity duration curves.]{Example immunity duration curves for several values of \( \alpha_2 \), with \( \alpha_0 = \ln\left(100\right), \alpha_1^* = 0.5 \).
     The full formula for these curves is given by \eqref{ch_5:eqn:kappa_delta} and \eqref{ch_5:eqn:alpha_1}.}
     \label{ch_5:fig:example_immune_durration_plot}
 \end{figure}
@@ -372,14 +372,14 @@ Then, the individuals begin to transition into the \( N \) subscript compartment
 Forecasting this second wave is the objective of our modeling efforts.
 
 We manipulate the size of this wave and the speed with which the novel variant takes over by altering \( \beta \) and \( \epsilon \) in the different simulation settings.
-Table~\ref{ch_5:table:scenario_differing_parameters} presents the  the exact \( \beta \) and \( \epsilon \) values used.
+Table~\ref{ch_5:table:scenario_differing_parameters} presents the exact \( \beta \) and \( \epsilon \) values used.
 The other simulation parameters are given in Table~\ref{ch_5:tbl:simulation_parameters_and_interpretations}.
 Changes of the resulting proportion of individuals infected with the novel variant over time for each simulated scenario is presented in Figure~\ref{ch_5:fig:proportion_novel_variant_simulated_data_plot}.
 The simulated data for the medium takeover speed scenario is plotted in Figure~\ref{ch_5:fig:simulated_binned_data_medium_plot}, with the gray shaded areas indicating the time points for which we produce forecasts.
 Similar figures for the other data sets are presented in Figures~\ref{ch_5:fig:simulated_binned_data_slow_plot} and \ref{ch_5:fig:simulated_binned_data_fast_plot}.
 In each scenario, non-genetic data is reported at a weekly resolution, starting 20 weeks into the simulation, which we call \( t = 0 \).
 Genetic data is reported at a daily resolution, which is crucial to capturing the early exponential-like growth of the novel variant, relative to the other variants.
-Additionally, the genetic data is only reported beginning one week before the novel variant import event, which is necessary to meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth}.
+Additionally, the genetic data is only reported beginning one week before the novel variant importation event, which is necessary to meet the assumption of logistic growth in \eqref{ch_5:eqn:logistic_growth}.
 
 \begin{figure}
     \centering
@@ -400,7 +400,7 @@ Additionally, the genetic data is only reported beginning one week before the no
 We fit three models to these simulated data sets: (1) a model where \( R_0(t) \) is a priori modeled as a GMRF and \( 1 / \kappa(t) \) is constant, (2) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a priori modeled as a GMRF, and (3) a model where \( R_0(t) \) is constant and \( 1 / \kappa(t) \) is a function of the proportion of infectious individuals infected with the novel variant shown in \eqref{ch_5:eqn:kappa_delta}.
 The first model is reflective of typical practice in infectious disease modeling (see, e.g., \citep{Gibson2020real, ODea2021semi}).
 The second is a slight variation on the first, where we make the immunity duration, rather than the basic reproductive number, vary over time.
-The third model is our main innovation, which models the mean immune duration based on genetic data.
+The third model is our main innovation, which models the mean immunity duration based on genetic data.
 The priors used in these models are presented in Table~\ref{ch_5:tbl:simulation_prior_table}.
 For each simulated data set, we used four Markov chains run in parallel to draw a total of 1000 posterior samples.
 
@@ -626,12 +626,12 @@ Each fit consists of four Markov chains run in parallel to draw a total of 1000 
 
 We developed a Bayesian model that integrates time series of cases, hospitalizations, ICU admissions, and deaths, as well as genetic data to produce forecasts during time periods where a novel virus variant becomes dominant.
 Our approach is based on the idea that the introduction of a novel variant leads to increased infections, primarily due to immune escape.
-As such, we allow the parameter in our model reflecting the average immune duration to change over time and consider modeling this time-varying parameter both parametrically using genetic data, and non-parametrically.
+As such, we allow the parameter in our model reflecting the average immunity duration to change over time and consider modeling this time-varying parameter both parametrically using genetic data, and non-parametrically.
 We applied our model to simulated data sets as well as real data from the Omicron wave in Orange County and the state of California, with a particular focus on forecasting hospital occupancy.
-We compare our models with time-varying immune duration to a standard model where the basic reproduction number varies in time and is modeled non-parametrically.
-In simulated data sets, the model where the time-varying immune duration is informed by genetic data produces superior forecasts when the new variant becomes dominant at a ``slow" or ``medium" pace (24 or 13 weeks to go from 1\% to 99\% of sequences, respectively).
+We compare our models with time-varying immunity duration to a standard model where the basic reproduction number varies in time and is modeled non-parametrically.
+In simulated data sets, the model where the time-varying immunity duration is informed by genetic data produces superior forecasts when the new variant becomes dominant at a ``slow" or ``medium" pace (24 or 13 weeks to go from 1\% to 99\% of sequences, respectively).
 When the new variant becomes dominant quickly (6 weeks), this model is competitive with the model where the basic reproduction number is modeled non-parametrically, which performs the best.
-In the real data scenarios, the model where the time-varying immune duration is informed by genetic data is shown to be especially useful for forecasting the timing and size of peak hospital occupancy, a metric that is of great interest to public health agencies.
+In the real data scenarios, the model where the time-varying immunity duration is informed by genetic data is shown to be especially useful for forecasting the timing and size of peak hospital occupancy, a metric that is of great interest to public health agencies.
 
 Despite these advancements, some potential issues remain unaddressed by our model.
 First, our model asserts that a novel variant must lead to reduced immunity in the population, and therefore cause a second wave.

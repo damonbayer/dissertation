@@ -135,10 +135,6 @@ The diagram in Figure~\ref{ch_2:fig:stocastic_SIR} represents the system's evolu
 \end{figure}
 
 The deterministic treatment of a stochastic compartmental model is a system of ordinary differential equations (ODEs).
-Let \( s(t) = S(t) / N \), \( i(t) = I(t) / N \), \( r(t) = R(t) / N \), where \( A(t) \) is the value of compartment \( A \) at time \( t \).
-The system of ODEs can be viewed as the diffusion limit of the stochastic model as \( N \to \infty \), while \( s(0), i(0), r(0) \) are held constant \citep{Greenwood2009, fuchs2013inference}.
-% The latter corresponds to a deterministic model and can be obtained by ignoring the stochastic part of
-% which is the infinite population limit of the stochastic model.
 For the SIR model, we have 
 \begin{equation}
     \deriv{S}{t} = -\beta \frac{SI}{N}, \qquad
@@ -148,6 +144,10 @@ For the SIR model, we have
     \text{.}
 \label{ch_2:SIR_diff_eq}
 \end{equation}
+Letting \( s(t) = S(t) / N \), \( i(t) = I(t) / N \), \( r(t) = R(t) / N \), where \( A(t) \) is the value of compartment \( A \) at time \( t \), the system of ODEs can be viewed as the diffusion limit of the stochastic model as \( N \to \infty \), while \( s(0), i(0), r(0) \) are held constant \citep{Greenwood2009, fuchs2013inference}.
+% The latter corresponds to a deterministic model and can be obtained by ignoring the stochastic part of
+% which is the infinite population limit of the stochastic model.
+
 
 Compared to the deterministic models, the stochastic models are more computationally difficult to work with, but they are particularly useful when there are few infections, as at the beginning or end of an outbreak and in small populations.
 In these scenarios, the randomness involved at the subject level can have a major impact on the course of the outbreak.
@@ -192,7 +192,7 @@ We refer to this as incidence data because each count is assumed to correspond t
 In contrast, we can work with prevalence data, which is reflective of the frequency of a condition at a given time.
 Examples of prevalence data include counts of current hospital or intensive care unit (ICU) occupants with a certain disease or the number of seropositive tests from a carefully constructed population sample.
 We also loosely differentiate between data that is passively or actively collected.
-Passively collected data like case counts and hospital occupancy is reported routinely by health care agencies and is generally more affordable to collect because it doesn't require a formal study to be conducted.
+Passively collected data like case counts and hospital occupancy is routinely reported to health care agencies and is generally more affordable to collect because it does not require a formal study to be conducted.
 Actively collected data is often the result of a survey that has been deliberately designed and conducted to measure some aspect of a population, like the number of people previously infected with a disease or the contact rates between different subpopulations.
 This data is more expensive to collect, but can provide information that is difficult to gather through passive surveillance.
 % could mention mobility data somewhere here
@@ -210,9 +210,9 @@ We can link this to \( C_l \), the number of observed cases between time \( t = 
 C_l \sim \text{Negative binomial}\left (\mu_l =  \rho \times \Delta N_{S I}(t_l),\ {\sigma^2_l} = \mu_l (1 + \mu_l / \phi )\right ),
 \label{ch_2:eqn:example_case_emission}
 \end{equation}
-where \( \mu_l \) and \( \sigma^2_l \) are the mean and variance of this negative binomial distribution, \( \rho \) is a case reporting rate, reflecting that not all people who become infected with a disease are tested, and \( \phi \) is an over-dispersion parameter.
+where \( \mu_l \) and \( \sigma^2_l \) are the mean and variance of this negative binomial distribution, \( \rho \) is a case reporting probability, reflecting that not all people who become infected with a disease are tested, and \( \phi \) is an over-dispersion parameter.
 
-The specifics of the data and compartmental model used can make the mapping from the latent compartments and the observed data challenging.
+The specifics of the data and compartmental model used can make the mapping from the latent compartments to the observed data challenging.
 In some cases, the distinction between incidence and prevalence data is not clear.
 For example, when someone receives a positive test result for an infectious disease with a relatively short period of infectiousness, they may receive several tests in the following weeks to assess whether they are still infectious.
 In that case, each positive test is not necessarily reflective of a new disease case.
@@ -341,7 +341,7 @@ When only point forecasts are available, many standard loss functions are applic
 The most common of these are the absolute error, \( \abs{x - \hat{x}} \), and the squared error, \( \left( x - \hat{x} \right)^2 \).
 These measures are scale-dependent, making them inappropriate for comparing forecasts on quantities of different units.
 To overcome this limitation, the absolute percentage error \( \abs{100 \left( x - \hat{x} \right)/ x} \) can be used.
-A detailed discussion of error measurements available for point forecasts is presented in \citet{Hyndman2006Another}.
+A detailed discussion of error measurements available for point forecasts is presented in \citep{Hyndman2006Another}.
 
 When assessing any of the measures of forecast quality mentioned in this section, it is useful to aggregate them at a fixed forecast horizon.
 For example, for a $j$-week forecast horizon, we create a forecast for week \( i \) using all data up to week \( i - j \).
